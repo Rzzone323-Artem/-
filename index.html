@@ -11,15 +11,6 @@
 <body>
 
 <!-- Декоративные гифки по бокам с чередованием -->
-<div id="leftGif" style="position: fixed; top: 50%; left: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none;">
-<img src="img/eye.gif" style="width: 80px; filter: drop-shadow(0 0 20px #ff0066);" alt="Всевидящее око">
-</div>
-<div id="rightGif" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none;">
-<img src="img/skull.gif" style="width: 70px; filter: drop-shadow(0 0 20px #8a2be2);" alt="Череп">
-</div>
-
-<!-- Панель управления звуками -->
-<script src="sound-controls.js"></script>
 
 <script>
 // Массивы гифок для левой и правой сторон
@@ -165,106 +156,109 @@ setInterval(() => {
 // Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
 function goToProductFromMain(productId) {
     // Создаем уникальный звук для каждого товара
-    if (window.soundManager) {
-        const audioContext = window.soundManager.audioContext;
-        const duration = 2; // 2 секунды для лучшего восприятия
-        const sampleRate = 44100;
-        const numSamples = duration * sampleRate;
-        
-        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
-        const data = buffer.getChannelData(0);
-        
-        // УНИКАЛЬНЫЕ звуковые профили для каждого товара
-        const soundProfiles = {
-            'sivorotka-svet-radiacii': { 
-                freq: 440, 
-                modulation: 0.5, 
-                harmonics: [1, 2, 3, 4], 
-                filter: 'lowpass',
-                envelope: 3,
-                description: 'Сыворотка - яркий, чистый'
-            },
-            'anomalnyj-artefakt': { 
-                freq: 110, 
-                modulation: 0.8, 
-                harmonics: [1, 1.618, 2.618], 
-                filter: 'lowpass',
-                envelope: 2,
-                description: 'Артефакт - глубокий, таинственный'
-            },
-            'energeticheskij-donut': { 
-                freq: 880, 
-                modulation: 0.3, 
-                harmonics: [1, 3, 5, 7], 
-                filter: 'highpass',
-                envelope: 4,
-                description: 'Донат - высокий, веселый'
-            },
-            'svyatoj-vodon': { 
-                freq: 349, 
-                modulation: 0.4, 
-                harmonics: [1, 2, 3, 5], 
-                filter: 'lowpass',
-                envelope: 3.5,
-                description: 'Водон - священный, гармоничный'
-            },
-            'protivogaz-stalkera': { 
-                freq: 147, 
-                modulation: 0.7, 
-                harmonics: [1, 1.5, 2, 2.5], 
-                filter: 'lowpass',
-                envelope: 2.5,
-                description: 'Противогаз - защитный, серьезный'
-            },
-            'karta-tajnyh-prohodov': { 
-                freq: 523, 
-                modulation: 0.6, 
-                harmonics: [1, 2.5, 4, 6], 
-                filter: 'bandpass',
-                envelope: 3,
-                description: 'Карта - загадочный, исследовательский'
-            }
-        };
-        
-        const profile = soundProfiles[productId] || soundProfiles['sivorotka-svet-radiacii'];
-        
-        // Генерируем УНИКАЛЬНЫЙ звук
-        for (let i = 0; i < numSamples; i++) {
-            const t = i / sampleRate;
-            const envelope = Math.exp(-t * profile.envelope);
-            
-            let sample = 0;
-            profile.harmonics.forEach((harmonic, index) => {
-                const harmonicFreq = profile.freq * harmonic;
-                const harmonicVolume = 1 / (index + 1);
-                const phase = Math.random() * Math.PI * 2; // Случайная фаза для уникальности
-                sample += Math.sin(2 * Math.PI * harmonicFreq * t + phase) * harmonicVolume;
-            });
-            
-            // Уникальная модуляция для каждого товара
-            const modulation1 = Math.sin(2 * Math.PI * profile.modulation * t);
-            const modulation2 = Math.sin(2 * Math.PI * profile.modulation * 0.3 * t);
-            const vibrato = Math.sin(2 * Math.PI * 5 * t) * 0.1; // Вибрато
-            
-            data[i] = envelope * sample * (0.5 + 0.3 * modulation1 + 0.2 * modulation2) * (1 + vibrato);
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 2; // 2 секунды для лучшего восприятия
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // УНИКАЛЬНЫЕ звуковые профили для каждого товара
+    const soundProfiles = {
+        'sivorotka-svet-radiacii': { 
+            freq: 440, 
+            modulation: 0.5, 
+            harmonics: [1, 2, 3, 4], 
+            filter: 'lowpass',
+            envelope: 3,
+            description: 'Сыворотка - яркий, чистый'
+        },
+        'anomalnyj-artefakt': { 
+            freq: 110, 
+            modulation: 0.8, 
+            harmonics: [1, 1.618, 2.618], 
+            filter: 'lowpass',
+            envelope: 2,
+            description: 'Артефакт - глубокий, таинственный'
+        },
+        'energeticheskij-donut': { 
+            freq: 880, 
+            modulation: 0.3, 
+            harmonics: [1, 3, 5, 7], 
+            filter: 'highpass',
+            envelope: 4,
+            description: 'Донат - высокий, веселый'
+        },
+        'svyatoj-vodon': { 
+            freq: 349, 
+            modulation: 0.4, 
+            harmonics: [1, 2, 3, 5], 
+            filter: 'lowpass',
+            envelope: 3.5,
+            description: 'Водон - священный, гармоничный'
+        },
+        'protivogaz-stalkera': { 
+            freq: 147, 
+            modulation: 0.7, 
+            harmonics: [1, 1.5, 2, 2.5], 
+            filter: 'lowpass',
+            envelope: 2.5,
+            description: 'Противогаз - защитный, серьезный'
+        },
+        'karta-tajnyh-prohodov': { 
+            freq: 523, 
+            modulation: 0.6, 
+            harmonics: [1, 2.5, 4, 6], 
+            filter: 'bandpass',
+            envelope: 3,
+            description: 'Карта - загадочный, исследовательский'
         }
+    };
+    
+    const profile = soundProfiles[productId] || soundProfiles['sivorotka-svet-radiacii'];
+    
+    // Генерируем УНИКАЛЬНЫЙ звук
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * profile.envelope);
         
-        // Воспроизводим звук
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
+        let sample = 0;
+        profile.harmonics.forEach((harmonic, index) => {
+            const harmonicFreq = profile.freq * harmonic;
+            const harmonicVolume = 1 / (index + 1);
+            const phase = Math.random() * Math.PI * 2; // Случайная фаза для уникальности
+            sample += Math.sin(2 * Math.PI * harmonicFreq * t + phase) * harmonicVolume;
+        });
         
-        // УНИКАЛЬНЫЙ фильтр для каждого товара
-        const filter = audioContext.createBiquadFilter();
-        filter.type = profile.filter;
-        filter.frequency.value = profile.freq * 2;
-        filter.Q.value = 5; // Резонанс для характера
+        // Уникальная модуляция для каждого товара
+        const modulation1 = Math.sin(2 * Math.PI * profile.modulation * t);
+        const modulation2 = Math.sin(2 * Math.PI * profile.modulation * 0.3 * t);
+        const vibrato = Math.sin(2 * Math.PI * 5 * t) * 0.1; // Вибрато
         
-        source.connect(filter);
-        filter.connect(audioContext.destination);
-        source.start();
-        
-        console.log(`🎵 ${profile.description} - Частота: ${profile.freq}Гц, Фильтр: ${profile.filter}`);
+        data[i] = envelope * sample * (0.5 + 0.3 * modulation1 + 0.2 * modulation2) * (1 + vibrato);
     }
+    
+    // Воспроизводим звук
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    // УНИКАЛЬНЫЙ фильтр для каждого товара
+    const filter = audioContext.createBiquadFilter();
+    filter.type = profile.filter;
+    filter.frequency.value = profile.freq * 2;
+    filter.Q.value = 5; // Резонанс для характера
+    
+    // ГЛАВНОЕ: Устанавливаем громкость 0.5!
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.5; // Умеренная громкость
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
+    
+    console.log(`🎵 ${profile.description} - Частота: ${profile.freq}Гц, Фильтр: ${profile.filter}`);
     
     // Переходим на страницу товара
     setTimeout(() => {

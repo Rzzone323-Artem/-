@@ -202,7 +202,7 @@
 
 <div class="header">
 <img src="img/left.gif">
-<span class="title">ФОРУМ СТАЛКЕРОВ</span>
+<span class="title" id="adminButton">ФОРУМ СТАЛКЕРОВ</span>
 <img src="img/right.gif">
 </div>
 
@@ -521,12 +521,12 @@ function submitTopic(event) {
             
             // Очищаем форму
             document.getElementById('topicTitle').value = '';
-            document.getElementById('topicCategory').value = 'general';
+            document.getElementById('topicCategory').value = 'zone';
             document.getElementById('topicContent').value = '';
             document.getElementById('stalkerName').value = '';
             
             // Закрываем модальное окно
-            document.getElementById('topicModal').style.display = 'none';
+            closeModal();
             
             // Восстанавливаем кнопку
             submitBtn.textContent = originalText;
@@ -544,7 +544,7 @@ function submitTopic(event) {
         document.getElementById('topicTitle').value = '';
         document.getElementById('topicContent').value = '';
         document.getElementById('stalkerName').value = '';
-        document.getElementById('topicModal').style.display = 'none';
+        closeModal();
         
         // Восстанавливаем кнопку
         submitBtn.textContent = originalText;
