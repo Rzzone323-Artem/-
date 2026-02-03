@@ -160,16 +160,38 @@
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
-    .forum-header {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .topic-stats {
-        flex-direction: column;
-        gap: 5px;
-    }
+.admin-btn {
+    background: linear-gradient(45deg, #800080, #008000);
+    color: #FFF;
+    border: 2px solid #FF0;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.admin-btn:hover {
+    background: linear-gradient(45deg, #A000A0, #00A000);
+    transform: scale(1.05);
+}
+
+.admin-status {
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FF0;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.admin-topics {
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #FF0;
+    padding: 10px;
+    border-radius: 5px;
 }
 </style>
 </head>
@@ -193,6 +215,9 @@
 </div>
 
 <hr>
+
+<!-- Секретная админ-кнопка (невидимая) -->
+<div id="adminButton" style="position: fixed; top: 0; left: 0; width: 10px; height: 10px; background: transparent; cursor: default; z-index: 9999;" title="Админ-панель"></div>
 
 <div class="forum-container">
 
@@ -400,13 +425,45 @@
 </div>
 </div>
 
+<!-- Админ-панель -->
+<div id="adminModal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeAdminModal()">&times;</span>
+<h2>🔐 АДМИНИСТРАТОРСКАЯ ПАНЕЛЬ 🔐</h2>
+<div class="admin-controls">
+<button class="admin-btn" onclick="togglePosting()">🚫 ЗАПРЕТИТЬ ПОСТИНГ</button>
+<button class="admin-btn" onclick="clearAllTopics()">🗑️ ОЧИСТИТЬ ВСЕ ТЕМЫ</button>
+<button class="admin-btn" onclick="enablePosting()">✅ РАЗРЕШИТЬ ПОСТИНГ</button>
+</div>
+<div id="adminStatus" class="admin-status">
+<p>Статус постинга: <span id="postingStatus" style="color: #0F0;">РАЗРЕШЕН</span></p>
+</div>
+<div class="admin-topics">
+<h3>Управление темами:</h3>
+<div id="topicsList"></div>
+</div>
+</div>
+</div>
+
 <script>
+// Глобальные переменные для админ-панели
+let postingEnabled = true;
+let topics = [];
+
 function openModal() {
+    if (!postingEnabled) {
+        alert('🚫 Постинг запрещён администратором!');
+        return;
+    }
     document.getElementById('newTopicModal').style.display = 'block';
 }
 
 function closeModal() {
     document.getElementById('newTopicModal').style.display = 'none';
+}
+
+function closeAdminModal() {
+    document.getElementById('adminModal').style.display = 'none';
 }
 
 function openTopic(topicTitle) {
@@ -421,6 +478,17 @@ function submitTopic(event) {
     const content = document.getElementById('topicContent').value;
     const author = document.getElementById('stalkerName').value;
     
+    const newTopic = {
+        id: Date.now(),
+        title: title,
+        category: category,
+        content: content,
+        author: author,
+        date: new Date().toLocaleString()
+    };
+    
+    topics.push(newTopic);
+    
     alert(`Тема "${title}" успешно создана!\n\nКатегория: ${category}\nАвтор: ${author}\n\nСообщение будет опубликовано после проверки модератором.`);
     
     // Очищаем форму и закрываем модальное окно
@@ -430,11 +498,76 @@ function submitTopic(event) {
     closeModal();
 }
 
-// Закрытие модального окна при клике вне его
+// Админ-функции
+function togglePosting() {
+    postingEnabled = false;
+    updateAdminStatus();
+    alert('🚫 Постинг запрещён!');
+}
+
+function enablePosting() {
+    postingEnabled = true;
+    updateAdminStatus();
+    alert('✅ Постинг разрешён!');
+}
+
+function clearAllTopics() {
+    if (confirm('⚠️ Вы уверены, что хотите удалить все темы?')) {
+        topics = [];
+        updateTopicsList();
+        alert('🗑️ Все темы удалены!');
+    }
+}
+
+function updateAdminStatus() {
+    const statusElement = document.getElementById('postingStatus');
+    statusElement.textContent = postingEnabled ? 'РАЗРЕШЕН' : 'ЗАПРЕЩЕН';
+    statusElement.style.color = postingEnabled ? '#0F0' : '#F00';
+}
+
+function updateTopicsList() {
+    const topicsList = document.getElementById('topicsList');
+    if (topics.length === 0) {
+        topicsList.innerHTML = '<p style="color: #FF0;">Нет тем для управления</p>';
+        return;
+    }
+    
+    topicsList.innerHTML = topics.map(topic => `
+        <div class="admin-topic-item" style="border: 1px solid #FF0; padding: 10px; margin: 5px 0;">
+            <strong>${topic.title}</strong> - ${topic.author}
+            <button onclick="deleteTopic(${topic.id})" style="margin-left: 10px; background: #F00; color: #FFF; border: none; padding: 5px; cursor: pointer;">УДАЛИТЬ</button>
+        </div>
+    `).join('');
+}
+
+function deleteTopic(topicId) {
+    topics = topics.filter(topic => topic.id !== topicId);
+    updateTopicsList();
+    alert('🗑️ Тема удалена!');
+}
+
+// Секретная активация админ-панели
+let adminClickCount = 0;
+document.getElementById('adminButton').addEventListener('click', function() {
+    adminClickCount++;
+    if (adminClickCount >= 5) {
+        document.getElementById('adminModal').style.display = 'block';
+        updateAdminStatus();
+        updateTopicsList();
+        adminClickCount = 0;
+    }
+});
+
+// Закрытие модальных окон при клике вне их
 window.onclick = function(event) {
-    const modal = document.getElementById('newTopicModal');
-    if (event.target == modal) {
+    const newTopicModal = document.getElementById('newTopicModal');
+    const adminModal = document.getElementById('adminModal');
+    
+    if (event.target == newTopicModal) {
         closeModal();
+    }
+    if (event.target == adminModal) {
+        closeAdminModal();
     }
 }
 </script>

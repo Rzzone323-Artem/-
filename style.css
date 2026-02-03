@@ -89,28 +89,22 @@ text-shadow: 3px 3px 6px #F00;
 
 .product {
 border: 5px groove #F00;
-background: repeating-linear-gradient(
-    45deg,
-    #000,
-    #000 10px,
-    #111 10px,
-    #111 20px
-);
+background: #000;
 margin: 20px;
 padding: 20px;
 position: relative;
 z-index: 2;
 box-shadow: 
     0 0 20px #F00,
-    inset 0 0 20px rgba(255, 0, 0, 0.3);
+    inset 0 0 10px rgba(255, 0, 0, 0.2);
 transition: all 0.3s;
 }
 
 .product:hover {
-transform: scale(1.05);
+transform: scale(1.02);
 box-shadow: 
     0 0 30px #FF0,
-    inset 0 0 30px rgba(255, 255, 0, 0.3);
+    inset 0 0 15px rgba(255, 255, 0, 0.2);
 border-color: #FF0;
 }
 
@@ -176,22 +170,20 @@ cursor: pointer;
 text-transform: uppercase;
 letter-spacing: 2px;
 text-shadow: 2px 2px 4px #000;
-animation: shake 0.1s infinite, rainbow 1s linear infinite;
+animation: rainbow 2s linear infinite;
 position: relative;
 z-index: 2;
+transition: all 0.3s ease;
 }
 
 input[type="submit"]:hover {
-animation: shake 0.05s infinite, rainbow 0.5s linear infinite;
-transform: scale(1.1);
+animation: rainbow 1s linear infinite;
+transform: scale(1.05);
+box-shadow: 0 0 20px #FF0;
 }
 
-@keyframes shake {
-0% { transform: translate(0px, 0px) rotate(0deg); }
-25% { transform: translate(2px, 2px) rotate(1deg); }
-50% { transform: translate(-2px, -2px) rotate(-1deg); }
-75% { transform: translate(2px, -2px) rotate(1deg); }
-100% { transform: translate(-2px, 2px) rotate(-1deg); }
+input[type="submit"]:active {
+transform: scale(0.95);
 }
 
 input[type="text"], input[type="password"] {
