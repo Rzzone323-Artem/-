@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>ФОРУМ СТАЛКЕРОВ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="sounds.js"></script>
 <style>
 .forum-container {
     max-width: 1000px;
@@ -470,6 +471,9 @@ function openTopic(topicTitle) {
 
 function submitTopic(event) {
     event.preventDefault();
+    
+    // Воспроизводим звук создания темы
+    playForumSound();
     
     const title = document.getElementById('topicTitle').value;
     const category = document.getElementById('topicCategory').value;

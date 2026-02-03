@@ -4,17 +4,26 @@
 <meta charset="UTF-8">
 <title>КАТАЛОГ ТОВАРОВ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="sounds.js"></script>
 </head>
 
 <body>
 
 <!-- Декоративные гифки по бокам с чередованием -->
-<div id="leftGif" style="position: fixed; top: 50%; left: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<div id="leftGif" style="position: fixed; top: 50%; left: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none;">
 <img src="img/eye.gif" style="width: 80px; filter: drop-shadow(0 0 20px #ff0066);" alt="Всевидящее око">
 </div>
-<div id="rightGif" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<div id="rightGif" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out; pointer-events: none;">
 <img src="img/skull.gif" style="width: 70px; filter: drop-shadow(0 0 20px #8a2be2);" alt="Череп">
 </div>
+
+<!-- Панель управления звуками -->
+<script src="sound-controls.html"></script>
+
+<script>
+// Звук при загрузке каталога
+setTimeout(() => playCatalogSound(), 1000);
+</script>
 
 <script>
 // Массивы гифок для левой и правой сторон
@@ -80,10 +89,10 @@ animateGifs(); // Первый запуск сразу
 </script>
 
 <!-- Декоративные гифки -->
-<img src="img/alchemy.gif" class="decorative-gif gif-top-right gif-floating">
-<img src="img/skull.gif" class="decorative-gif gif-bottom-left gif-floating">
-<img src="img/fire.gif" class="decorative-gif" style="top: 40%; right: 8%; width: 90px;">
-<img src="img/eye.gif" class="decorative-gif" style="bottom: 30%; left: 5%; width: 70px;">
+<img src="img/alchemy.gif" class="decorative-gif gif-top-right gif-floating" style="pointer-events: none;">
+<img src="img/skull.gif" class="decorative-gif gif-bottom-left gif-floating" style="pointer-events: none;">
+<img src="img/fire.gif" class="decorative-gif" style="top: 40%; right: 8%; width: 90px; pointer-events: none;">
+<img src="img/eye.gif" class="decorative-gif" style="bottom: 30%; left: 5%; width: 70px; pointer-events: none;">
 
 <div class="header">
 <img src="img/left.gif">
