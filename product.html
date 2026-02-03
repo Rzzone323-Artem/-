@@ -519,6 +519,110 @@ function loadProduct() {
     }
 }
 
+// Мистические фразы для страниц товаров
+const phrases = [
+    "ПРОСНИСЬ",
+    "ЗЕМЛЯ ПЛОСКАЯ",
+    "НЕ ВЕРЬ ГЛАЗАМ",
+    "ТРЕТИЙ ГЛАЗ ОТКРЫТ",
+    "ВЕЧНОСТЬ БЛИЗКО",
+    "СЛЕДУЙ ЗА ЗВЕЗДОЙ",
+    "ЗОНА ВЫЗЫВАЕТ",
+    "МУДРОСТЬ В ТИШИНЕ",
+    "ЭНЕРГИЯ ЧЕРЕЗ КРАЙ",
+    "ПОРОГ НЕВИДИМ",
+    "ИСТИНА ВНУТРИ",
+    "СВЕТ ВО ТЬМЕ",
+    "ВРЕМЯ ИЛЛЮЗИЯ",
+    "ЗНАНИЕ СИЛА",
+    // НОВЫЕ ФРАЗЫ:
+    "КВАНТОВЫЙ ПЕРЕХОД",
+    "СОЗНАНИЕ МЕНЯЕТСЯ",
+    "РЕАЛЬНОСТЬ ИЛЛЮЗИЯ",
+    "ВИБРАЦИИ ВСЕЛЕННОЙ",
+    "ПОРТАЛ ОТКРЫТ",
+    "ЧЕТВЕРТОЕ ИЗМЕРЕНИЕ",
+    "АКАШИЧЕСКИЕ ЗАПИСИ",
+    "ПЯТАЯ СТИХИЯ ОТКРЫТА",
+    "ЭНЕРГЕТИЧЕСКИЙ ПОТОК",
+    "КОСМИЧЕСКАЯ СВЯЗЬ",
+    "ПАРАЛЛЕЛЬНЫЙ МИР",
+    "МНОЖЕСТВЕННОСТЬ РЕАЛЬНОСТЕЙ",
+    "ИНФОРМАЦИОННОЕ ПОЛЕ",
+    "ЧАКРЫ СУДЬБЫ",
+    "ПРОШЛОЕ ВЛИЯЕТ НАСТОЯЩЕЕ",
+    "МАТРИЦА ВОЗМОЖНОСТЕЙ",
+    "РЕЗОНАНС ЧАСТОТ",
+    "ЭНЕРГЕТИЧЕСКИЙ ИМПУЛЬС",
+    "ПСИХОАКТИЧЕСКИЙ ЭФФЕКТ",
+    "НУЛЕВОЕ ПОЛЕ СОЗНАНИЯ",
+    "ТРАНСЦЕНДЕНТАЛЬНЫЙ ОПЫТ",
+    "ВИБРАЦИОННАЯ МЕДИЦИНА",
+    "КОСМИЧЕСКОЕ СОЗНАНИЕ",
+    "КВАНТОВАЯ ЗАПУТАННОСТЬ"
+];
+
+let phraseIndex = 0;
+let phraseElement = null;
+
+function showMysticPhrase() {
+    // Удаляем старую фразу если есть
+    if (phraseElement) {
+        phraseElement.remove();
+    }
+    
+    // Создаем новую фразу
+    phraseElement = document.createElement('div');
+    phraseElement.className = 'mystic-phrase';
+    phraseElement.textContent = phrases[phraseIndex];
+    
+    // Случайная позиция
+    const positions = [
+        { top: '20%', left: '10%' },
+        { top: '30%', right: '15%' },
+        { top: '50%', left: '20%' },
+        { top: '70%', right: '10%' },
+        { top: '80%', left: '30%' },
+        { top: '15%', right: '25%' },
+        { top: '60%', left: '15%' },
+        { top: '40%', right: '20%' }
+    ];
+    
+    const pos = positions[Math.floor(Math.random() * positions.length)];
+    Object.assign(phraseElement.style, pos);
+    
+    document.body.appendChild(phraseElement);
+    
+    // Показываем фразу
+    setTimeout(() => {
+        phraseElement.style.opacity = '1';
+    }, 100);
+    
+    // Скрываем через 4 секунды
+    setTimeout(() => {
+        if (phraseElement) {
+            phraseElement.style.opacity = '0';
+            setTimeout(() => {
+                if (phraseElement) {
+                    phraseElement.remove();
+                    phraseElement = null;
+                }
+            }, 2000);
+        }
+    }, 4000);
+    
+    // Следующая фраза
+    phraseIndex = (phraseIndex + 1) % phrases.length;
+}
+
+// Показываем фразы в случайные моменты - ЧАЩЕ и ЧАСТЕ!
+setInterval(() => {
+    const random = Math.random();
+    if (random < 0.7) { // 70% шанс
+        showMysticPhrase();
+    }
+}, 4000); // Каждые 4 секунды
+
 // Создание мистических частиц
 function createMysticalParticles() {
     const container = document.getElementById('mysticalEffects');

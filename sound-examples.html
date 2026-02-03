@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ПРОВЕРКА ВСЕХ ЗВУКОВ - ЧУДО-БАЗАР</title>
+<style>
+body {
+    background: #000;
+    color: #C0C0C0;
+    font-family: 'Times New Roman', serif;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sound-test {
+    background: rgba(75, 0, 130, 0.2);
+    border: 2px solid #8a2be2;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    transition: all 0.3s;
+}
+
+.sound-test:hover {
+    background: rgba(75, 0, 130, 0.3);
+    transform: translateY(-2px);
+}
+
+.sound-btn {
+    background: linear-gradient(145deg, #ff0066, #8a2be2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.sound-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+}
+
+.sound-btn:active {
+    transform: scale(0.95);
+}
+
+.category-title {
+    color: #ff0066;
+    font-size: 24px;
+    margin: 20px 0 10px 0;
+    text-shadow: 0 0 10px #ff0066;
+}
+
+.sound-info {
+    font-size: 12px;
+    color: #8a2be2;
+    margin-top: 5px;
+}
+
+h1 {
+    text-align: center;
+    color: #ff0066;
+    text-shadow: 0 0 20px #ff0066;
+    margin-bottom: 30px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎵 ПРОВЕРКА ВСЕХ ЗВУКОВ ЧУДО-БАЗАРА 🎵</h1>
+
+<div class="category-title">🏠 ГЛАВНАЯ СТРАНИЦА - КАРТОЧКИ ТОВАРОВ</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('sivorotka-svet-radiacii')">🧪 СЫВОРОТКА "СВЕТ РАДИАЦИИ"</button>
+    <div class="sound-info">Частота: 440 Гц | Гармоники: [1, 2, 3, 4] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('anomalnyj-artefakt')">🦴 АМУЛЕТ ИЗ КОГТЯ</button>
+    <div class="sound-info">Частота: 110 Гц | Гармоники: [1, 1.618, 2.618] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('energeticheskij-donut')">🍄 ПОРОШОК "РЫЖИЙ ЛЕС"</button>
+    <div class="sound-info">Частота: 880 Гц | Гармоники: [1, 3, 5, 7] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('svyatoj-vodon')">💧 ФЕРОМОНЫ "СТАЛКЕРА"</button>
+    <div class="sound-info">Частота: 349 Гц | Гармоники: [1, 2, 3, 5] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('protivogaz-stalkera')">✨ НАБОР "ЧИСТОТА ДУШИ"</button>
+    <div class="sound-info">Частота: 147 Гц | Гармоники: [1, 1.5, 2, 2.5] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playMainSound('karta-tajnyh-prohodov')">👁️ ЭЛИКСИР "ТРЕТИЙ ГЛАЗ"</button>
+    <div class="sound-info">Частота: 523 Гц | Гармоники: [1, 2.5, 4, 6] | Фильтр: Bandpass</div>
+</div>
+
+<div class="category-title">📦 КАТАЛОГ - КАТЕГОРИИ</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playCatalogSound('sivorotka-svet-radiacii')">🛡️ ЗАЩИТА И БРОНЯ</button>
+    <div class="sound-info">Частота: 523 Гц | Гармоники: [1, 2, 4, 6] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playCatalogSound('karta-tajnyh-prohodov')">🗺️ КАРТЫ И НАВИГАЦИЯ</button>
+    <div class="sound-info">Частота: 392 Гц | Гармоники: [1, 2, 4, 5] | Фильтр: Bandpass</div>
+</div>
+
+<div class="category-title">🔮 АМУЛЕТЫ И ТАЛИСМАНЫ</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('kost-ploti')">💀 КОСТЬ ПЛОТИ</button>
+    <div class="sound-info">Частота: 196 Гц | Гармоники: [1, 2, 3] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('glaz-slepogo-psa')">👁️ ГЛАЗ СЛЕПОГО ПСА</button>
+    <div class="sound-info">Частота: 330 Гц | Гармоники: [1, 3, 5] | Фильтр: Bandpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('shnurok-udachi')">🧵 ШНУРОК УДАЧИ</button>
+    <div class="sound-info">Частота: 587 Гц | Гармоники: [1, 2, 4] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('amulet-kogtya')">🦷 АМУЛЕТ ИЗ КОГТЯ</button>
+    <div class="sound-info">Частота: 220 Гц | Гармоники: [1, 1.5, 2.5] | Фильтр: Bandpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('talisman-udacha')">🎯 ТАЛИСМАН "УДАЧА СТАЛКЕРА"</button>
+    <div class="sound-info">Частота: 440 Гц | Гармоники: [1, 2, 3, 5] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('obereg-zashita')">🛡️ ОБЕРЕГ "ЗАЩИТА ОТ СГЛАЗА"</button>
+    <div class="sound-info">Частота: 293 Гц | Гармоники: [1, 2, 4] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('kulon-energiya')">⚡ КУЛОН "ЭНЕРГИЯ ЗОНЫ"</button>
+    <div class="sound-info">Частота: 784 Гц | Гармоники: [1, 3, 6] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playAmuletSound('runa-put')">🧭 РУНА "ПУТЬ К ВЫХОДУ"</button>
+    <div class="sound-info">Частота: 349 Гц | Гармоники: [1, 2.5, 4] | Фильтр: Bandpass</div>
+</div>
+
+<div class="category-title">🌟 ГОРОСКОПЫ</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playHoroscopeSound()">✨ ВЫБОР ГОРОСКОПА</button>
+    <div class="sound-info">Частота: 440 Гц | Гармоники: [1, 1.5, 2, 0.5] | Фильтр: Bandpass</div>
+</div>
+
+<div class="category-title">🔮 СТРАНИЦЫ ТОВАРОВ (10 секунд)</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('svyatoj-vodon')">💧 СВЯТОЙ ВОДОН</button>
+    <div class="sound-info">Частота: 349 Гц | Гармоники: [1, 2, 3, 5] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('sivorotka-svet-radiacii')">⚡ СЫВОРОТКА "СВЕТ РАДИАЦИИ"</button>
+    <div class="sound-info">Частота: 523 Гц | Гармоники: [1, 2, 4, 6] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('protivogaz-stalkera')">🎭 ПРОТИВОГАЗ СТАЛКЕРА</button>
+    <div class="sound-info">Частота: 293 Гц | Гармоники: [1, 2, 3] | Фильтр: Lowpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('anomalnyj-artefakt')">💎 АНОМАЛЬНЫЙ АРТЕФАКТ</button>
+    <div class="sound-info">Частота: 110 Гц | Гармоники: [1, 1.618, 2.618] | Фильтр: Bandpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('energeticheskij-donut')">🍩 ЭНЕРГЕТИЧЕСКИЙ ДОНАТ</button>
+    <div class="sound-info">Частота: 659 Гц | Гармоники: [1, 3, 5, 7] | Фильтр: Highpass</div>
+</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playProductSound('karta-tajnyh-prohodov')">🗺️ КАРТА ТАЙНЫХ ПРОХОДОВ</button>
+    <div class="sound-info">Частота: 392 Гц | Гармоники: [1, 2, 4, 5] | Фильтр: Bandpass</div>
+</div>
+
+<div class="category-title">🎵 СЕКРЕТНАЯ МУЗЫКА (1 минута)</div>
+
+<div class="sound-test">
+    <button class="sound-btn" onclick="playSecretMusic()">🌌 ТАИНСТВЕННАЯ МУЗЫКА</button>
+    <div class="sound-info">Длительность: 60 секунд | Стерео | Реверберация</div>
+</div>
+
+<script>
+// Звуковые профили для главной страницы
+const mainSoundProfiles = {
+    'sivorotka-svet-radiacii': { freq: 440, modulation: 0.5, harmonics: [1, 2, 3, 4], filter: 'lowpass' },
+    'anomalnyj-artefakt': { freq: 110, modulation: 0.8, harmonics: [1, 1.618, 2.618], filter: 'lowpass' },
+    'energeticheskij-donut': { freq: 880, modulation: 0.3, harmonics: [1, 3, 5, 7], filter: 'highpass' },
+    'svyatoj-vodon': { freq: 349, modulation: 0.4, harmonics: [1, 2, 3, 5], filter: 'lowpass' },
+    'protivogaz-stalkera': { freq: 147, modulation: 0.7, harmonics: [1, 1.5, 2, 2.5], filter: 'lowpass' },
+    'karta-tajnyh-prohodov': { freq: 523, modulation: 0.6, harmonics: [1, 2.5, 4, 6], filter: 'bandpass' }
+};
+
+// Звуковые профили для каталога
+const catalogSoundProfiles = {
+    'sivorotka-svet-radiacii': { freq: 523, modulation: 0.4, harmonics: [1, 2, 4, 6], filter: 'highpass' },
+    'protivogaz-stalkera': { freq: 293, modulation: 0.5, harmonics: [1, 2, 3], filter: 'lowpass' },
+    'anomalnyj-artefakt': { freq: 220, modulation: 0.6, harmonics: [1, 1.5, 2], filter: 'bandpass' },
+    'energeticheskij-donut': { freq: 880, modulation: 0.2, harmonics: [1, 3, 5], filter: 'highpass' },
+    'svyatoj-vodon': { freq: 349, modulation: 0.3, harmonics: [1, 2, 3, 5], filter: 'lowpass' },
+    'karta-tajnyh-prohodov': { freq: 392, modulation: 0.4, harmonics: [1, 2, 4, 5], filter: 'bandpass' }
+};
+
+// Звуковые профили для амулетов
+const amuletSoundProfiles = {
+    'kost-ploti': { freq: 196, modulation: 0.7, harmonics: [1, 2, 3], filter: 'lowpass' },
+    'glaz-slepogo-psa': { freq: 330, modulation: 0.5, harmonics: [1, 3, 5], filter: 'bandpass' },
+    'shnurok-udachi': { freq: 587, modulation: 0.3, harmonics: [1, 2, 4], filter: 'highpass' },
+    'amulet-kogtya': { freq: 220, modulation: 0.6, harmonics: [1, 1.5, 2.5], filter: 'bandpass' },
+    'talisman-udacha': { freq: 440, modulation: 0.4, harmonics: [1, 2, 3, 5], filter: 'lowpass' },
+    'obereg-zashita': { freq: 293, modulation: 0.8, harmonics: [1, 2, 4], filter: 'lowpass' },
+    'kulon-energiya': { freq: 784, modulation: 0.2, harmonics: [1, 3, 6], filter: 'highpass' },
+    'runa-put': { freq: 349, modulation: 0.5, harmonics: [1, 2.5, 4], filter: 'bandpass' }
+};
+
+// Звуковые профили для товаров
+const productSoundProfiles = {
+    'svyatoj-vodon': { freq: 349, harmonics: [1, 2, 3, 5], modulation: 0.3, filter: 'lowpass' },
+    'sivorotka-svet-radiacii': { freq: 523, harmonics: [1, 2, 4, 6], modulation: 0.4, filter: 'highpass' },
+    'protivogaz-stalkera': { freq: 293, harmonics: [1, 2, 3], modulation: 0.5, filter: 'lowpass' },
+    'anomalnyj-artefakt': { freq: 110, harmonics: [1, 1.618, 2.618], modulation: 0.8, filter: 'bandpass' },
+    'energeticheskij-donut': { freq: 659, harmonics: [1, 3, 5, 7], modulation: 0.2, filter: 'highpass' },
+    'karta-tajnyh-prohodov': { freq: 392, harmonics: [1, 2, 4, 5], modulation: 0.4, filter: 'bandpass' }
+};
+
+// Функция создания звука
+function createSound(profile, duration = 2) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * 2);
+        
+        let sample = 0;
+        profile.harmonics.forEach((harmonic, index) => {
+            const harmonicFreq = profile.freq * harmonic;
+            const harmonicVolume = 1 / (index + 1);
+            sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
+        });
+        
+        const modulation = Math.sin(2 * Math.PI * profile.modulation * t);
+        data[i] = envelope * sample * (0.6 + 0.4 * modulation);
+    }
+    
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = profile.filter;
+    filter.frequency.value = profile.freq * 2;
+    filter.Q.value = 3;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1;
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
+}
+
+// Функции для разных типов звуков
+function playMainSound(id) {
+    createSound(mainSoundProfiles[id]);
+}
+
+function playCatalogSound(id) {
+    createSound(catalogSoundProfiles[id]);
+}
+
+function playAmuletSound(id) {
+    createSound(amuletSoundProfiles[id]);
+}
+
+function playProductSound(id) {
+    createSound(productSoundProfiles[id], 10); // 10 секунд для товаров
+}
+
+function playHoroscopeSound() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 1;
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * 3);
+        
+        const baseFreq = 440;
+        const sample = envelope * (
+            Math.sin(2 * Math.PI * baseFreq * t) * 0.3 +
+            Math.sin(2 * Math.PI * baseFreq * 1.5 * t) * 0.2 +
+            Math.sin(2 * Math.PI * baseFreq * 2 * t) * 0.1 +
+            Math.sin(2 * Math.PI * baseFreq * 0.5 * t) * 0.4
+        ) * (0.5 + 0.5 * Math.sin(2 * Math.PI * 8 * t));
+        
+        data[i] = sample;
+    }
+    
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 2;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1;
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
+}
+
+function playSecretMusic() {
+    if (window.secretMusicSource) {
+        window.secretMusicSource.stop();
+    }
+    
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 60;
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(2, numSamples, sampleRate);
+    const leftChannel = buffer.getChannelData(0);
+    const rightChannel = buffer.getChannelData(1);
+    
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        
+        const bassFreq = 55 + Math.sin(t * 0.1) * 10;
+        const bass = Math.sin(2 * Math.PI * bassFreq * t) * 0.3;
+        
+        const padFreq = 110 * (1 + Math.sin(t * 0.05) * 0.1);
+        const pad = Math.sin(2 * Math.PI * padFreq * t) * 0.2;
+        const pad2 = Math.sin(2 * Math.PI * padFreq * 1.5 * t) * 0.1;
+        
+        const noise = (Math.random() - 0.5) * 0.05 * Math.exp(-t * 0.1);
+        
+        const melodyNotes = [196, 220, 246, 261, 293, 329, 369, 392];
+        const melodyIndex = Math.floor(t * 0.5) % melodyNotes.length;
+        const melodyFreq = melodyNotes[melodyIndex];
+        const melody = Math.sin(2 * Math.PI * melodyFreq * t) * 0.1 * Math.exp(-((t % 2) - 1) * 2);
+        
+        const echo = Math.sin(2 * Math.PI * 440 * (t - 0.5)) * 0.05 * (t > 0.5 ? 1 : 0);
+        const pulse = Math.sin(2 * Math.PI * 0.8 * t) * 0.1;
+        
+        let leftSignal = bass + pad + pad2 + noise + melody + echo + pulse;
+        let rightSignal = bass + pad + pad2 + noise + melody * 0.8 + echo * 1.2 + pulse;
+        
+        const stereoPan = Math.sin(t * 0.2) * 0.3;
+        leftSignal *= (1 - stereoPan);
+        rightSignal *= (1 + stereoPan);
+        
+        leftChannel[i] = Math.tanh(leftSignal) * 0.8;
+        rightChannel[i] = Math.tanh(rightSignal) * 0.8;
+    }
+    
+    window.secretMusicSource = audioContext.createBufferSource();
+    window.secretMusicSource.buffer = buffer;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1;
+    
+    const convolver = audioContext.createConvolver();
+    const reverbLength = audioContext.sampleRate * 3;
+    const reverbBuffer = audioContext.createBuffer(2, reverbLength, audioContext.sampleRate);
+    
+    for (let channel = 0; channel < 2; channel++) {
+        const channelData = reverbBuffer.getChannelData(channel);
+        for (let i = 0; i < reverbLength; i++) {
+            channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, 2);
+        }
+    }
+    
+    convolver.buffer = reverbBuffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 2;
+    
+    window.secretMusicSource.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(convolver);
+    convolver.connect(audioContext.destination);
+    gainNode.connect(audioContext.destination);
+    
+    window.secretMusicSource.start(0);
+    
+    setTimeout(() => {
+        if (window.secretMusicSource) {
+            window.secretMusicSource.stop();
+            window.secretMusicSource = null;
+        }
+    }, 60000);
+}
+</script>
+
+</body>
+</html>

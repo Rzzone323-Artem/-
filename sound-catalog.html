@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>КАТАЛОГ ЗВУКОВ - ЧУДО-БАЗАР</title>
+<style>
+body {
+    background: #000;
+    color: #C0C0C0;
+    font-family: 'Times New Roman', serif;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    color: #ff0066;
+    text-shadow: 0 0 20px #ff0066;
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+.category-section {
+    background: rgba(75, 0, 130, 0.2);
+    border: 2px solid #8a2be2;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.category-title {
+    color: #ff0066;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #ff0066;
+    border-bottom: 2px solid #8a2be2;
+    padding-bottom: 10px;
+}
+
+.sound-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #4B0082;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.sound-item:hover {
+    background: rgba(75, 0, 130, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+}
+
+.sound-info {
+    flex: 1;
+}
+
+.sound-name {
+    font-weight: bold;
+    color: #C0C0C0;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.sound-params {
+    font-size: 12px;
+    color: #8a2be2;
+    margin-bottom: 3px;
+}
+
+.sound-description {
+    font-size: 14px;
+    color: #ff0066;
+    font-style: italic;
+}
+
+.sound-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.play-btn {
+    background: linear-gradient(145deg, #ff0066, #8a2be2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.delete-btn:hover {
+    background: #ff6666;
+    transform: scale(1.05);
+}
+
+.keep-btn {
+    background: #44ff44;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.keep-btn:hover {
+    background: #66ff66;
+    transform: scale(1.05);
+}
+
+.status-indicator {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-kept {
+    background: #44ff44;
+    color: #000;
+}
+
+.status-deleted {
+    background: #ff4444;
+    color: #fff;
+}
+
+.status-default {
+    background: #888888;
+    color: #fff;
+}
+
+.new-sounds-section {
+    background: rgba(255, 0, 102, 0.1);
+    border: 2px solid #ff0066;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.summary {
+    background: rgba(0, 255, 0, 0.1);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.summary h3 {
+    color: #00ff00;
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff0066;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #C0C0C0;
+}
+</style>
+</head>
+<body>
+
+<h1 class="header">🎵 КАТАЛОГ ЗВУКОВ ЧУДО-БАЗАРА 🎵</h1>
+
+<div class="summary">
+    <h3>📊 СТАТИСТИКА ЗВУКОВ</h3>
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number" id="totalSounds">0</div>
+            <div class="stat-label">ВСЕГО ЗВУКОВ</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="keptSounds">0</div>
+            <div class="stat-label">ОСТАВЛЕНО</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="deletedSounds">0</div>
+            <div class="stat-label">УДАЛЕНО</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="newSounds">0</div>
+            <div class="stat-label">НОВЫХ</div>
+        </div>
+    </div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">🏠 ГЛАВНАЯ СТРАНИЦА - КАРТОЧКИ ТОВАРОВ</div>
+    <div id="mainPageSounds"></div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">📦 КАТАЛОГ - КАТЕГОРИИ</div>
+    <div id="catalogSounds"></div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">🔮 АМУЛЕТЫ И ТАЛИСМАНЫ</div>
+    <div id="amuletSounds"></div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">🌟 ГОРОСКОПЫ</div>
+    <div id="horoscopeSounds"></div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">🔮 СТРАНИЦЫ ТОВАРОВ (10 секунд)</div>
+    <div id="productSounds"></div>
+</div>
+
+<div class="category-section">
+    <div class="category-title">🌌 СЕКРЕТНАЯ МУЗЫКА (1 минута)</div>
+    <div id="secretSounds"></div>
+</div>
+
+<div class="new-sounds-section">
+    <div class="category-title">🎵 НОВЫЕ ЗВУКИ ДЛЯ ВЫБОРА</div>
+    <div id="newSounds"></div>
+</div>
+
+<script>
+// Звуковые профили для всех категорий
+const soundCatalog = {
+    mainPage: [
+        { id: 'sivorotka-svet-radiacii', name: '🧪 СЫВОРОТКА "СВЕТ РАДИАЦИИ"', freq: 440, harmonics: [1, 2, 3, 4], filter: 'lowpass', description: 'Яркий, чистый' },
+        { id: 'anomalnyj-artefakt', name: '🦴 АМУЛЕТ ИЗ КОГТЯ', freq: 110, harmonics: [1, 1.618, 2.618], filter: 'lowpass', description: 'Глубокий, таинственный' },
+        { id: 'energeticheskij-donut', name: '🍄 ПОРОШОК "РЫЖИЙ ЛЕС"', freq: 880, harmonics: [1, 3, 5, 7], filter: 'highpass', description: 'Высокий, веселый' },
+        { id: 'svyatoj-vodon', name: '💧 ФЕРОМОНЫ "СТАЛКЕРА"', freq: 349, harmonics: [1, 2, 3, 5], filter: 'lowpass', description: 'Священный, гармоничный' },
+        { id: 'protivogaz-stalkera', name: '✨ НАБОР "ЧИСТОТА ДУШИ"', freq: 147, harmonics: [1, 1.5, 2, 2.5], filter: 'lowpass', description: 'Низкий, защитный' },
+        { id: 'karta-tajnyh-prohodov', name: '👁️ ЭЛИКСИР "ТРЕТИЙ ГЛАЗ"', freq: 523, harmonics: [1, 2.5, 4, 6], filter: 'bandpass', description: 'Мистический, проникающий' }
+    ],
+    
+    catalog: [
+        { id: 'sivorotka-svet-radiacii', name: '🛡️ ЗАЩИТА И БРОНЯ', freq: 523, harmonics: [1, 2, 4, 6], filter: 'highpass', description: 'Яркий, чистый (улучшенный)' },
+        { id: 'karta-tajnyh-prohodov', name: '🗺️ КАРТЫ И НАВИГАЦИЯ', freq: 392, harmonics: [1, 2, 4, 5], filter: 'bandpass', description: 'Исследовательский, таинственный (улучшенный)' },
+        { id: 'protivogaz-stalkera', name: '🎭 ПРОТИВОГАЗ СТАЛКЕРА', freq: 293, harmonics: [1, 2, 3], filter: 'lowpass', description: 'Защитный, надежный (улучшенный)' },
+        { id: 'anomalnyj-artefakt', name: '💎 АНОМАЛЬНЫЙ АРТЕФАКТ', freq: 220, harmonics: [1, 1.5, 2], filter: 'bandpass', description: 'Древний, загадочный' },
+        { id: 'energeticheskij-donut', name: '🍩 ЭНЕРГЕТИЧЕСКИЙ ДОНАТ', freq: 880, harmonics: [1, 3, 5], filter: 'highpass', description: 'Энергичный, вибрирующий' },
+        { id: 'svyatoj-vodon', name: '💧 СВЯТОЙ ВОДОН', freq: 349, harmonics: [1, 2, 3, 5], filter: 'lowpass', description: 'Священный, гармоничный' }
+    ],
+    
+    amulets: [
+        { id: 'kost-ploti', name: '💀 КОСТЬ ПЛОТИ', freq: 196, harmonics: [1, 2, 3], filter: 'lowpass', description: 'Мощный, земной' },
+        { id: 'glaz-slepogo-psa', name: '👁️ ГЛАЗ СЛЕПОГО ПСА', freq: 330, harmonics: [1, 3, 5], filter: 'bandpass', description: 'Мистический, проникающий' },
+        { id: 'shnurok-udachi', name: '🧵 ШНУРОК УДАЧИ', freq: 587, harmonics: [1, 2, 4], filter: 'highpass', description: 'Легкий, воздушный' },
+        { id: 'amulet-kogtya', name: '🦷 АМУЛЕТ ИЗ КОГТЯ', freq: 220, harmonics: [1, 1.5, 2.5], filter: 'bandpass', description: 'Защитный, острый' },
+        { id: 'talisman-udacha', name: '🎯 ТАЛИСМАН "УДАЧА СТАЛКЕРА"', freq: 440, harmonics: [1, 2, 3, 5], filter: 'lowpass', description: 'Удачливый, гармоничный' },
+        { id: 'obereg-zashita', name: '🛡️ ОБЕРЕГ "ЗАЩИТА ОТ СГЛАЗА"', freq: 293, harmonics: [1, 2, 4], filter: 'lowpass', description: 'Оберегающий, спокойный' },
+        { id: 'kulon-energiya', name: '⚡ КУЛОН "ЭНЕРГИЯ ЗОНЫ"', freq: 784, harmonics: [1, 3, 6], filter: 'highpass', description: 'Энергетический, вибрирующий' },
+        { id: 'runa-put', name: '🧭 РУНА "ПУТЬ К ВЫХОДУ"', freq: 349, harmonics: [1, 2.5, 4], filter: 'bandpass', description: 'Ведущий, направляющий' }
+    ],
+    
+    horoscope: [
+        { id: 'horoscope-select', name: '✨ ВЫБОР ГОРОСКОПА', freq: 440, harmonics: [1, 1.5, 2, 0.5], filter: 'bandpass', description: 'Мистический, предсказующий' }
+    ],
+    
+    products: [
+        { id: 'svyatoj-vodon', name: '💧 СВЯТОЙ ВОДОН', freq: 349, harmonics: [1, 2, 3, 5], filter: 'lowpass', description: 'Священный, гармоничный' },
+        { id: 'sivorotka-svet-radiacii', name: '⚡ СЫВОРОТКА "СВЕТ РАДИАЦИИ"', freq: 523, harmonics: [1, 2, 4, 6], filter: 'highpass', description: 'Яркий, чистый' },
+        { id: 'protivogaz-stalkera', name: '🎭 ПРОТИВОГАЗ СТАЛКЕРА', freq: 293, harmonics: [1, 2, 3], filter: 'lowpass', description: 'Защитный, надежный' },
+        { id: 'anomalnyj-artefakt', name: '💎 АНОМАЛЬНЫЙ АРТЕФАКТ', freq: 110, harmonics: [1, 1.618, 2.618], filter: 'bandpass', description: 'Древний, загадочный' },
+        { id: 'energeticheskij-donut', name: '🍩 ЭНЕРГЕТИЧЕСКИЙ ДОНАТ', freq: 659, harmonics: [1, 3, 5, 7], filter: 'highpass', description: 'Энергичный, веселый' },
+        { id: 'karta-tajnyh-prohodov', name: '🗺️ КАРТА ТАЙНЫХ ПРОХОДОВ', freq: 392, harmonics: [1, 2, 4, 5], filter: 'bandpass', description: 'Исследовательский, таинственный' }
+    ],
+    
+    secret: [
+        { id: 'secret-music', name: '🌌 ТАИНСТВЕННАЯ МУЗЫКА', freq: 55, harmonics: [1, 2, 3], filter: 'lowpass', description: 'Глубокая, медитативная, 60 секунд' }
+    ],
+    
+    // НОВЫЕ ЗВУКИ ДЛЯ ВЫБОРА
+    newSounds: [
+        { id: 'new-01', name: '🔮 КВАНТОВЫЙ РЕЗОНАНС', freq: 256, harmonics: [1, 2, 4, 8], filter: 'bandpass', description: 'Технологичный, футуристичный' },
+        { id: 'new-02', name: '🌟 КОСМИЧЕСКАЯ ГАРМОНИЯ', freq: 528, harmonics: [1, 3, 5, 7, 9], filter: 'highpass', description: 'Эфирный, космический' },
+        { id: 'new-03', name: '⚡ ЭНЕРГЕТИЧЕСКИЙ ИМПУЛЬС', freq: 741, harmonics: [1, 1.5, 2.5, 3.5], filter: 'bandpass', description: 'Мощный, импульсивный' },
+        { id: 'new-04', name: '🌙 ЛУННАЯ МЕЛОДИЯ', freq: 210, harmonics: [1, 2, 3, 5, 8], filter: 'lowpass', description: 'Спокойный, гипнотический' },
+        { id: 'new-05', name: '🔥 ОГНЕННЫЙ ЭЛЕМЕНТ', freq: 617, harmonics: [1, 3, 6, 9], filter: 'highpass', description: 'Пылающий, энергичный' },
+        { id: 'new-06', name: '💧 ВОДНАЯ СФЕРА', freq: 392, harmonics: [1, 2, 4, 6, 8], filter: 'lowpass', description: 'Текучий, очищающий' },
+        { id: 'new-07', name: '🌍 ЗЕМНОЙ РИТМ', freq: 174, harmonics: [1, 2, 3, 4], filter: 'lowpass', description: 'Заземляющий, стабильный' },
+        { id: 'new-08', name: '💨 ВОЗДУШНЫЙ ПОТОК', freq: 880, harmonics: [1, 2, 3, 5], filter: 'highpass', description: 'Легкий, парящий' },
+        { id: 'new-09', name: '🌈 РАДУЖНАЯ ЧАСТОТА', freq: 432, harmonics: [1, 2, 3, 4, 5, 6], filter: 'bandpass', description: 'Гармоничный, целебный' },
+        { id: 'new-10', name: '⚛️ АТОМНЫЙ ВИБРАТ', freq: 512, harmonics: [1, 2, 4, 8, 16], filter: 'highpass', description: 'Микроскопический, точный' },
+        { id: 'new-11', name: '🔮 МАГИЧЕСКИЙ КРИСТАЛЛ', freq: 369, harmonics: [1, 3, 7, 9], filter: 'bandpass', description: 'Мистический, кристаллический' },
+        { id: 'new-12', name: '🌌 ГАЛАКТИЧЕСКИЙ ПУЛЬС', freq: 128, harmonics: [1, 2, 3, 5, 7], filter: 'lowpass', description: 'Космический, пульсирующий' },
+        { id: 'new-13', name: '⚡ ЭЛЕКТРИЧЕСКИЙ РАЗРЯД', freq: 1000, harmonics: [1, 2, 3], filter: 'highpass', description: 'Резкий, электрический' },
+        { id: 'new-14', name: '🌸 ЦВЕТОЧНАЯ ЭНЕРГИЯ', freq: 587, harmonics: [1, 2, 3, 5, 8], filter: 'bandpass', description: 'Цветущий, нежный' },
+        { id: 'new-15', name: '🦋 МЕТАМОРФОЗА', freq: 444, harmonics: [1, 2, 4, 8], filter: 'bandpass', description: 'Трансформирующийся, изменчивый' },
+        { id: 'new-16', name: '🌟 ЗВЕЗДНАЯ ПЫЛЬ', freq: 777, harmonics: [1, 3, 7, 9], filter: 'highpass', description: 'Мерцающий, звездный' },
+        { id: 'new-17', name: '🔥 ФОТОННЫЙ ЛУЧ', freq: 666, harmonics: [1, 2, 3, 6], filter: 'highpass', description: 'Световой, фотонный' },
+        { id: 'new-18', name: '💎 ДИАМАНТИЧЕСКИЙ РЕЗОНАНС', freq: 963, harmonics: [1, 3, 9], filter: 'highpass', description: 'Блестящий, драгоценный' },
+        { id: 'new-19', name: '🌊 ОКЕАНСКИЙ ШУМ', freq: 147, harmonics: [1, 2, 3, 4, 5], filter: 'lowpass', description: 'Глубокий, океанический' },
+        { id: 'new-20', name: '⚡ ПЛАЗМЕННОЕ ПОЛЕ', freq: 831, harmonics: [1, 2, 4, 8], filter: 'bandpass', description: 'Плазменный, энергетический' },
+        { id: 'new-21', name: '🌙 ЛУННЫЙ СВЕТ', freq: 415, harmonics: [1, 2, 3, 5], filter: 'lowpass', description: 'Лунный, серебристый' },
+        { id: 'new-22', name: '🔥 СОЛНЕЧНАЯ ЭНЕРГИЯ', freq: 523, harmonics: [1, 3, 5, 7], filter: 'highpass', description: 'Солнечный, золотой' },
+        { id: 'new-23', name: '🌌 НЕЙТРИННЫЙ ПОТОК', freq: 233, harmonics: [1, 2, 3, 7], filter: 'bandpass', description: 'Нейтральный, проникающий' },
+        { id: 'new-24', name: '⚛️ КВАНТОВЫЙ СКАЧОК', freq: 740, harmonics: [1, 2, 4, 8], filter: 'highpass', description: 'Квантовый, скачкообразный' },
+        { id: 'new-25', name: '🌈 СПЕКТРАЛЬНЫЙ АНАЛИЗ', freq: 555, harmonics: [1, 2, 3, 4, 5, 6, 7], filter: 'bandpass', description: 'Спектральный, радужный' }
+    ]
+};
+
+// Статус звуков
+const soundStatus = {};
+
+// Функция создания звука
+function createSound(profile, duration = 2) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * 2);
+        
+        let sample = 0;
+        profile.harmonics.forEach((harmonic, index) => {
+            const harmonicFreq = profile.freq * harmonic;
+            const harmonicVolume = 1 / (index + 1);
+            sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
+        });
+        
+        const modulation = Math.sin(2 * Math.PI * 0.5 * t);
+        data[i] = envelope * sample * (0.6 + 0.4 * modulation);
+    }
+    
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = profile.filter;
+    filter.frequency.value = profile.freq * 2;
+    filter.Q.value = 3;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1;
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
+}
+
+// Функция создания элемента звука
+function createSoundElement(sound, container) {
+    const div = document.createElement('div');
+    div.className = 'sound-item';
+    div.id = `sound-${sound.id}`;
+    
+    const status = soundStatus[sound.id] || 'default';
+    
+    div.innerHTML = `
+        <div class="sound-info">
+            <div class="sound-name">${sound.name}</div>
+            <div class="sound-params">Частота: ${sound.freq} Гц | Гармоники: [${sound.harmonics.join(', ')}] | Фильтр: ${sound.filter}</div>
+            <div class="sound-description">${sound.description}</div>
+        </div>
+        <div class="sound-controls">
+            <button class="play-btn" onclick="playSound('${sound.id}')">▶️ Прослушать</button>
+            <button class="keep-btn" onclick="keepSound('${sound.id}')">✅ Оставить</button>
+            <button class="delete-btn" onclick="deleteSound('${sound.id}')">❌ Удалить</button>
+            <div class="status-indicator status-${status}" id="status-${sound.id}">${getStatusText(status)}</div>
+        </div>
+    `;
+    
+    container.appendChild(div);
+}
+
+// Функции управления статусом
+function playSound(soundId) {
+    const sound = findSoundById(soundId);
+    if (sound) {
+        const duration = soundId === 'secret-music' ? 60 : (soundId.startsWith('new-') ? 3 : 2);
+        createSound(sound, duration);
+    }
+}
+
+function keepSound(soundId) {
+    soundStatus[soundId] = 'kept';
+    updateStatus(soundId);
+    updateStats();
+}
+
+function deleteSound(soundId) {
+    soundStatus[soundId] = 'deleted';
+    updateStatus(soundId);
+    updateStats();
+}
+
+function updateStatus(soundId) {
+    const statusElement = document.getElementById(`status-${soundId}`);
+    const status = soundStatus[soundId];
+    if (statusElement) {
+        statusElement.className = `status-indicator status-${status}`;
+        statusElement.textContent = getStatusText(status);
+    }
+}
+
+function getStatusText(status) {
+    switch(status) {
+        case 'kept': return 'ОСТАВЛЕНО';
+        case 'deleted': return 'УДАЛЕНО';
+        default: return 'ПО УМОЛЧАНИЮ';
+    }
+}
+
+function findSoundById(soundId) {
+    for (const category in soundCatalog) {
+        const sound = soundCatalog[category].find(s => s.id === soundId);
+        if (sound) return sound;
+    }
+    return null;
+}
+
+function updateStats() {
+    const total = Object.keys(soundCatalog).reduce((sum, category) => sum + soundCatalog[category].length, 0);
+    const kept = Object.values(soundStatus).filter(s => s === 'kept').length;
+    const deleted = Object.values(soundStatus).filter(s => s === 'deleted').length;
+    const newCount = soundCatalog.newSounds.length;
+    
+    document.getElementById('totalSounds').textContent = total;
+    document.getElementById('keptSounds').textContent = kept;
+    document.getElementById('deletedSounds').textContent = deleted;
+    document.getElementById('newSounds').textContent = newCount;
+}
+
+// Инициализация каталога
+function initCatalog() {
+    // Отображаем все категории
+    renderCategory('mainPageSounds', soundCatalog.mainPage);
+    renderCategory('catalogSounds', soundCatalog.catalog);
+    renderCategory('amuletSounds', soundCatalog.amulets);
+    renderCategory('horoscopeSounds', soundCatalog.horoscope);
+    renderCategory('productSounds', soundCatalog.products);
+    renderCategory('secretSounds', soundCatalog.secret);
+    renderCategory('newSounds', soundCatalog.newSounds);
+    
+    updateStats();
+}
+
+function renderCategory(containerId, sounds) {
+    const container = document.getElementById(containerId);
+    sounds.forEach(sound => createSoundElement(sound, container));
+}
+
+// Запуск при загрузке
+window.addEventListener('load', initCatalog);
+</script>
+
+</body>
+</html>
