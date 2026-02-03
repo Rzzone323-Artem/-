@@ -8,11 +8,211 @@
 
 <body>
 
-<!-- Декоративные гифки -->
-<img src="img/wise.gif" class="decorative-gif gif-top-right gif-floating">
-<img src="img/ring.gif" class="decorative-gif gif-bottom-left gif-floating">
-<img src="img/alchemy.gif" class="decorative-gif" style="top: 40%; right: 8%; width: 90px;">
-<img src="img/eye.gif" class="decorative-gif" style="bottom: 30%; left: 5%; width: 70px;">
+<!-- Декоративные гифки по бокам с чередованием -->
+<div id="leftGif" style="position: fixed; top: 50%; left: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<img src="img/eye.gif" style="width: 80px; filter: drop-shadow(0 0 20px #ff0066);" alt="Всевидящее око">
+</div>
+<div id="rightGif" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<img src="img/skull.gif" style="width: 70px; filter: drop-shadow(0 0 20px #8a2be2);" alt="Череп">
+</div>
+
+<script>
+// Массивы гифок для левой и правой сторон
+const leftGifs = [
+    { src: "img/eye.gif", width: "80px", filter: "drop-shadow(0 0 20px #ff0066)" },
+    { src: "img/skull.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/wise.gif", width: "75px", filter: "drop-shadow(0 0 20px #00ff00)" },
+    { src: "img/ring.gif", width: "65px", filter: "drop-shadow(0 0 20px #ffff00)" },
+    { src: "img/alchemy.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/fire.gif", width: "60px", filter: "drop-shadow(0 0 20px #ff4500)" },
+    { src: "img/left.gif", width: "65px", filter: "drop-shadow(0 0 20px #00ffff)" },
+    { src: "img/right.gif", width: "65px", filter: "drop-shadow(0 0 20px #ff00ff)" }
+];
+
+const rightGifs = [
+    { src: "img/skull.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/eye.gif", width: "80px", filter: "drop-shadow(0 0 20px #ff0066)" },
+    { src: "img/ring.gif", width: "65px", filter: "drop-shadow(0 0 20px #ffff00)" },
+    { src: "img/wise.gif", width: "75px", filter: "drop-shadow(0 0 20px #00ff00)" },
+    { src: "img/fire.gif", width: "60px", filter: "drop-shadow(0 0 20px #ff4500)" },
+    { src: "img/alchemy.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/right.gif", width: "65px", filter: "drop-shadow(0 0 20px #ff00ff)" },
+    { src: "img/left.gif", width: "65px", filter: "drop-shadow(0 0 20px #00ffff)" }
+];
+
+let leftIndex = 0;
+let rightIndex = 0;
+let leftVisible = false;
+let rightVisible = false;
+
+function animateGifs() {
+    const leftGif = document.getElementById('leftGif');
+    const rightGif = document.getElementById('rightGif');
+    
+    // Левая гифка
+    if (!leftVisible) {
+        leftGif.innerHTML = `<img src="${leftGifs[leftIndex].src}" style="width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};" alt="Декоративная гифка">`;
+        leftGif.style.opacity = '1';
+        leftVisible = true;
+    } else {
+        leftGif.style.opacity = '0';
+        leftVisible = false;
+        leftIndex = (leftIndex + 1) % leftGifs.length;
+    }
+    
+    // Правая гифка (с небольшой задержкой)
+    setTimeout(() => {
+        if (!rightVisible) {
+            rightGif.innerHTML = `<img src="${rightGifs[rightIndex].src}" style="width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};" alt="Декоративная гифка">`;
+            rightGif.style.opacity = '1';
+            rightVisible = true;
+        } else {
+            rightGif.style.opacity = '0';
+            rightVisible = false;
+            rightIndex = (rightIndex + 1) % rightGifs.length;
+        }
+    }, 500);
+}
+
+// Запуск анимации
+setInterval(animateGifs, 3000);
+animateGifs(); // Первый запуск сразу
+
+// Загадочные фразы
+const phrases = [
+    "ПРОСНИСЬ",
+    "ЗЕМЛЯ ПЛОСКАЯ",
+    "НЕ ВЕРЬ ГЛАЗАМ",
+    "ТРЕТИЙ ГЛАЗ ОТКРЫТ",
+    "ВЕЧНОСТЬ БЛИЗКО",
+    "СЛЕДУЙ ЗА ЗВЕЗДОЙ",
+    "ЗОНА ВЫЗЫВАЕТ",
+    "МУДРОСТЬ В ТИШИНЕ",
+    "ЭНЕРГИЯ ЧЕРЕЗ КРАЙ",
+    "ПОРОГ НЕВИДИМ",
+    "ИСТИНА ВНУТРИ",
+    "СВЕТ ВО ТЬМЕ",
+    "ВРЕМЯ ИЛЛЮЗИЯ",
+    "ЗНАНИЕ СИЛА"
+];
+
+let phraseIndex = 0;
+let phraseElement = null;
+
+function showMysticPhrase() {
+    // Удаляем старую фразу если есть
+    if (phraseElement) {
+        phraseElement.remove();
+    }
+    
+    // Создаем новую фразу
+    phraseElement = document.createElement('div');
+    phraseElement.className = 'mystic-phrase';
+    phraseElement.textContent = phrases[phraseIndex];
+    
+    // Случайная позиция
+    const positions = [
+        { top: '20%', left: '10%' },
+        { top: '30%', right: '15%' },
+        { top: '50%', left: '20%' },
+        { top: '70%', right: '10%' },
+        { top: '80%', left: '30%' },
+        { top: '15%', right: '25%' },
+        { top: '60%', left: '15%' },
+        { top: '40%', right: '20%' }
+    ];
+    
+    const pos = positions[Math.floor(Math.random() * positions.length)];
+    Object.assign(phraseElement.style, pos);
+    
+    document.body.appendChild(phraseElement);
+    
+    // Показываем фразу
+    setTimeout(() => {
+        phraseElement.style.opacity = '1';
+    }, 100);
+    
+    // Скрываем через 4 секунды
+    setTimeout(() => {
+        if (phraseElement) {
+            phraseElement.style.opacity = '0';
+            setTimeout(() => {
+                if (phraseElement) {
+                    phraseElement.remove();
+                    phraseElement = null;
+                }
+            }, 2000);
+        }
+    }, 4000);
+    
+    // Следующая фраза
+    phraseIndex = (phraseIndex + 1) % phrases.length;
+}
+
+// Показываем фразы в случайные моменты, чередуя с крипто-символами
+setInterval(() => {
+    const random = Math.random();
+    
+    if (random < 0.33) {
+        // 33% шанс - показываем фразу (заменяем крипто-символы)
+        showMysticPhrase();
+    } else if (random < 0.66) {
+        // 33% шанс - показываем фразу на обычном фоне
+        showMysticPhraseOnNormalBackground();
+    }
+    // 34% - ничего не делаем (показываем крипто-символы или пустой фон)
+}, 8000);
+
+function showMysticPhraseOnNormalBackground() {
+    // Удаляем старую фразу если есть
+    if (phraseElement) {
+        phraseElement.remove();
+    }
+    
+    // Создаем новую фразу
+    phraseElement = document.createElement('div');
+    phraseElement.className = 'mystic-phrase';
+    phraseElement.textContent = phrases[phraseIndex];
+    
+    // Случайная позиция
+    const positions = [
+        { top: '20%', left: '10%' },
+        { top: '30%', right: '15%' },
+        { top: '50%', left: '20%' },
+        { top: '70%', right: '10%' },
+        { top: '80%', left: '30%' },
+        { top: '15%', right: '25%' },
+        { top: '60%', left: '15%' },
+        { top: '40%', right: '20%' }
+    ];
+    
+    const pos = positions[Math.floor(Math.random() * positions.length)];
+    Object.assign(phraseElement.style, pos);
+    
+    document.body.appendChild(phraseElement);
+    
+    // Показываем фразу
+    setTimeout(() => {
+        phraseElement.style.opacity = '1';
+    }, 100);
+    
+    // Скрываем через 4 секунды
+    setTimeout(() => {
+        if (phraseElement) {
+            phraseElement.style.opacity = '0';
+            setTimeout(() => {
+                if (phraseElement) {
+                    phraseElement.remove();
+                    phraseElement = null;
+                }
+            }, 2000);
+        }
+    }, 4000);
+    
+    // Следующая фраза
+    phraseIndex = (phraseIndex + 1) % phrases.length;
+}
+</script>
 
 <div class="header">
 <img src="img/left.gif">
@@ -40,16 +240,8 @@
 ⚠️ ВНИМАНИЕ! ВСЕ ТОВАРЫ СЕРТИФИЦИРОВАНЫ В ЛАБОРАТОРИЯХ ЗОНЫ! ⚠️ НЕ ЯВЛЯЮТСЯ ЛЕКАРСТВАМИ! ⚠️ ПРИМЕНЯТЬ С ОСТОРОЖНОСТЬЮ! ⚠️
 </marquee>
 
-<div class="mystic-banner">
-<div class="mystic-text">
-🔮 ТАЙНЫЕ ЗНАНИЯ ЗОНЫ ОТКРЫВАЮТСЯ ТОЛЬКО ИЗБРАННЫМ 🔮
-</div>
-<div class="eye-container">
-<img src="img/eye.gif" class="eye-gif" alt="Всевидящее око">
-</div>
-<div class="mystic-text">
-✨ ПОСВЯЩЁННЫЕ ПОНИМАЮТ ИСТИННУЮ СИЛУ АРТЕФАКТОВ ✨
-</div>
+<div style="text-align: center; margin: 20px 0;">
+<img src="img/eye.gif" style="width: 120px; filter: drop-shadow(0 0 25px #ff0066); animation: pulse 2s infinite;" alt="Всевидящее око">
 </div>
 
 <div class="products-grid">
@@ -198,7 +390,6 @@
 
 <a href="catalog.html">→ СМОТРЕТЬ ВЕСЬ КАТАЛОГ ←</a>
 
-<script src="admin.js"></script>
 <script>
 function submitOrder(event) {
     event.preventDefault();

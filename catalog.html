@@ -8,6 +8,77 @@
 
 <body>
 
+<!-- Декоративные гифки по бокам с чередованием -->
+<div id="leftGif" style="position: fixed; top: 50%; left: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<img src="img/eye.gif" style="width: 80px; filter: drop-shadow(0 0 20px #ff0066);" alt="Всевидящее око">
+</div>
+<div id="rightGif" style="position: fixed; top: 50%; right: 20px; transform: translateY(-50%); z-index: 1; opacity: 0; transition: opacity 1s ease-in-out;">
+<img src="img/skull.gif" style="width: 70px; filter: drop-shadow(0 0 20px #8a2be2);" alt="Череп">
+</div>
+
+<script>
+// Массивы гифок для левой и правой сторон
+const leftGifs = [
+    { src: "img/eye.gif", width: "80px", filter: "drop-shadow(0 0 20px #ff0066)" },
+    { src: "img/skull.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/wise.gif", width: "75px", filter: "drop-shadow(0 0 20px #00ff00)" },
+    { src: "img/ring.gif", width: "65px", filter: "drop-shadow(0 0 20px #ffff00)" },
+    { src: "img/alchemy.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/fire.gif", width: "60px", filter: "drop-shadow(0 0 20px #ff4500)" },
+    { src: "img/left.gif", width: "65px", filter: "drop-shadow(0 0 20px #00ffff)" },
+    { src: "img/right.gif", width: "65px", filter: "drop-shadow(0 0 20px #ff00ff)" }
+];
+
+const rightGifs = [
+    { src: "img/skull.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/eye.gif", width: "80px", filter: "drop-shadow(0 0 20px #ff0066)" },
+    { src: "img/ring.gif", width: "65px", filter: "drop-shadow(0 0 20px #ffff00)" },
+    { src: "img/wise.gif", width: "75px", filter: "drop-shadow(0 0 20px #00ff00)" },
+    { src: "img/fire.gif", width: "60px", filter: "drop-shadow(0 0 20px #ff4500)" },
+    { src: "img/alchemy.gif", width: "70px", filter: "drop-shadow(0 0 20px #8a2be2)" },
+    { src: "img/right.gif", width: "65px", filter: "drop-shadow(0 0 20px #ff00ff)" },
+    { src: "img/left.gif", width: "65px", filter: "drop-shadow(0 0 20px #00ffff)" }
+];
+
+let leftIndex = 0;
+let rightIndex = 0;
+let leftVisible = false;
+let rightVisible = false;
+
+function animateGifs() {
+    const leftGif = document.getElementById('leftGif');
+    const rightGif = document.getElementById('rightGif');
+    
+    // Левая гифка
+    if (!leftVisible) {
+        leftGif.innerHTML = `<img src="${leftGifs[leftIndex].src}" style="width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};" alt="Декоративная гифка">`;
+        leftGif.style.opacity = '1';
+        leftVisible = true;
+    } else {
+        leftGif.style.opacity = '0';
+        leftVisible = false;
+        leftIndex = (leftIndex + 1) % leftGifs.length;
+    }
+    
+    // Правая гифка (с небольшой задержкой)
+    setTimeout(() => {
+        if (!rightVisible) {
+            rightGif.innerHTML = `<img src="${rightGifs[rightIndex].src}" style="width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};" alt="Декоративная гифка">`;
+            rightGif.style.opacity = '1';
+            rightVisible = true;
+        } else {
+            rightGif.style.opacity = '0';
+            rightVisible = false;
+            rightIndex = (rightIndex + 1) % rightGifs.length;
+        }
+    }, 500);
+}
+
+// Запуск анимации
+setInterval(animateGifs, 3000);
+animateGifs(); // Первый запуск сразу
+</script>
+
 <!-- Декоративные гифки -->
 <img src="img/alchemy.gif" class="decorative-gif gif-top-right gif-floating">
 <img src="img/skull.gif" class="decorative-gif gif-bottom-left gif-floating">
@@ -35,6 +106,18 @@
 <div class="products-grid">
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>🧪 ЭЛИКСИРЫ И НАПИТКИ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Сыворотка "Свет радиации" - 2500 RU</li>
@@ -46,6 +129,18 @@
 </div>
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>🍄 ПОРОШКИ И ЗЕЛЬЯ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Порошок "Рыжий лес" - 900 RU</li>
@@ -57,6 +152,18 @@
 </div>
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>🔮 АМУЛЕТЫ И ТАЛИСМАНЫ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Амулет из когтя невидимого мутанта - 1800 RU</li>
@@ -68,6 +175,18 @@
 </div>
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>🔥 ФРАГМЕНТ И АРТЕФАКТЫ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Осколок "Испорченный камень" - 1400 RU</li>
@@ -79,6 +198,18 @@
 </div>
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>🧪 НЕЧТО В БАНКАХ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Банка "Светлячки в сиропе" - 1100 RU</li>
@@ -90,6 +221,18 @@
 </div>
 
 <div class="product">
+<div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; top: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; left: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
+<div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
+<img src="img/fire.gif" style="width: 40px;">
+</div>
 <h2>📦 НАБОРЫ И КОМПЛЕКТЫ</h2>
 <ul style="text-align: left; color: #0F0;">
 <li>Набор "Чистота души" - 3200 RU</li>
