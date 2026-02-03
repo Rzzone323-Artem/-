@@ -154,6 +154,68 @@ function showMysticPhrase() {
     phraseIndex = (phraseIndex + 1) % phrases.length;
 }
 
+// Функция перехода на страницу товара с уникальными звуками
+function goToProductFromMain(productId) {
+    // Создаем уникальный звук для каждого товара
+    if (window.soundManager) {
+        const audioContext = window.soundManager.audioContext;
+        const duration = 1.5; // 1.5 секунды
+        const sampleRate = 44100;
+        const numSamples = duration * sampleRate;
+        
+        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        // Уникальные параметры звука для каждого товара
+        const soundProfiles = {
+            'sivorotka-svet-radiacii': { freq: 440, modulation: 0.3, harmonics: [1, 2, 3] }, // Ля - яркий
+            'anomalnyj-artefakt': { freq: 220, modulation: 0.5, harmonics: [1, 1.5, 2] }, // Ля октавой ниже - таинственный
+            'energeticheskij-donut': { freq: 880, modulation: 0.2, harmonics: [1, 3, 5] }, // Ля октавой выше - веселый
+            'svyatoj-vodon': { freq: 330, modulation: 0.4, harmonics: [1, 2, 4] }, // Ми - священный
+            'protivogaz-stalkera': { freq: 196, modulation: 0.6, harmonics: [1, 1.2, 1.5] }, // Соль - защитный
+            'karta-tajnyh-prohodov': { freq: 523, modulation: 0.3, harmonics: [1, 2.5, 4] } // До - загадочный
+        };
+        
+        const profile = soundProfiles[productId] || { freq: 440, modulation: 0.3, harmonics: [1, 2, 3] };
+        
+        // Генерируем звук
+        for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            const envelope = Math.exp(-t * 2); // Быстрое затухание
+            
+            let sample = 0;
+            profile.harmonics.forEach((harmonic, index) => {
+                const harmonicFreq = profile.freq * harmonic;
+                const harmonicVolume = 1 / (index + 1); // Уменьшаем громкость гармоник
+                sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
+            });
+            
+            // Добавляем модуляцию
+            const modulation = Math.sin(2 * Math.PI * profile.modulation * t);
+            data[i] = envelope * sample * (0.5 + 0.5 * modulation);
+        }
+        
+        // Воспроизводим звук
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        
+        // Добавляем фильтр для уникальности
+        const filter = audioContext.createBiquadFilter();
+        filter.type = productId === 'energeticheskij-donut' ? 'highpass' : 'lowpass';
+        filter.frequency.value = profile.freq * 2;
+        
+        source.connect(filter);
+        filter.connect(audioContext.destination);
+        source.start();
+        
+        console.log(`🎵 Проигрывается уникальный звук для товара: ${productId}`);
+    }
+    
+    // Переходим на страницу товара
+    window.location.href = `product.html?id=${productId}`;
+}
+</script>
+
 // Показываем фразы в случайные моменты, чередуя с крипто-символами
 setInterval(() => {
     const random = Math.random();
@@ -210,17 +272,6 @@ function showMysticPhraseOnNormalBackground() {
                     phraseElement.remove();
                     phraseElement = null;
                 }
-            }, 2000);
-        }
-    }, 4000);
-    
-    // Следующая фраза
-    phraseIndex = (phraseIndex + 1) % phrases.length;
-}
-</script>
-
-<div class="header">
-<img src="img/left.gif">
 <span class="title">ЧУДО-БАЗАР "СВЯТОЙ АЛТАРЬ"</span>
 <img src="img/right.gif">
 </div>
@@ -251,76 +302,84 @@ function showMysticPhraseOnNormalBackground() {
 
 <div class="products-grid">
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('sivorotka-svet-radiacii')" style="cursor: pointer; position: relative;">
 <h2>🧪 СЫВОРОТКА "СВЕТ РАДИАЦИИ"</h2>
 Цена: 2500 RU  
 <br>
 Описание: Восстанавливает чакры, стабилизирует потецнию, усиливает карму.  
 <br>
 Побочные эффекты: металлический привкус, желание купить ещё.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('anomalnyj-artefakt')" style="cursor: pointer; position: relative;">
 <h2>🦷 АМУЛЕТ ИЗ КОГТЯ НЕВИДИМОГО МУТАНТА</h2>
 Цена: 1800 RU  
 <br>
 Описание: Защита от сглаза, налоговой и бывших.  
 <br>
 Побочные эффекты: амулет может пропасть.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('energeticheskij-donut')" style="cursor: pointer; position: relative;">
 <h2>🍄 ПОРОШОК "РЫЖИЙ ЛЕС"</h2>
 Цена: 900 RU  
 <br>
 Описание: Улучшает сон, открывает третий глаз, пахнет плесенью.  
 <br>
 Побочные эффекты: неизвестны.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('svyatoj-vodon')" style="cursor: pointer; position: relative;">
 <h2>💧 ФЕРОМОНЫ ИЗ ЯИЧЕК "СТАЛКЕРА"</h2>
 Цена: 1800 RU  
 <br>
 Описание: Привлекает синих мухар, усиливает харизму.  
 <br>
 Побочные эффекты: синие мухи следуют за вами.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('protivogaz-stalkera')" style="cursor: pointer; position: relative;">
 <h2>✨ НАБОР "ЧИСТОТА ДУШИ"</h2>
 Цена: 3200 RU  
 <br>
 Описание: Включает: щётку для ауры, соль для энергетики, свечу из воска мутанта.  
 <br>
 Побочные эффекты: временная прозрачность.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('karta-tajnyh-prohodov')" style="cursor: pointer; position: relative;">
 <h2>👁️ ЭЛИКСИР "ТРЕТИЙ ГЛАЗ"</h2>
 Цена: 1500 RU  
 <br>
 Описание: Позволяет видеть параллельные миры и читать мысли кошек.  
 <br>
 Побочные эффекты: кошки начинают вас игнорировать.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('anomalnyj-artefakt')" style="cursor: pointer; position: relative;">
 <h2>🌡️ МАЗЬ "АНТИ-РАДИАЦИЯ"</h2>
 Цена: 750 RU  
 <br>
 Описание: Защищает от радиации, ультрафиолета и плохих мыслей.  
 <br>
 Побочные эффекты: лёгкое свечение в темноте.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProductFromMain('energeticheskij-donut')" style="cursor: pointer; position: relative;">
 <h2>🎯 ТАЛИСМАН "УДАЧА СТАЛКЕРА"</h2>
 Цена: 2100 RU  
 <br>
 Описание: Увеличивает шанс найти артефакты на 73%.  
 <br>
 Побочные эффекты: тянет к аномалиям.
+<div style="color: #ff0066; font-size: 0.8em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
 </div>
