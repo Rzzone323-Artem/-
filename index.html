@@ -5,6 +5,7 @@
 <title>ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
 <script src="sounds.js"></script>
+<script src="email-setup.js"></script>
 </head>
 
 <body>
@@ -396,21 +397,64 @@ function submitOrder(event) {
         date: new Date().toLocaleString('ru-RU')
     };
     
-    // Сохраняем заказ в localStorage
-    const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
-    orders.push(order);
-    localStorage.setItem('siteOrders', JSON.stringify(orders));
+    // Показываем индикатор загрузки
+    const submitBtn = document.querySelector('input[type="submit"]');
+    const originalValue = submitBtn.value;
+    submitBtn.value = '⏳ ОТПРАВКА...';
+    submitBtn.disabled = true;
     
-    // Показываем пользователю сообщение об успехе
-    alert('✨ ВАШ ЗАКАЗ ОТПРАВЛЕН В НООСФЕРУ! ✨\n\nМы свяжемся с вами в ближайшее время через эфирные каналы связи.');
-    
-    // Очищаем форму
-    document.getElementById('name').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('message').value = '';
-    
-    // Редирект на главную (чтобы пользователь не видел куда на самом деле ушел заказ)
-    window.location.href = 'index.html';
+    // Отправляем на email через EmailJS
+    if (window.emailManager) {
+        window.emailManager.sendOrder(order).then(success => {
+            // Также сохраняем копию в localStorage как бэкап
+            const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+            orders.push(order);
+            localStorage.setItem('siteOrders', JSON.stringify(orders));
+            
+            if (success) {
+                alert('✨ ВАШ ЗАКАЗ ОТПРАВЛЕН В НООСФЕРУ! ✨\n\nМы свяжемся с вами в ближайшее время через эфирные каналы связи.\n\n� Заказ отправлен на email администратору!');
+                
+                // Воспроизводим звук успеха
+                if (window.soundManager) {
+                    window.soundManager.playSuccess();
+                }
+            } else {
+                alert('⚠️ ЗАКАЗ СОХРАНЕН ЛОКАЛЬНО\n\nПроизошла ошибка отправки email, но ваш заказ сохранен.\n\nМы свяжемся с вами при первой возможности.');
+                
+                // Воспроизводим звук ошибки
+                if (window.soundManager) {
+                    window.soundManager.playError();
+                }
+            }
+            
+            // Очищаем форму
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('product').value = '';
+            document.getElementById('message').value = '';
+            
+            // Восстанавливаем кнопку
+            submitBtn.value = originalValue;
+            submitBtn.disabled = false;
+        });
+    } else {
+        // Если EmailJS не загрузился, сохраняем только локально
+        const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+        orders.push(order);
+        localStorage.setItem('siteOrders', JSON.stringify(orders));
+        
+        alert('⚠️ ЗАКАЗ СОХРАНЕН ЛОКАЛЬНО\n\nEmail сервис не доступен, но ваш заказ сохранен.\n\nМы свяжемся с вами при первой возможности.');
+        
+        // Очищаем форму
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('product').value = '';
+        document.getElementById('message').value = '';
+        
+        // Восстанавливаем кнопку
+        submitBtn.value = originalValue;
+        submitBtn.disabled = false;
+    }
 }
 </script>
 

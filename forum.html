@@ -5,6 +5,7 @@
 <title>ФОРУМ СТАЛКЕРОВ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
 <script src="sounds.js"></script>
+<script src="email-setup.js"></script>
 <style>
 .forum-container {
     max-width: 1000px;
@@ -481,7 +482,6 @@ function submitTopic(event) {
     const author = document.getElementById('stalkerName').value;
     
     const newTopic = {
-        id: Date.now(),
         title: title,
         category: category,
         content: content,
@@ -489,20 +489,67 @@ function submitTopic(event) {
         date: new Date().toLocaleString()
     };
     
-    // Если админ онлайн - отправляем на модерацию
-    if (window.isAdmin && window.addPendingMessage) {
-        window.addPendingMessage(newTopic);
-        alert(`✨ Тема "${title}" отправлена на модерацию!`);
-    } else {
-        topics.push(newTopic);
-        alert(`✨ Тема "${title}" успешно создана!\n\nКатегория: ${category}\nАвтор: ${author}\n\nСообщение будет опубликовано после проверки модератором.`);
-    }
+    // Показываем индикатор загрузки
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = '⏳ ОТПРАВКА...';
+    submitBtn.disabled = true;
     
-    // Очищаем форму и закрываем модальное окно
-    document.getElementById('topicTitle').value = '';
-    document.getElementById('topicContent').value = '';
-    document.getElementById('stalkerName').value = '';
-    closeModal();
+    // Отправляем на email через EmailJS (простая версия)
+    if (window.emailManager) {
+        window.emailManager.sendForumMessage(newTopic).then(success => {
+            // Также сохраняем копию в localStorage как бэкап
+            const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+            messages.push(newTopic);
+            localStorage.setItem('pendingMessages', JSON.stringify(messages));
+            
+            if (success) {
+                alert('✨ ТЕМА ОТПРАВЛЕНА НА МОДЕРАЦИЮ! ✨\n\nАдминистратор проверит вашу тему в ближайшее время.\n\n� Уведомление отправлено на email администратору!');
+                
+                // Воспроизводим звук успеха
+                if (window.soundManager) {
+                    window.soundManager.playSuccess();
+                }
+            } else {
+                alert('⚠️ ТЕМА СОХРАНЕНА ЛОКАЛЬНО\n\nПроизошла ошибка отправки email, но ваша тема сохранена.\n\nАдминистратор увидит ее при следующем входе.');
+                
+                // Воспроизводим звук ошибки
+                if (window.soundManager) {
+                    window.soundManager.playError();
+                }
+            }
+            
+            // Очищаем форму
+            document.getElementById('topicTitle').value = '';
+            document.getElementById('topicCategory').value = 'general';
+            document.getElementById('topicContent').value = '';
+            document.getElementById('stalkerName').value = '';
+            
+            // Закрываем модальное окно
+            document.getElementById('topicModal').style.display = 'none';
+            
+            // Восстанавливаем кнопку
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    } else {
+        // Если EmailJS не загрузился, сохраняем только локально
+        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        messages.push(newTopic);
+        localStorage.setItem('pendingMessages', JSON.stringify(messages));
+        
+        alert('⚠️ ТЕМА СОХРАНЕНА ЛОКАЛЬНО\n\nEmail сервис не доступен, но ваша тема сохранена.\n\nАдминистратор увидит ее при следующем входе.');
+        
+        // Очищаем форму и закрываем модальное окно
+        document.getElementById('topicTitle').value = '';
+        document.getElementById('topicContent').value = '';
+        document.getElementById('stalkerName').value = '';
+        document.getElementById('topicModal').style.display = 'none';
+        
+        // Восстанавливаем кнопку
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
 }
 
 // Админ-функции

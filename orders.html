@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>🔐 ЗАКАЗЫ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="simple-setup.js"></script>
 <style>
 body {
     background: #000;
@@ -117,52 +118,88 @@ body {
 </div>
 
 <script>
-// Загрузка заказов из localStorage
-function loadOrders() {
-    const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+// Загрузка заказов из Google Sheets (простая версия)
+async function loadOrders() {
     const ordersList = document.getElementById('ordersList');
+    ordersList.innerHTML = '<p style="color: #FF0;">⏳ Загрузка заказов...</p>';
     
-    if (orders.length === 0) {
-        ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
-        return;
+    try {
+        const orders = await window.simpleSheets.getOrders();
+        
+        if (orders.length > 0) {
+            ordersList.innerHTML = orders.map((order, index) => `
+                <div class="order-item">
+                    <div class="order-time">📅 ${order[0]}</div>
+                    <div class="order-field"><strong>👤 Имя:</strong> ${order[1]}</div>
+                    <div class="order-field"><strong>📧 Email:</strong> ${order[2]}</div>
+                    <div class="order-field"><strong>📦 Товар:</strong> ${order[3]}</div>
+                    <div class="order-message"><strong>💬 Сообщение:</strong> ${order[4]}</div>
+                </div>
+            `).join('');
+        } else {
+            ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки заказов:', error);
+        // Загружаем из localStorage как бэкап
+        const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+        if (orders.length > 0) {
+            ordersList.innerHTML = orders.map((order, index) => `
+                <div class="order-item">
+                    <button class="delete-btn" onclick="deleteOrder(${index})">❌</button>
+                    <div class="order-time">📅 ${order.date}</div>
+                    <div class="order-field"><strong>👤 Имя:</strong> ${order.name}</div>
+                    <div class="order-field"><strong>📧 Email:</strong> ${order.email}</div>
+                    <div class="order-field"><strong>📦 Товар:</strong> ${order.product}</div>
+                    <div class="order-message"><strong>💬 Сообщение:</strong> ${order.message}</div>
+                </div>
+            `).join('');
+        } else {
+            ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
+        }
     }
-    
-    ordersList.innerHTML = orders.map((order, index) => `
-        <div class="order-item">
-            <button class="delete-btn" onclick="deleteOrder(${index})">❌</button>
-            <div class="order-time">📅 ${order.date}</div>
-            <div class="order-field"><strong>👤 Имя:</strong> ${order.name}</div>
-            <div class="order-field"><strong>📧 Email:</strong> ${order.email}</div>
-            <div class="order-field"><strong>📦 Товар:</strong> ${order.product}</div>
-            <div class="order-message"><strong>💬 Сообщение:</strong> ${order.message}</div>
-        </div>
-    `).join('');
 }
 
-// Загрузка сообщений на модерацию
-function loadMessages() {
-    const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+// Загрузка сообщений на модерацию (простая версия)
+async function loadMessages() {
     const messagesList = document.getElementById('messagesList');
+    messagesList.innerHTML = '<p style="color: #FF0;">⏳ Загрузка сообщений...</p>';
     
-    if (messages.length === 0) {
-        messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
-        return;
+    try {
+        const messages = await window.simpleSheets.getMessages();
+        
+        if (messages.length > 0) {
+            messagesList.innerHTML = messages.map((message, index) => `
+                <div class="message-item">
+                    <div class="message-time">📅 ${message[0]}</div>
+                    <div class="message-field"><strong>👤 Автор:</strong> ${message[1]}</div>
+                    <div class="message-field"><strong>📝 Заголовок:</strong> ${message[2]}</div>
+                    <div class="message-field"><strong>📂 Категория:</strong> ${message[3]}</div>
+                    <div class="message-content"><strong>💬 Текст:</strong> ${message[4]}</div>
+                </div>
+            `).join('');
+        } else {
+            messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки сообщений:', error);
+        // Загружаем из localStorage как бэкап
+        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        if (messages.length > 0) {
+            messagesList.innerHTML = messages.map((message, index) => `
+                <div class="message-item">
+                    <button class="approve-btn" onclick="approveMessage(${index})">✅</button>
+                    <button class="delete-btn" onclick="deleteMessage(${index})">❌</button>
+                    <div class="message-time">📅 ${message.date}</div>
+                    <div class="message-field"><strong>👤 Автор:</strong> ${message.author}</div>
+                    <div class="message-field"><strong>📝 Заголовок:</strong> ${message.title}</div>
+                    <div class="message-content"><strong>💬 Текст:</strong> ${message.content}</div>
+                </div>
+            `).join('');
+        } else {
+            messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
+        }
     }
-    
-    messagesList.innerHTML = messages.map((message, index) => `
-        <div class="order-item" style="border-color: #ff0066; background: rgba(255, 0, 102, 0.05);">
-            <button class="delete-btn" onclick="deleteMessage(${index})">❌</button>
-            <div class="order-time">📅 ${message.date}</div>
-            <div class="order-field"><strong>👤 Автор:</strong> ${message.author}</div>
-            <div class="order-field"><strong>📝 Тема:</strong> ${message.title}</div>
-            <div class="order-field"><strong>📂 Категория:</strong> ${message.category}</div>
-            <div class="order-message"><strong>💬 Сообщение:</strong> ${message.content}</div>
-            <div style="margin-top: 10px;">
-                <button class="clear-all-btn" style="padding: 5px 10px; font-size: 12px; background: #0A0;" onclick="approveMessage(${index})">✅ ОДОБРИТЬ</button>
-                <button class="clear-all-btn" style="padding: 5px 10px; font-size: 12px; background: #A00;" onclick="rejectMessage(${index})">❌ ОТКЛОНИТЬ</button>
-            </div>
-        </div>
-    `).join('');
 }
 
 // Удаление заказа
@@ -184,6 +221,18 @@ function deleteMessage(index) {
         loadMessages();
     }
 }
+
+// Автоматическая загрузка при открытии страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadOrders();
+    loadMessages();
+    
+    // Обновляем данные каждые 30 секунд
+    setInterval(() => {
+        loadOrders();
+        loadMessages();
+    }, 30000);
+});
 
 // Очистка всех заказов
 function clearAllOrders() {
