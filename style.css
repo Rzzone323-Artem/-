@@ -1,0 +1,94 @@
+body {
+background: black;
+background-image: url("stars.gif");
+color: yellow;
+font-family: "Comic Sans MS";
+text-align: center;
+}
+
+.header {
+font-size: 48px;
+background: rgba(0,0,0,0.4);
+color: lime;
+padding: 20px;
+border: 4px solid yellow;
+}
+
+.subtitle {
+font-size: 18px;
+margin: 10px;
+}
+
+.menu {
+background: blue;
+padding: 10px;
+}
+
+.menu a {
+color: white;
+text-decoration: none;
+margin: 10px;
+font-weight: bold;
+}
+
+.product {
+border: 3px solid red;
+background: Black;
+margin: 20px;
+padding: 15px;
+}
+
+.warning {
+color: red;
+font-size: 14px;
+margin-top: 30px;
+}
+
+.blink {
+animation: blink 1s infinite;
+}
+
+@keyframes blink {
+0% { opacity: 1; }
+50% { opacity: 0; }
+100% { opacity: 1; }
+}
+body {
+background-attachment: fixed;
+}
+.header img {
+width: 100px;
+vertical-align: middle;
+}
+
+.title {
+padding: 0 20px;
+display: inline-block;
+}
+input[type="submit"] {
+background: linear-gradient(#3a005f, #1a002f);
+color: yellow;
+font-size: 20px;
+border: 4px ridge purple;
+padding: 12px;
+cursor: crosshair;
+}
+
+input[type="submit"] {
+animation: shake 0.3s infinite;
+}
+
+@keyframes shake {
+0% { transform: translate(0px); }
+25% { transform: translate(2px); }
+50% { transform: translate(-2px); }
+75% { transform: translate(2px); }
+100% { transform: translate(0px); }
+}
+h2 img {
+width: 32px;
+vertical-align: middle;
+margin-right: 10px;
+}
+
+
