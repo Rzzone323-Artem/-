@@ -2,8 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ФОРУМ СТАЛКЕРОВ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="audio-utils.js"></script>
 <script src="sounds.js"></script>
 <script src="email-setup.js"></script>
 <style>
@@ -582,16 +584,33 @@ function updateAdminStatus() {
 function updateTopicsList() {
     const topicsList = document.getElementById('topicsList');
     if (topics.length === 0) {
-        topicsList.innerHTML = '<p style="color: #FF0;">Нет тем для управления</p>';
+        // Безопасное создание контента
+        topicsList.innerHTML = '';
+        const noTopicsPara = safeCreateElement('p');
+        noTopicsPara.textContent = 'Нет тем для управления';
+        noTopicsPara.style.color = '#FF0';
+        topicsList.appendChild(noTopicsPara);
         return;
     }
     
-    topicsList.innerHTML = topics.map(topic => `
-        <div class="admin-topic-item" style="border: 1px solid #FF0; padding: 10px; margin: 5px 0;">
-            <strong>${topic.title}</strong> - ${topic.author}
-            <button onclick="deleteTopic(${topic.id})" style="margin-left: 10px; background: #F00; color: #FFF; border: none; padding: 5px; cursor: pointer;">УДАЛИТЬ</button>
-        </div>
-    `).join('');
+    // Безопасное создание контента
+    topicsList.innerHTML = '';
+    topics.forEach(topic => {
+        const topicDiv = safeCreateElement('div');
+        topicDiv.style.cssText = 'border: 1px solid #FF0; padding: 10px; margin: 5px 0;';
+        
+        const topicTitle = safeCreateElement('strong');
+        topicTitle.textContent = `${topic.title} - ${topic.author}`;
+        topicDiv.appendChild(topicTitle);
+        
+        const deleteBtn = safeCreateElement('button');
+        deleteBtn.textContent = 'УДАЛИТЬ';
+        deleteBtn.style.cssText = 'margin-left: 10px; background: #F00; color: #FFF; border: none; padding: 5px; cursor: pointer;';
+        deleteBtn.onclick = () => deleteTopic(topic.id);
+        topicDiv.appendChild(deleteBtn);
+        
+        topicsList.appendChild(topicDiv);
+    });
 }
 
 function deleteTopic(topicId) {

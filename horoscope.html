@@ -2,8 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ГОРОСКОП ЗОНЫ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="audio-utils.js"></script>
+<script src="sounds.js"></script>
 <style>
 .horoscope-container {
     max-width: 800px;
@@ -281,17 +284,33 @@ function generateHoroscope(zodiac) {
     const prediction = data.predictions[Math.floor(Math.random() * data.predictions.length)];
     
     document.getElementById('zodiacTitle').textContent = `ГОРОСКОП ДЛЯ ${zodiac.toUpperCase()}`;
-    document.getElementById('predictionText').innerHTML = `
-        <p><strong>Прогноз дня:</strong> ${prediction}</p>
-        <p><strong>Общее состояние:</strong> Энергетика Зоны стабильна, интуиция обострена на 73%.</p>
-        <p><strong>Совет дня:</strong> ${data.danger}</p>
-    `;
     
-    const luckyHtml = data.lucky.map(item => 
-        `<div class="lucky-item">🔮 Счастливый предмет: ${item}</div>`
-    ).join('');
+    // Безопасное создание контента
+    const predictionContainer = document.getElementById('predictionText');
+    predictionContainer.innerHTML = ''; // Очищаем
     
-    document.getElementById('luckyItems').innerHTML = luckyHtml;
+    const predictionPara = safeCreateElement('p');
+    predictionPara.innerHTML = `<strong>Прогноз дня:</strong> ${prediction}`;
+    predictionContainer.appendChild(predictionPara);
+    
+    const statePara = safeCreateElement('p');
+    statePara.innerHTML = '<strong>Общее состояние:</strong> Энергетика Зоны стабильна, интуиция обострена на 73%.';
+    predictionContainer.appendChild(statePara);
+    
+    const advicePara = safeCreateElement('p');
+    advicePara.innerHTML = `<strong>Совет дня:</strong> ${data.danger}`;
+    predictionContainer.appendChild(advicePara);
+    
+    const luckyContainer = document.getElementById('luckyItems');
+    luckyContainer.innerHTML = ''; // Очищаем
+    
+    data.lucky.forEach(item => {
+        const luckyDiv = safeCreateElement('div');
+        luckyDiv.className = 'lucky-item';
+        luckyDiv.textContent = `🔮 Счастливый предмет: ${item}`;
+        luckyContainer.appendChild(luckyDiv);
+    });
+    
     document.getElementById('horoscopeResult').classList.add('show');
 }
 
@@ -370,78 +389,90 @@ function showMysticPhrase() {
     document.body.appendChild(phraseElement);
     
     // Показываем фразу
-    setTimeout(() => {
+    const showTimer = window.audioManager?.addTimer(setTimeout(() => {
         phraseElement.style.opacity = '1';
-    }, 100);
+    }, 100));
     
     // Скрываем через 4 секунды
-    setTimeout(() => {
+    const hideTimer = window.audioManager?.addTimer(setTimeout(() => {
         if (phraseElement) {
             phraseElement.style.opacity = '0';
-            setTimeout(() => {
+            const removeTimer = window.audioManager?.addTimer(setTimeout(() => {
                 if (phraseElement) {
                     phraseElement.remove();
                     phraseElement = null;
                 }
-            }, 2000);
+            }, 2000));
         }
-    }, 4000);
+    }, 4000));
     
     // Следующая фраза
     phraseIndex = (phraseIndex + 1) % phrases.length;
 }
 
 // Показываем фразы в случайные моменты - ЧАЩЕ и ЧАСТЕ!
-setInterval(() => {
+const phraseTimer = window.audioManager?.addTimer(setInterval(() => {
     const random = Math.random();
     if (random < 0.7) { // 70% шанс
         showMysticPhrase();
     }
-}, 4000); // Каждые 4 секунды
+}, 4000)); // Каждые 4 секунды
 
 // Функция воспроизведения мистического звука гороскопа
 function playHoroscopeSound() {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const duration = 1; // 1 секунда
-    const sampleRate = 44100;
-    const numSamples = duration * sampleRate;
-    
-    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
-    const data = buffer.getChannelData(0);
-    
-    // Создаем мистический звук гороскопа
-    for (let i = 0; i < numSamples; i++) {
-        const t = i / sampleRate;
-        const envelope = Math.exp(-t * 3); // Быстрое затухание
+    try {
+        const audioContext = window.audioManager?.getAudioContext();
+        if (!audioContext) {
+            console.warn('AudioContext недоступен');
+            return;
+        }
+
+        const duration = 1; // 1 секунда
+        const sampleRate = 44100;
+        const numSamples = duration * sampleRate;
         
-        // Основная частота + мистические гармоники
-        const baseFreq = 440; // A4
-        const sample = envelope * (
-            Math.sin(2 * Math.PI * baseFreq * t) * 0.3 +
-            Math.sin(2 * Math.PI * baseFreq * 1.5 * t) * 0.2 +
-            Math.sin(2 * Math.PI * baseFreq * 2 * t) * 0.1 +
-            Math.sin(2 * Math.PI * baseFreq * 0.5 * t) * 0.4
-        ) * (0.5 + 0.5 * Math.sin(2 * Math.PI * 8 * t)); // Модуляция
+        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
         
-        data[i] = sample;
+        // Создаем мистический звук гороскопа
+        for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            const envelope = Math.exp(-t * 3); // Быстрое затухание
+            
+            // Основная частота + мистические гармоники
+            const baseFreq = 440; // A4
+            const sample = envelope * (
+                Math.sin(2 * Math.PI * baseFreq * t) * 0.3 +
+                Math.sin(2 * Math.PI * baseFreq * 1.5 * t) * 0.2 +
+                Math.sin(2 * Math.PI * baseFreq * 2 * t) * 0.1 +
+                Math.sin(2 * Math.PI * baseFreq * 0.5 * t) * 0.4
+            ) * (0.5 + 0.5 * Math.sin(2 * Math.PI * 8 * t)); // Модуляция
+            
+            data[i] = sample;
+        }
+        
+        const source = window.audioManager?.createBufferSource();
+        if (!source) return;
+        
+        source.buffer = buffer;
+        
+        // Добавляем фильтр для мистичности
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 800;
+        filter.Q.value = 2;
+        
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.1; // Тихая громкость
+        
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        source.start();
+        
+    } catch (error) {
+        console.error('Ошибка воспроизведения звука гороскопа:', error);
     }
-    
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    
-    // Добавляем фильтр для мистичности
-    const filter = audioContext.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 800;
-    filter.Q.value = 2;
-    
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.1; // Тихая громкость
-    
-    source.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    source.start();
 }
 </script>
 

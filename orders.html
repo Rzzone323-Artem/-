@@ -2,8 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>🔐 ЗАКАЗЫ - ЧУДО-БАЗАР "Святой Алтарь"</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>АДМИН-ПАНЕЛЬ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="audio-utils.js"></script>
+<script src="sounds.js"></script>
+<script src="google-sheets.js"></script>
 <script src="simple-setup.js"></script>
 <style>
 body {
@@ -118,44 +122,124 @@ body {
 </div>
 
 <script>
+// Функция безопасного создания элемента
+function safeCreateElement(tagName) {
+    return document.createElement(tagName);
+}
+
 // Загрузка заказов из Google Sheets (простая версия)
 async function loadOrders() {
     const ordersList = document.getElementById('ordersList');
-    ordersList.innerHTML = '<p style="color: #FF0;">⏳ Загрузка заказов...</p>';
+    
+    // Безопасное создание индикатора загрузки
+    ordersList.innerHTML = '';
+    const loadingPara = safeCreateElement('p');
+    loadingPara.textContent = '⏳ Загрузка заказов...';
+    loadingPara.style.color = '#FF0';
+    ordersList.appendChild(loadingPara);
     
     try {
         const orders = await window.simpleSheets.getOrders();
         
         if (orders.length > 0) {
-            ordersList.innerHTML = orders.map((order, index) => `
-                <div class="order-item">
-                    <div class="order-time">📅 ${order[0]}</div>
-                    <div class="order-field"><strong>👤 Имя:</strong> ${order[1]}</div>
-                    <div class="order-field"><strong>📧 Email:</strong> ${order[2]}</div>
-                    <div class="order-field"><strong>📦 Товар:</strong> ${order[3]}</div>
-                    <div class="order-message"><strong>💬 Сообщение:</strong> ${order[4]}</div>
-                </div>
-            `).join('');
+            // Безопасное создание контента заказов
+            ordersList.innerHTML = '';
+            orders.forEach((order, index) => {
+                const orderDiv = safeCreateElement('div');
+                orderDiv.className = 'order-item';
+                
+                const timeDiv = safeCreateElement('div');
+                timeDiv.className = 'order-time';
+                timeDiv.textContent = `📅 ${order[0]}`;
+                orderDiv.appendChild(timeDiv);
+                
+                const nameDiv = safeCreateElement('div');
+                nameDiv.className = 'order-field';
+                nameDiv.innerHTML = '<strong>👤 Имя:</strong> ' + order[1];
+                orderDiv.appendChild(nameDiv);
+                
+                const emailDiv = safeCreateElement('div');
+                emailDiv.className = 'order-field';
+                emailDiv.innerHTML = '<strong>📧 Email:</strong> ' + order[2];
+                orderDiv.appendChild(emailDiv);
+                
+                const productDiv = safeCreateElement('div');
+                productDiv.className = 'order-field';
+                productDiv.innerHTML = '<strong>📦 Товар:</strong> ' + order[3];
+                orderDiv.appendChild(productDiv);
+                
+                const messageDiv = safeCreateElement('div');
+                messageDiv.className = 'order-message';
+                messageDiv.innerHTML = '<strong>💬 Сообщение:</strong> ' + order[4];
+                orderDiv.appendChild(messageDiv);
+                
+                const deleteBtn = safeCreateElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '❌';
+                deleteBtn.onclick = () => deleteOrder(index);
+                orderDiv.appendChild(deleteBtn);
+                
+                ordersList.appendChild(orderDiv);
+            });
         } else {
-            ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
+            // Безопасное создание сообщения об отсутствии заказов
+            ordersList.innerHTML = '';
+            const noOrdersPara = safeCreateElement('p');
+            noOrdersPara.textContent = 'Заказов пока нет';
+            noOrdersPara.style.color = '#FF0';
+            ordersList.appendChild(noOrdersPara);
         }
     } catch (error) {
         console.error('Ошибка загрузки заказов:', error);
         // Загружаем из localStorage как бэкап
         const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
         if (orders.length > 0) {
-            ordersList.innerHTML = orders.map((order, index) => `
-                <div class="order-item">
-                    <button class="delete-btn" onclick="deleteOrder(${index})">❌</button>
-                    <div class="order-time">📅 ${order.date}</div>
-                    <div class="order-field"><strong>👤 Имя:</strong> ${order.name}</div>
-                    <div class="order-field"><strong>📧 Email:</strong> ${order.email}</div>
-                    <div class="order-field"><strong>📦 Товар:</strong> ${order.product}</div>
-                    <div class="order-message"><strong>💬 Сообщение:</strong> ${order.message}</div>
-                </div>
-            `).join('');
+            // Безопасное создание контента из localStorage
+            ordersList.innerHTML = '';
+            orders.forEach((order, index) => {
+                const orderDiv = safeCreateElement('div');
+                orderDiv.className = 'order-item';
+                
+                const deleteBtn = safeCreateElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '❌';
+                deleteBtn.onclick = () => deleteOrder(index);
+                orderDiv.appendChild(deleteBtn);
+                
+                const timeDiv = safeCreateElement('div');
+                timeDiv.className = 'order-time';
+                timeDiv.textContent = `📅 ${order.date}`;
+                orderDiv.appendChild(timeDiv);
+                
+                const nameDiv = safeCreateElement('div');
+                nameDiv.className = 'order-field';
+                nameDiv.innerHTML = '<strong>👤 Имя:</strong> ' + order.name;
+                orderDiv.appendChild(nameDiv);
+                
+                const emailDiv = safeCreateElement('div');
+                emailDiv.className = 'order-field';
+                emailDiv.innerHTML = '<strong>📧 Email:</strong> ' + order.email;
+                orderDiv.appendChild(emailDiv);
+                
+                const productDiv = safeCreateElement('div');
+                productDiv.className = 'order-field';
+                productDiv.innerHTML = '<strong>📦 Товар:</strong> ' + order.product;
+                orderDiv.appendChild(productDiv);
+                
+                const messageDiv = safeCreateElement('div');
+                messageDiv.className = 'order-message';
+                messageDiv.innerHTML = '<strong>💬 Сообщение:</strong> ' + order.message;
+                orderDiv.appendChild(messageDiv);
+                
+                ordersList.appendChild(orderDiv);
+            });
         } else {
-            ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
+            // Безопасное создание сообщения об отсутствии заказов
+            ordersList.innerHTML = '';
+            const noOrdersPara = safeCreateElement('p');
+            noOrdersPara.textContent = 'Заказов пока нет';
+            noOrdersPara.style.color = '#FF0';
+            ordersList.appendChild(noOrdersPara);
         }
     }
 }
@@ -163,41 +247,118 @@ async function loadOrders() {
 // Загрузка сообщений на модерацию (простая версия)
 async function loadMessages() {
     const messagesList = document.getElementById('messagesList');
-    messagesList.innerHTML = '<p style="color: #FF0;">⏳ Загрузка сообщений...</p>';
+    
+    // Безопасное создание индикатора загрузки
+    messagesList.innerHTML = '';
+    const loadingPara = safeCreateElement('p');
+    loadingPara.textContent = '⏳ Загрузка сообщений...';
+    loadingPara.style.color = '#FF0';
+    messagesList.appendChild(loadingPara);
     
     try {
         const messages = await window.simpleSheets.getMessages();
         
         if (messages.length > 0) {
-            messagesList.innerHTML = messages.map((message, index) => `
-                <div class="message-item">
-                    <div class="message-time">📅 ${message[0]}</div>
-                    <div class="message-field"><strong>👤 Автор:</strong> ${message[1]}</div>
-                    <div class="message-field"><strong>📝 Заголовок:</strong> ${message[2]}</div>
-                    <div class="message-field"><strong>📂 Категория:</strong> ${message[3]}</div>
-                    <div class="message-content"><strong>💬 Текст:</strong> ${message[4]}</div>
-                </div>
-            `).join('');
+            // Безопасное создание контента сообщений
+            messagesList.innerHTML = '';
+            messages.forEach((message, index) => {
+                const messageDiv = safeCreateElement('div');
+                messageDiv.className = 'message-item';
+                
+                const approveBtn = safeCreateElement('button');
+                approveBtn.className = 'approve-btn';
+                approveBtn.textContent = '✅';
+                approveBtn.onclick = () => approveMessage(index);
+                messageDiv.appendChild(approveBtn);
+                
+                const deleteBtn = safeCreateElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '❌';
+                deleteBtn.onclick = () => deleteMessage(index);
+                messageDiv.appendChild(deleteBtn);
+                
+                const timeDiv = safeCreateElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = `📅 ${message[0]}`;
+                messageDiv.appendChild(timeDiv);
+                
+                const authorDiv = safeCreateElement('div');
+                authorDiv.className = 'message-field';
+                authorDiv.innerHTML = '<strong>� Автор:</strong> ' + message[1];
+                messageDiv.appendChild(authorDiv);
+                
+                const emailDiv = safeCreateElement('div');
+                emailDiv.className = 'message-field';
+                emailDiv.innerHTML = '<strong>� Email:</strong> ' + message[2];
+                messageDiv.appendChild(emailDiv);
+                
+                const contentDiv = safeCreateElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = '<strong>💬 Сообщение:</strong> ' + message[3];
+                messageDiv.appendChild(contentDiv);
+                
+                messagesList.appendChild(messageDiv);
+            });
         } else {
-            messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
+            // Безопасное создание сообщения об отсутствии сообщений
+            messagesList.innerHTML = '';
+            const noMessagesPara = safeCreateElement('p');
+            noMessagesPara.textContent = 'Сообщений на модерации нет';
+            noMessagesPara.style.color = '#FF0';
+            messagesList.appendChild(noMessagesPara);
         }
     } catch (error) {
         console.error('Ошибка загрузки сообщений:', error);
         // Загружаем из localStorage как бэкап
         const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
         if (messages.length > 0) {
-            messagesList.innerHTML = messages.map((message, index) => `
-                <div class="message-item">
-                    <button class="approve-btn" onclick="approveMessage(${index})">✅</button>
-                    <button class="delete-btn" onclick="deleteMessage(${index})">❌</button>
-                    <div class="message-time">📅 ${message.date}</div>
-                    <div class="message-field"><strong>👤 Автор:</strong> ${message.author}</div>
-                    <div class="message-field"><strong>📝 Заголовок:</strong> ${message.title}</div>
-                    <div class="message-content"><strong>💬 Текст:</strong> ${message.content}</div>
-                </div>
-            `).join('');
+            // Безопасное создание контента из localStorage
+            messagesList.innerHTML = '';
+            messages.forEach((message, index) => {
+                const messageDiv = safeCreateElement('div');
+                messageDiv.className = 'message-item';
+                
+                const approveBtn = safeCreateElement('button');
+                approveBtn.className = 'approve-btn';
+                approveBtn.textContent = '✅';
+                approveBtn.onclick = () => approveMessage(index);
+                messageDiv.appendChild(approveBtn);
+                
+                const deleteBtn = safeCreateElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '❌';
+                deleteBtn.onclick = () => deleteMessage(index);
+                messageDiv.appendChild(deleteBtn);
+                
+                const timeDiv = safeCreateElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = `📅 ${message.date}`;
+                messageDiv.appendChild(timeDiv);
+                
+                const authorDiv = safeCreateElement('div');
+                authorDiv.className = 'message-field';
+                authorDiv.innerHTML = '<strong>👤 Автор:</strong> ' + message.author;
+                messageDiv.appendChild(authorDiv);
+                
+                const emailDiv = safeCreateElement('div');
+                emailDiv.className = 'message-field';
+                emailDiv.innerHTML = '<strong>� Email:</strong> ' + message.email;
+                messageDiv.appendChild(emailDiv);
+                
+                const contentDiv = safeCreateElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = '<strong>💬 Сообщение:</strong> ' + message.content;
+                messageDiv.appendChild(contentDiv);
+                
+                messagesList.appendChild(messageDiv);
+            });
         } else {
-            messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
+            // Безопасное создание сообщения об отсутствии сообщений
+            messagesList.innerHTML = '';
+            const noMessagesPara = safeCreateElement('p');
+            noMessagesPara.textContent = 'Сообщений на модерации нет';
+            noMessagesPara.style.color = '#FF0';
+            messagesList.appendChild(noMessagesPara);
         }
     }
 }
@@ -228,10 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMessages();
     
     // Обновляем данные каждые 30 секунд
-    setInterval(() => {
+    const updateTimer = window.audioManager?.addTimer(setInterval(() => {
         loadOrders();
         loadMessages();
-    }, 30000);
+    }, 30000));
 });
 
 // Очистка всех заказов

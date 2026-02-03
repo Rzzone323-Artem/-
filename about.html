@@ -2,8 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>О НАС - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="audio-utils.js"></script>
+<script src="sounds.js"></script>
 </head>
 
 <body>
@@ -65,9 +68,17 @@ function animateGifs() {
     const leftGif = document.getElementById('leftGif');
     const rightGif = document.getElementById('rightGif');
     
-    // Левая гифка
+    // Левая гифка - безопасное создание элементов
     if (!leftVisible) {
-        leftGif.innerHTML = `<img src="${leftGifs[leftIndex].src}" style="width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};" alt="Декоративная гифка">`;
+        // Очищаем контейнер
+        leftGif.innerHTML = '';
+        
+        // Создаем изображение безопасно
+        const leftImg = safeCreateImage(leftGifs[leftIndex].src, 'Декоративная гифка слева', {
+            style: `width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};`
+        });
+        
+        leftGif.appendChild(leftImg);
         leftGif.style.opacity = '1';
         leftVisible = true;
     } else {
@@ -77,9 +88,17 @@ function animateGifs() {
     }
     
     // Правая гифка (с небольшой задержкой)
-    setTimeout(() => {
+    const rightTimer = window.audioManager?.addTimer(setTimeout(() => {
         if (!rightVisible) {
-            rightGif.innerHTML = `<img src="${rightGifs[rightIndex].src}" style="width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};" alt="Декоративная гифка">`;
+            // Очищаем контейнер
+            rightGif.innerHTML = '';
+            
+            // Создаем изображение безопасно
+            const rightImg = safeCreateImage(rightGifs[rightIndex].src, 'Декоративная гифка справа', {
+                style: `width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};`
+            });
+            
+            rightGif.appendChild(rightImg);
             rightGif.style.opacity = '1';
             rightVisible = true;
         } else {
@@ -87,11 +106,11 @@ function animateGifs() {
             rightVisible = false;
             rightIndex = (rightIndex + 1) % rightGifs.length;
         }
-    }, 500);
+    }, 500));
 }
 
-// Запуск анимации
-setInterval(animateGifs, 3000);
+// Запуск анимации с отслеживанием таймера
+const animationTimer = window.audioManager?.addTimer(setInterval(animateGifs, 3000));
 animateGifs(); // Первый запуск сразу
 </script>
 
