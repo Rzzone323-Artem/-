@@ -92,18 +92,28 @@ body {
 <body>
 
 <div class="admin-only">
-<h2>🔐 ПАНЕЛЬ АДМИНИСТРАТОРА ЗАКАЗОВ</h2>
+<h2>🔐 ПАНЕЛЬ АДМИНИСТРАТОРА</h2>
 <p>Эта страница доступна только администратору сайта</p>
-<p>Все заказы от пользователей отображаются ниже</p>
-<button class="clear-all-btn" onclick="clearAllOrders()">🗑️ ОЧИСТИТЬ ВСЕ ЗАКАЗЫ</button>
+<p>Все заказы и сообщения на модерацию отображаются ниже</p>
+<button class="clear-all-btn" onclick="clearAllOrders()">🗑️ ОЧИСТИТЬ ЗАКАЗЫ</button>
+<button class="clear-all-btn" onclick="clearAllMessages()">🗑️ ОЧИСТИТЬ СООБЩЕНИЯ</button>
+<button class="clear-all-btn" onclick="clearAll()">🗑️ ОЧИСТИТЬ ВСЁ</button>
 </div>
 
 <hr>
 
-<h2>📦 СПИСОК ЗАКАЗОВ</h2>
+<h2>📦 ЗАКАЗЫ ПОЛЬЗОВАТЕЛЕЙ</h2>
 
 <div id="ordersList">
 <p style="color: #FF0;">Загрузка заказов...</p>
+</div>
+
+<hr>
+
+<h2>💬 СООБЩЕНИЯ НА МОДЕРАЦИЮ</h2>
+
+<div id="messagesList">
+<p style="color: #FF0;">Загрузка сообщений...</p>
 </div>
 
 <script>
@@ -129,6 +139,32 @@ function loadOrders() {
     `).join('');
 }
 
+// Загрузка сообщений на модерацию
+function loadMessages() {
+    const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+    const messagesList = document.getElementById('messagesList');
+    
+    if (messages.length === 0) {
+        messagesList.innerHTML = '<p style="color: #FF0;">Сообщений на модерации нет</p>';
+        return;
+    }
+    
+    messagesList.innerHTML = messages.map((message, index) => `
+        <div class="order-item" style="border-color: #ff0066; background: rgba(255, 0, 102, 0.05);">
+            <button class="delete-btn" onclick="deleteMessage(${index})">❌</button>
+            <div class="order-time">📅 ${message.date}</div>
+            <div class="order-field"><strong>👤 Автор:</strong> ${message.author}</div>
+            <div class="order-field"><strong>📝 Тема:</strong> ${message.title}</div>
+            <div class="order-field"><strong>📂 Категория:</strong> ${message.category}</div>
+            <div class="order-message"><strong>💬 Сообщение:</strong> ${message.content}</div>
+            <div style="margin-top: 10px;">
+                <button class="clear-all-btn" style="padding: 5px 10px; font-size: 12px; background: #0A0;" onclick="approveMessage(${index})">✅ ОДОБРИТЬ</button>
+                <button class="clear-all-btn" style="padding: 5px 10px; font-size: 12px; background: #A00;" onclick="rejectMessage(${index})">❌ ОТКЛОНИТЬ</button>
+            </div>
+        </div>
+    `).join('');
+}
+
 // Удаление заказа
 function deleteOrder(index) {
     if (confirm('Удалить этот заказ?')) {
@@ -136,6 +172,16 @@ function deleteOrder(index) {
         orders.splice(index, 1);
         localStorage.setItem('siteOrders', JSON.stringify(orders));
         loadOrders();
+    }
+}
+
+// Удаление сообщения
+function deleteMessage(index) {
+    if (confirm('Удалить это сообщение?')) {
+        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        messages.splice(index, 1);
+        localStorage.setItem('pendingMessages', JSON.stringify(messages));
+        loadMessages();
     }
 }
 
@@ -147,11 +193,64 @@ function clearAllOrders() {
     }
 }
 
+// Очистка всех сообщений
+function clearAllMessages() {
+    if (confirm('Удалить все сообщения на модерации? Это действие нельзя отменить!')) {
+        localStorage.removeItem('pendingMessages');
+        loadMessages();
+    }
+}
+
+// Очистка всего
+function clearAll() {
+    if (confirm('Удалить ВСЁ - заказы и сообщения? Это действие нельзя отменить!')) {
+        localStorage.removeItem('siteOrders');
+        localStorage.removeItem('pendingMessages');
+        loadOrders();
+        loadMessages();
+    }
+}
+
+// Одобрение сообщения
+function approveMessage(index) {
+    if (confirm('Одобрить это сообщение?')) {
+        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        const message = messages[index];
+        
+        // Добавляем в основные темы форума
+        const topics = JSON.parse(localStorage.getItem('forumTopics') || '[]');
+        topics.push(message);
+        localStorage.setItem('forumTopics', JSON.stringify(topics));
+        
+        // Удаляем из модерации
+        messages.splice(index, 1);
+        localStorage.setItem('pendingMessages', JSON.stringify(messages));
+        
+        loadMessages();
+        alert('✅ Сообщение одобрено и опубликовано на форуме!');
+    }
+}
+
+// Отклонение сообщения
+function rejectMessage(index) {
+    if (confirm('Отклонить это сообщение?')) {
+        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
+        messages.splice(index, 1);
+        localStorage.setItem('pendingMessages', JSON.stringify(messages));
+        loadMessages();
+        alert('❌ Сообщение отклонено');
+    }
+}
+
 // Автоматическое обновление каждые 5 секунд
-setInterval(loadOrders, 5000);
+setInterval(() => {
+    loadOrders();
+    loadMessages();
+}, 5000);
 
 // Первая загрузка
 loadOrders();
+loadMessages();
 </script>
 
 </body>
