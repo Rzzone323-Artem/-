@@ -3,42 +3,24 @@ class SoundManager {
     constructor() {
         this.sounds = {};
         this.enabled = true;
-        this.volume = 0.3;
-        this.audioContext = null;
+        this.volume = 0.1; // Уменьшенная громкость по умолчанию
         this.initAudioContext();
     }
 
-    // Инициализация Audio Context
+    // Инициализация Audio Context через singleton
     initAudioContext() {
-        try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.audioContext = new AudioContext();
-        } catch (e) {
-            console.log('Web Audio API не поддерживается');
+        this.audioContext = window.audioManager?.getAudioContext();
+        if (!this.audioContext) {
+            console.warn('AudioContext недоступен');
         }
     }
 
     // Создание звука с помощью Web Audio API
     createTone(frequency, duration, type = 'sine') {
-        if (!this.audioContext) return null;
+        if (!this.enabled) return null;
         
-        const oscillator = this.audioContext.createOscillator();
-        const gainNode = this.audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        
-        oscillator.frequency.value = frequency;
-        oscillator.type = type;
-        
-        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-        gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + 0.01);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
-        
-        oscillator.start(this.audioContext.currentTime);
-        oscillator.stop(this.audioContext.currentTime + duration);
-        
-        return oscillator;
+        // Используем безопасный метод из audioManager
+        return window.audioManager?.createTone(frequency, duration, type, this.volume) || null;
     }
 
     // Различные звуковые эффекты
@@ -114,11 +96,20 @@ class SoundManager {
     }
 
     setVolume(volume) {
-        this.volume = Math.max(0, Math.min(1, volume));
+        // Безопасная валидация громкости
+        const numVolume = parseFloat(volume);
+        if (isNaN(numVolume)) {
+            console.warn('Некорректное значение громкости:', volume);
+            return;
+        }
+        this.volume = Math.max(0, Math.min(1, numVolume));
     }
 
     // Инициализация звуков на странице
     initPageSounds() {
+        // Используем debounce для hover событий
+        const debouncedHover = debounce(() => this.playHover(), 50);
+        
         // Звуки для всех кнопок и ссылок
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.type === 'submit') {
@@ -126,17 +117,17 @@ class SoundManager {
             }
         });
 
-        // Звуки при наведении на меню
+        // Звуки при наведении на меню с debounce
         document.querySelectorAll('.menu a, .product').forEach(element => {
-            element.addEventListener('mouseenter', () => this.playHover());
+            element.addEventListener('mouseenter', debouncedHover);
         });
 
         // Звук при загрузке страницы
-        setTimeout(() => this.playMysticChime(), 500);
+        const loadTimer = window.audioManager?.addTimer(setTimeout(() => this.playMysticChime(), 500));
 
-        // Звук для форм
+        // Звук для форм с debounce
         document.querySelectorAll('input, textarea, select').forEach(element => {
-            element.addEventListener('focus', () => this.playHover());
+            element.addEventListener('focus', debouncedHover);
         });
     }
 }
