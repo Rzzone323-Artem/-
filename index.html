@@ -357,6 +357,37 @@ function showMysticPhraseOnNormalBackground() {
 <input type="submit" value="ОТПРАВИТЬ В НООСФЕРУ">
 </form>
 
+<script>
+function submitOrder(event) {
+    event.preventDefault();
+    
+    // Собираем данные формы
+    const order = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        product: document.getElementById('product').value,
+        message: document.getElementById('message').value,
+        date: new Date().toLocaleString('ru-RU')
+    };
+    
+    // Сохраняем заказ в localStorage
+    const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+    orders.push(order);
+    localStorage.setItem('siteOrders', JSON.stringify(orders));
+    
+    // Показываем пользователю сообщение об успехе
+    alert('✨ ВАШ ЗАКАЗ ОТПРАВЛЕН В НООСФЕРУ! ✨\n\nМы свяжемся с вами в ближайшее время через эфирные каналы связи.');
+    
+    // Очищаем форму
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
+    
+    // Редирект на главную (чтобы пользователь не видел куда на самом деле ушел заказ)
+    window.location.href = 'index.html';
+}
+</script>
+
 <hr>
 
 <h2>� ОТЗЫВЫ НАШИХ КЛИЕНТОВ �</h2>
@@ -386,6 +417,7 @@ function showMysticPhraseOnNormalBackground() {
 <p>⚠️ ВСЕ ТОВАРЫ НЕ ПОДЛЕЖАТ ВОЗВРАТУ! ⚠️</p>
 <p>⚠️ АДМИНИСТРАЦИЯ НЕ НЕСЁТ ОТВЕТСТВЕННОСТЬ ЗА ПАРАНОРМАЛЬНЫЕ ЭФФЕКТЫ! ⚠️</p>
 <p>⚠️ ПРИ ОБНАРУЖЕНИИ МУТАНТОВ В УПАКОВКЕ - СООБЩИТЕ НАМ! ⚠️</p>
+<p style="font-size: 10px; opacity: 0.3;"><a href="orders.html" style="color: #333;">🔐</a></p>
 </div>
 
 <a href="catalog.html">→ СМОТРЕТЬ ВЕСЬ КАТАЛОГ ←</a>

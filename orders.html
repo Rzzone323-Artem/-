@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>🔐 ЗАКАЗЫ - ЧУДО-БАЗАР "Святой Алтарь"</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+    background: #000;
+    color: #0F0;
+    font-family: "Courier New", monospace;
+    padding: 20px;
+}
+
+.order-item {
+    background: rgba(75, 0, 130, 0.1);
+    border: 2px solid #4B0082;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    position: relative;
+}
+
+.order-time {
+    color: #FF0;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.order-field {
+    margin: 5px 0;
+}
+
+.order-field strong {
+    color: #8a2be2;
+}
+
+.order-message {
+    color: #C0C0C0;
+    font-style: italic;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid #ff0066;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #800;
+    color: #FFF;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    background: #A00;
+}
+
+.admin-only {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #F00;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.clear-all-btn {
+    background: linear-gradient(45deg, #800, #400);
+    color: #FFF;
+    border: 2px solid #F00;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.clear-all-btn:hover {
+    background: linear-gradient(45deg, #A00, #600);
+    transform: scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-only">
+<h2>🔐 ПАНЕЛЬ АДМИНИСТРАТОРА ЗАКАЗОВ</h2>
+<p>Эта страница доступна только администратору сайта</p>
+<p>Все заказы от пользователей отображаются ниже</p>
+<button class="clear-all-btn" onclick="clearAllOrders()">🗑️ ОЧИСТИТЬ ВСЕ ЗАКАЗЫ</button>
+</div>
+
+<hr>
+
+<h2>📦 СПИСОК ЗАКАЗОВ</h2>
+
+<div id="ordersList">
+<p style="color: #FF0;">Загрузка заказов...</p>
+</div>
+
+<script>
+// Загрузка заказов из localStorage
+function loadOrders() {
+    const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+    const ordersList = document.getElementById('ordersList');
+    
+    if (orders.length === 0) {
+        ordersList.innerHTML = '<p style="color: #FF0;">Заказов пока нет</p>';
+        return;
+    }
+    
+    ordersList.innerHTML = orders.map((order, index) => `
+        <div class="order-item">
+            <button class="delete-btn" onclick="deleteOrder(${index})">❌</button>
+            <div class="order-time">📅 ${order.date}</div>
+            <div class="order-field"><strong>👤 Имя:</strong> ${order.name}</div>
+            <div class="order-field"><strong>📧 Email:</strong> ${order.email}</div>
+            <div class="order-field"><strong>📦 Товар:</strong> ${order.product}</div>
+            <div class="order-message"><strong>💬 Сообщение:</strong> ${order.message}</div>
+        </div>
+    `).join('');
+}
+
+// Удаление заказа
+function deleteOrder(index) {
+    if (confirm('Удалить этот заказ?')) {
+        const orders = JSON.parse(localStorage.getItem('siteOrders') || '[]');
+        orders.splice(index, 1);
+        localStorage.setItem('siteOrders', JSON.stringify(orders));
+        loadOrders();
+    }
+}
+
+// Очистка всех заказов
+function clearAllOrders() {
+    if (confirm('Удалить все заказы? Это действие нельзя отменить!')) {
+        localStorage.removeItem('siteOrders');
+        loadOrders();
+    }
+}
+
+// Автоматическое обновление каждые 5 секунд
+setInterval(loadOrders, 5000);
+
+// Первая загрузка
+loadOrders();
+</script>
+
+</body>
+</html>
