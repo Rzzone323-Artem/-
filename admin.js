@@ -2,6 +2,7 @@
 let isAdmin = false;
 let postingEnabled = true;
 let topics = [];
+let pendingMessages = [];
 let snakeGame = null;
 
 // Функция входа в админ-панель
@@ -13,6 +14,7 @@ function showAdminLogin() {
         updateNavigation();
         enableAdminFeatures();
         localStorage.setItem('adminAuth', 'true');
+        checkPendingMessages();
     } else {
         alert("❌ Неверный код! Доступ запрещен.");
     }
@@ -24,6 +26,7 @@ function checkAdminAuth() {
         isAdmin = true;
         updateNavigation();
         enableAdminFeatures();
+        checkPendingMessages();
     }
 }
 
@@ -32,7 +35,17 @@ function updateNavigation() {
     if (isAdmin) {
         const menuElements = document.querySelectorAll('.menu');
         menuElements.forEach(menu => {
+            // Удаляем старую ссылку если есть
+            const oldAdminLink = menu.querySelector('.admin-link');
+            if (oldAdminLink) {
+                oldAdminLink.remove();
+            }
+            
+            // Добавляем новую ссылку
             if (!menu.querySelector('.admin-link')) {
+                const separator = document.createTextNode(' | ');
+                menu.appendChild(separator);
+                
                 const adminLink = document.createElement('a');
                 adminLink.href = '#';
                 adminLink.className = 'admin-link';
@@ -41,8 +54,22 @@ function updateNavigation() {
                     e.preventDefault();
                     showAdminPanel();
                 };
-                menu.appendChild(document.createTextNode(' | '));
                 menu.appendChild(adminLink);
+                
+                // Добавляем кнопку выхода
+                const logoutSeparator = document.createTextNode(' | ');
+                menu.appendChild(logoutSeparator);
+                
+                const logoutLink = document.createElement('a');
+                logoutLink.href = '#';
+                logoutLink.className = 'logout-link';
+                logoutLink.textContent = '🚪 ВЫХОД';
+                logoutLink.style.cssText = 'color: #F00; font-weight: bold;';
+                logoutLink.onclick = function(e) {
+                    e.preventDefault();
+                    logoutAdmin();
+                };
+                menu.appendChild(logoutLink);
             }
         });
     }
@@ -63,6 +90,13 @@ function enableAdminFeatures() {
             product.appendChild(editBtn);
         }
     });
+}
+
+// Проверка ожидающих сообщений
+function checkPendingMessages() {
+    if (pendingMessages.length > 0) {
+        alert(`🔔 У вас ${pendingMessages.length} сообщений на модерации!`);
+    }
 }
 
 // Редактирование товара
@@ -90,6 +124,12 @@ function editProduct(productElement) {
 
 // Показ админ-панели
 function showAdminPanel() {
+    // Удаляем старую панель если есть
+    const oldModal = document.getElementById('adminPanelModal');
+    if (oldModal) {
+        oldModal.remove();
+    }
+    
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.id = 'adminPanelModal';
@@ -101,12 +141,14 @@ function showAdminPanel() {
                 <button class="admin-btn" onclick="toggleForumPosting()">🚫 ЗАПРЕТИТЬ ПОСТИНГ НА ФОРУМЕ</button>
                 <button class="admin-btn" onclick="enableForumPosting()">✅ РАЗРЕШИТЬ ПОСТИНГ НА ФОРУМЕ</button>
                 <button class="admin-btn" onclick="clearAllForumTopics()">🗑️ ОЧИСТИТЬ ФОРУМ</button>
+                <button class="admin-btn" onclick="showModerationPanel()">📋 МОДЕРАЦИЯ СООБЩЕНИЙ</button>
                 <button class="admin-btn" onclick="startSnakeGame()">🐍 ИГРАТЬ В ЗМЕЙКУ</button>
-                <button class="admin-btn" onclick="logoutAdmin()">🚪 ВЫЙТИ ИЗ АДМИНКИ</button>
+                <button class="admin-btn" onclick="logoutAdmin()" style="background: linear-gradient(45deg, #F00, #800);">🚪 ВЫЙТИ ИЗ АДМИНКИ</button>
             </div>
             <div class="admin-status">
                 <p>Статус постинга на форуме: <span id="forumPostingStatus" style="color: #0F0;">РАЗРЕШЕН</span></p>
                 <p>Текущий пользователь: <span style="color: #FF0;">АДМИНИСТРАТОР</span></p>
+                <p>Ожидающих сообщений: <span id="pendingCount" style="color: #FF0;">${pendingMessages.length}</span></p>
             </div>
         </div>
     `;
@@ -122,6 +164,61 @@ function closeAdminPanel() {
     if (modal) {
         modal.remove();
     }
+}
+
+// Панель модерации
+function showModerationPanel() {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.id = 'moderationModal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close" onclick="closeModerationPanel()">&times;</span>
+            <h2>📋 МОДЕРАЦИЯ СООБЩЕНИЙ</h2>
+            <div class="moderation-list">
+                ${pendingMessages.length === 0 ? 
+                    '<p style="color: #FF0;">Нет сообщений на модерации</p>' :
+                    pendingMessages.map((msg, index) => `
+                        <div class="moderation-item" style="border: 1px solid #FF0; padding: 10px; margin: 10px 0;">
+                            <p><strong>Автор:</strong> ${msg.author}</p>
+                            <p><strong>Тема:</strong> ${msg.title}</p>
+                            <p><strong>Сообщение:</strong> ${msg.content}</p>
+                            <div style="margin-top: 10px;">
+                                <button class="admin-btn" onclick="approveMessage(${index})" style="background: #0A0;">✅ ОДОБРИТЬ</button>
+                                <button class="admin-btn" onclick="rejectMessage(${index})" style="background: #A00;">❌ ОТКЛОНИТЬ</button>
+                            </div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.style.display = 'block';
+}
+
+function closeModerationPanel() {
+    const modal = document.getElementById('moderationModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function approveMessage(index) {
+    const message = pendingMessages[index];
+    alert(`✅ Сообщение от ${message.author} одобрено!`);
+    pendingMessages.splice(index, 1);
+    closeModerationPanel();
+    showAdminPanel();
+}
+
+function rejectMessage(index) {
+    const message = pendingMessages[index];
+    alert(`❌ Сообщение от ${message.author} отклонено!`);
+    pendingMessages.splice(index, 1);
+    closeModerationPanel();
+    showAdminPanel();
 }
 
 // Управление постингом на форуме
@@ -153,13 +250,20 @@ function updateAdminStatus() {
         statusElement.textContent = postingEnabled ? 'РАЗРЕШЕН' : 'ЗАПРЕЩЕН';
         statusElement.style.color = postingEnabled ? '#0F0' : '#F00';
     }
+    
+    const pendingElement = document.getElementById('pendingCount');
+    if (pendingElement) {
+        pendingElement.textContent = pendingMessages.length;
+    }
 }
 
 // Выход из админки
 function logoutAdmin() {
-    isAdmin = false;
-    localStorage.removeItem('adminAuth');
-    location.reload();
+    if (confirm('🚪 Выйти из панели администратора?')) {
+        isAdmin = false;
+        localStorage.removeItem('adminAuth');
+        location.reload();
+    }
 }
 
 // Игра в змейку
@@ -340,10 +444,100 @@ document.addEventListener('DOMContentLoaded', function() {
         loginBtn.onclick = showAdminLogin;
         header.appendChild(loginBtn);
     }
+    
+    // Создаем крутящийся коловрат курсор
+    createKolovratCursor();
 });
+
+// Создание крутящегося коловрата курсора
+function createKolovratCursor() {
+    const cursor = document.createElement('div');
+    cursor.className = 'kolovrat-cursor';
+    cursor.innerHTML = `
+        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="kolovratGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ff0066;stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:#ffff00;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff0066;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g fill="url(#kolovratGradient)" opacity="0.8">
+                <path d="M16 2 L18 8 L24 6 L20 12 L26 16 L20 20 L24 26 L18 24 L16 30 L14 24 L8 26 L12 20 L6 16 L12 12 L8 6 L14 8 Z"/>
+                <circle cx="16" cy="16" r="3" fill="#000"/>
+            </g>
+        </svg>
+    `;
+    
+    cursor.style.cssText = `
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.1s ease;
+        opacity: 0.8;
+        animation: spin 2s linear infinite;
+    `;
+    
+    document.body.appendChild(cursor);
+    
+    // Скрыть стандартный курсор
+    document.body.style.cursor = 'none';
+    
+    // Отслеживание движения мыши
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    // Плавное движение курсора
+    function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.1;
+        cursorY += (mouseY - cursorY) * 0.1;
+        
+        cursor.style.left = cursorX - 16 + 'px';
+        cursor.style.top = cursorY - 16 + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    
+    animateCursor();
+    
+    // Эффект при клике
+    document.addEventListener('click', (e) => {
+        cursor.style.transform = 'scale(1.5)';
+        setTimeout(() => {
+            cursor.style.transform = 'scale(1)';
+        }, 200);
+    });
+    
+    // Эффект при наведении на интерактивные элементы
+    const interactiveElements = document.querySelectorAll('a, button, input, textarea, select');
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(1.2)';
+            cursor.style.filter = 'drop-shadow(0 0 10px #ff0066)';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.filter = 'none';
+        });
+    });
+}
 
 // Глобальные функции для доступа из других скриптов
 window.isAdmin = function() { return isAdmin; };
 window.postingEnabled = function() { return postingEnabled; };
 window.showAdminLogin = showAdminLogin;
 window.startSnakeGame = startSnakeGame;
+window.addPendingMessage = function(message) {
+    pendingMessages.push(message);
+    if (isAdmin) {
+        alert(`🔔 Новое сообщение на модерации от ${message.author}!`);
+    }
+};

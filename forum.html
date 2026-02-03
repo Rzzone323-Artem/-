@@ -488,9 +488,14 @@ function submitTopic(event) {
         date: new Date().toLocaleString()
     };
     
-    topics.push(newTopic);
-    
-    alert(`Тема "${title}" успешно создана!\n\nКатегория: ${category}\nАвтор: ${author}\n\nСообщение будет опубликовано после проверки модератором.`);
+    // Если админ онлайн - отправляем на модерацию
+    if (window.isAdmin && window.addPendingMessage) {
+        window.addPendingMessage(newTopic);
+        alert(`✨ Тема "${title}" отправлена на модерацию!`);
+    } else {
+        topics.push(newTopic);
+        alert(`✨ Тема "${title}" успешно создана!\n\nКатегория: ${category}\nАвтор: ${author}\n\nСообщение будет опубликовано после проверки модератором.`);
+    }
     
     // Очищаем форму и закрываем модальное окно
     document.getElementById('topicTitle').value = '';
