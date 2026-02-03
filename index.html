@@ -2,38 +2,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ЧУДО-БАЗАР "Святой Алтарь" - ЗОНА ОТЧУЖДЕНИЯ</title>
+<title>ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <!-- Декоративные гифки -->
-<img src="img/alchemy.gif" class="decorative-gif gif-top-right gif-floating">
-<img src="img/skull.gif" class="decorative-gif gif-bottom-left gif-floating">
-<img src="img/fire.gif" class="decorative-gif" style="top: 50%; left: 10px; width: 100px;">
-<img src="img/eye.gif" class="decorative-gif" style="top: 30%; right: 5%; width: 80px;">
-<img src="img/wise.gif" class="decorative-gif" style="bottom: 20%; right: 15%; width: 110px;">
+<img src="img/wise.gif" class="decorative-gif gif-top-right gif-floating">
+<img src="img/ring.gif" class="decorative-gif gif-bottom-left gif-floating">
+<img src="img/alchemy.gif" class="decorative-gif" style="top: 40%; right: 8%; width: 90px;">
+<img src="img/eye.gif" class="decorative-gif" style="bottom: 30%; left: 5%; width: 70px;">
 
 <div class="header">
-
 <img src="img/left.gif">
-
-<span class="title">
-ЧУДО-БАЗАР "СВЯТОЙ АЛТАРЬ"
-</span>
-
+<span class="title">ЧУДО-БАЗАР "СВЯТОЙ АЛТАРЬ"</span>
 <img src="img/right.gif">
-
 </div>
-
-<div class="subtitle blink">
-🔮 ТОВАРЫ ИЗ ЗОНЫ ОТЧУЖДЕНИЯ 🔮 ИСЦЕЛЕНИЕ 🔮 ОЧИЩЕНИЕ 🔮 УСИЛЕНИЕ АУРЫ 🔮 ГАРАНТИЙ НЕТ 🔮
-</div>
-
-<marquee>
-⚠️ АКЦИЯ!!! ⚠️ ВЫТЯЖКА ИЗ ХВОСТА ПСЕВДОПСА СО СКИДКОЙ!!! ⚠️ ОЧИСТКА БИОПОЛЯ В ПОДАРОК!!! ⚠️ ТОЛЬКО СЕГОДНЯ!!! ⚠️ НЕ ПРОПУСТИТЕ ВЫБРОС!!! ⚠️
-</marquee>
 
 <div class="menu">
 <a href="index.html">🏠 ГЛАВНАЯ</a> |
@@ -46,6 +31,14 @@
 </div>
 
 <hr>
+
+<div class="subtitle">
+🌟 ДОБРО ПОЖАЛОВАТЬ В ЛУЧШИЙ ИНТЕРНЕТ-МАГАЗИН ЭЗОТЕРИЧЕСКИХ ТОВАРОВ ИЗ ЗОНЫ ОТЧУЖДЕНИЯ! 🌟
+</div>
+
+<marquee>
+⚠️ ВНИМАНИЕ! ВСЕ ТОВАРЫ СЕРТИФИЦИРОВАНЫ В ЛАБОРАТОРИЯХ ЗОНЫ! ⚠️ НЕ ЯВЛЯЮТСЯ ЛЕКАРСТВАМИ! ⚠️ ПРИМЕНЯТЬ С ОСТОРОЖНОСТЬЮ! ⚠️
+</marquee>
 
 <div class="products-grid">
 
@@ -125,52 +118,92 @@
 
 <hr>
 
-<hr>
-
 <h2>🔮 ОФОРМИТЬ ЗАКАЗ 🔮</h2>
 
-<form>
+<form onsubmit="submitOrder(event)">
+<div class="form-group">
+<label for="name">Ваше имя:</label>
+<input type="text" id="name" required placeholder="Введите ваше имя...">
+</div>
 
-Имя сталкера:<br>
-<input type="text"><br><br>
+<div class="form-group">
+<label for="email">Email:</label>
+<input type="text" id="email" required placeholder="email@example.com">
+</div>
 
-Позывной:<br>
-<input type="text"><br><br>
+<div class="form-group">
+<label for="product">Товар:</label>
+<select id="product" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 2px solid #ff0066; border-radius: 8px; color: #ffff00; font-family: 'Comic Sans MS';">
+<option value="Сыворотка">Сыворотка "Свет радиации"</option>
+<option value="Амулет">Амулет из когтя невидимого мутанта</option>
+<option value="Порошок">Порошок "Рыжий лес"</option>
+<option value="Феромоны">Феромоны из яичек "Сталкера"</option>
+<option value="Набор">Набор "Чистота души"</option>
+<option value="Эликсир">Эликсир "Третий глаз"</option>
+<option value="Мазь">Мазь "Анти-радиация"</option>
+<option value="Талисман">Талисман "Удача сталкера"</option>
+</select>
+</div>
 
-Название товара:<br>
-<input type="text"><br><br>
-
-Введите код посвящённого:<br>
-<input type="password"><br><br>
+<div class="form-group">
+<label for="message">Сообщение:</label>
+<textarea id="message" placeholder="Опишите ваши пожелания..." style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 2px solid #ff0066; border-radius: 8px; color: #ffff00; font-family: 'Comic Sans MS'; min-height: 100px;"></textarea>
+</div>
 
 <input type="submit" value="ОТПРАВИТЬ В НООСФЕРУ">
-
 </form>
+
 <hr>
 
-<h2>💬 ОТЗЫВЫ ПОСВЯЩЁННЫХ 💬</h2>
+<h2>� ОТЗЫВЫ НАШИХ КЛИЕНТОВ �</h2>
 
 <div class="products-grid">
 
 <div class="product">
-ИВАН: После порошка начал слышать холодильник. 10/10 🌟
+<h3>🧙‍♂️ АЛХИМИК ИЗ МОСКВЫ</h3>
+"Купил порошок 'Рыжий лес' - теперь вижу ауры! Правда, иногда вижу то, чего не хочу видеть... 5/5"
 </div>
 
 <div class="product">
-АНОНИМ: Деньги пропали, но аура стала легче. 👍
+<h3>🔮 ЭКСТРАСЕНС ИЗ ПИТЕРА</h3>
+"Амулет из когтя работает! Бывшая жена больше не звонит. Спасибо, Святой Алтарь!"
 </div>
 
 <div class="product">
-СТАЛКЕР_777: Товар пришёл, внутри была земля. Отлично! 🍄
+<h3>👁️ ЙОГ ИЗ НОВОСИБИРСКА</h3>
+"Эликсир 'Третий глаз' открыл мои чакры! Теперь медитирую 24/7. Рекомендую!"
 </div>
 
 </div>
+
+<hr>
 
 <div class="warning">
-⚠️ ВНИМАНИЕ: Администрация ответственности не несёт. ⚠️
-Все совпадения случайны. Лечение не гарантируется. Деньги не возвращаются. Души не принимаем.
-⚠️ ПОСЕЩЕНИЕ ЗОНЫ МОЖЕТ ПРИВЕСТИ К МУТАЦИЯМ ⚠️
+<p>⚠️ ВСЕ ТОВАРЫ НЕ ПОДЛЕЖАТ ВОЗВРАТУ! ⚠️</p>
+<p>⚠️ АДМИНИСТРАЦИЯ НЕ НЕСЁТ ОТВЕТСТВЕННОСТЬ ЗА ПАРАНОРМАЛЬНЫЕ ЭФФЕКТЫ! ⚠️</p>
+<p>⚠️ ПРИ ОБНАРУЖЕНИИ МУТАНТОВ В УПАКОВКЕ - СООБЩИТЕ НАМ! ⚠️</p>
 </div>
+
+<a href="catalog.html">→ СМОТРЕТЬ ВЕСЬ КАТАЛОГ ←</a>
+
+<script src="admin.js"></script>
+<script>
+function submitOrder(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const product = document.getElementById('product').value;
+    const message = document.getElementById('message').value;
+    
+    alert(`✨ ЗАКАЗ ОТПРАВЛЕН В НООСФЕРУ! ✨\n\nИмя: ${name}\nEmail: ${email}\nТовар: ${product}\nСообщение: ${message}\n\nНаш менеджер-экстрасенс свяжется с вами в ближайшее время!`);
+    
+    // Очищаем форму
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
+}
+</script>
 
 </body>
 </html>
