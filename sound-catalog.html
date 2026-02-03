@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>КАТАЛОГ ЗВУКОВ - ЧУДО-БАЗАР</title>
+<script src="audio-utils.js"></script>
 <style>
 body {
     background: #000;
@@ -348,43 +350,55 @@ const soundStatus = {};
 
 // Функция создания звука
 function createSound(profile, duration = 2) {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const sampleRate = 44100;
-    const numSamples = duration * sampleRate;
-    
-    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
-    const data = buffer.getChannelData(0);
-    
-    for (let i = 0; i < numSamples; i++) {
-        const t = i / sampleRate;
-        const envelope = Math.exp(-t * 2);
+    try {
+        const audioContext = window.audioManager?.getAudioContext();
+        if (!audioContext) {
+            console.warn('AudioContext недоступен');
+            return;
+        }
+
+        const sampleRate = 44100;
+        const numSamples = duration * sampleRate;
         
-        let sample = 0;
-        profile.harmonics.forEach((harmonic, index) => {
-            const harmonicFreq = profile.freq * harmonic;
-            const harmonicVolume = 1 / (index + 1);
-            sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
-        });
+        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
         
-        const modulation = Math.sin(2 * Math.PI * 0.5 * t);
-        data[i] = envelope * sample * (0.6 + 0.4 * modulation);
+        for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            const envelope = Math.exp(-t * 2);
+            
+            let sample = 0;
+            profile.harmonics.forEach((harmonic, index) => {
+                const harmonicFreq = profile.freq * harmonic;
+                const harmonicVolume = 1 / (index + 1);
+                sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
+            });
+            
+            const modulation = Math.sin(2 * Math.PI * 0.5 * t);
+            data[i] = envelope * sample * (0.6 + 0.4 * modulation);
+        }
+        
+        const source = window.audioManager?.createBufferSource();
+        if (!source) return;
+        
+        source.buffer = buffer;
+        
+        const filter = audioContext.createBiquadFilter();
+        filter.type = profile.filter;
+        filter.frequency.value = profile.freq * 2;
+        filter.Q.value = 3;
+        
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.1;
+        
+        source.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        source.start();
+        
+    } catch (error) {
+        console.error('Ошибка создания звука:', error);
     }
-    
-    const source = audioContext.createBufferSource();
-    source.buffer = buffer;
-    
-    const filter = audioContext.createBiquadFilter();
-    filter.type = profile.filter;
-    filter.frequency.value = profile.freq * 2;
-    filter.Q.value = 3;
-    
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.1;
-    
-    source.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    source.start();
 }
 
 // Функция создания элемента звука
@@ -395,20 +409,55 @@ function createSoundElement(sound, container) {
     
     const status = soundStatus[sound.id] || 'default';
     
-    div.innerHTML = `
-        <div class="sound-info">
-            <div class="sound-name">${sound.name}</div>
-            <div class="sound-params">Частота: ${sound.freq} Гц | Гармоники: [${sound.harmonics.join(', ')}] | Фильтр: ${sound.filter}</div>
-            <div class="sound-description">${sound.description}</div>
-        </div>
-        <div class="sound-controls">
-            <button class="play-btn" onclick="playSound('${sound.id}')">▶️ Прослушать</button>
-            <button class="keep-btn" onclick="keepSound('${sound.id}')">✅ Оставить</button>
-            <button class="delete-btn" onclick="deleteSound('${sound.id}')">❌ Удалить</button>
-            <div class="status-indicator status-${status}" id="status-${sound.id}">${getStatusText(status)}</div>
-        </div>
-    `;
+    // Безопасное создание контента
+    const infoDiv = safeCreateElement('div');
+    infoDiv.className = 'sound-info';
     
+    const nameDiv = safeCreateElement('div');
+    nameDiv.className = 'sound-name';
+    nameDiv.textContent = sound.name;
+    infoDiv.appendChild(nameDiv);
+    
+    const paramsDiv = safeCreateElement('div');
+    paramsDiv.className = 'sound-params';
+    paramsDiv.textContent = `Частота: ${sound.freq} Гц | Гармоники: [${sound.harmonics.join(', ')}] | Фильтр: ${sound.filter}`;
+    infoDiv.appendChild(paramsDiv);
+    
+    const descDiv = safeCreateElement('div');
+    descDiv.className = 'sound-description';
+    descDiv.textContent = sound.description;
+    infoDiv.appendChild(descDiv);
+    
+    div.appendChild(infoDiv);
+    
+    const controlsDiv = safeCreateElement('div');
+    controlsDiv.className = 'sound-controls';
+    
+    const playBtn = safeCreateElement('button');
+    playBtn.className = 'play-btn';
+    playBtn.textContent = '▶️ Прослушать';
+    playBtn.onclick = () => playSound(sound.id);
+    controlsDiv.appendChild(playBtn);
+    
+    const keepBtn = safeCreateElement('button');
+    keepBtn.className = 'keep-btn';
+    keepBtn.textContent = '✅ Оставить';
+    keepBtn.onclick = () => keepSound(sound.id);
+    controlsDiv.appendChild(keepBtn);
+    
+    const deleteBtn = safeCreateElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = '❌ Удалить';
+    deleteBtn.onclick = () => deleteSound(sound.id);
+    controlsDiv.appendChild(deleteBtn);
+    
+    const statusDiv = safeCreateElement('div');
+    statusDiv.className = `status-indicator status-${status}`;
+    statusDiv.id = `status-${sound.id}`;
+    statusDiv.textContent = getStatusText(status);
+    controlsDiv.appendChild(statusDiv);
+    
+    div.appendChild(controlsDiv);
     container.appendChild(div);
 }
 

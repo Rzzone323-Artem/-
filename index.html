@@ -71,8 +71,8 @@ function animateGifs() {
     }, 500);
 }
 
-// Запуск анимации
-setInterval(animateGifs, 3000);
+// Запуск анимации с отслеживанием таймера
+const animationTimer = window.audioManager?.addTimer(setInterval(animateGifs, 3000));
 animateGifs(); // Первый запуск сразу
 
 // Загадочные фразы
@@ -171,34 +171,34 @@ function showMysticPhrase() {
     document.body.appendChild(phraseElement);
     
     // Показываем фразу
-    setTimeout(() => {
+    const showTimer = window.audioManager?.addTimer(setTimeout(() => {
         phraseElement.style.opacity = '1';
-    }, 100);
+    }, 100));
     
     // Скрываем через 4 секунды
-    setTimeout(() => {
+    const hideTimer = window.audioManager?.addTimer(setTimeout(() => {
         if (phraseElement) {
             phraseElement.style.opacity = '0';
-            setTimeout(() => {
+            const removeTimer = window.audioManager?.addTimer(setTimeout(() => {
                 if (phraseElement) {
                     phraseElement.remove();
                     phraseElement = null;
                 }
-            }, 2000);
+            }, 2000));
         }
-    }, 4000);
+    }, 4000));
     
     // Следующая фраза
     phraseIndex = (phraseIndex + 1) % phrases.length;
 }
 
 // Показываем фразы в случайные моменты - ЧАЩЕ и ЧАСТЕ!
-setInterval(() => {
+const phraseTimer = window.audioManager?.addTimer(setInterval(() => {
     const random = Math.random();
     if (random < 0.7) { // Увеличено с 0.5 до 0.7 (70% шанс)
         showMysticPhrase();
     }
-}, 4000); // Уменьшено с 8000 до 4000 (каждые 4 секунды)
+}, 4000)); // Каждые 4 секунды
 
 // Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
 function goToProductFromMain(productId) {

@@ -2,8 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
+<script src="audio-utils.js"></script>
 <script src="sounds.js"></script>
 <script src="email-setup.js"></script>
 </head>
@@ -51,36 +53,56 @@ let leftVisible = false;
 let rightVisible = false;
 
 function animateGifs() {
-    const leftGif = document.getElementById('leftGif');
-    const rightGif = document.getElementById('rightGif');
-    
-    // Левая гифка
-    if (!leftVisible) {
-        leftGif.innerHTML = `<img src="${leftGifs[leftIndex].src}" style="width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};" alt="Декоративная гифка">`;
-        leftGif.style.opacity = '1';
-        leftVisible = true;
-    } else {
-        leftGif.style.opacity = '0';
-        leftVisible = false;
-        leftIndex = (leftIndex + 1) % leftGifs.length;
-    }
-    
-    // Правая гифка (с небольшой задержкой)
-    setTimeout(() => {
-        if (!rightVisible) {
-            rightGif.innerHTML = `<img src="${rightGifs[rightIndex].src}" style="width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};" alt="Декоративная гифка">`;
-            rightGif.style.opacity = '1';
-            rightVisible = true;
+    try {
+        const leftGif = document.getElementById('leftGif');
+        const rightGif = document.getElementById('rightGif');
+        
+        // Левая гифка - безопасное создание элементов
+        if (!leftVisible) {
+            // Очищаем контейнер
+            leftGif.innerHTML = '';
+            
+            // Создаем изображение безопасно
+            const leftImg = safeCreateImage(leftGifs[leftIndex].src, 'Декоративная гифка слева', {
+                style: `width: ${leftGifs[leftIndex].width}; filter: ${leftGifs[leftIndex].filter};`
+            });
+            
+            leftGif.appendChild(leftImg);
+            leftGif.style.opacity = '1';
+            leftVisible = true;
         } else {
-            rightGif.style.opacity = '0';
-            rightVisible = false;
-            rightIndex = (rightIndex + 1) % rightGifs.length;
+            leftGif.style.opacity = '0';
+            leftVisible = false;
+            leftIndex = (leftIndex + 1) % leftGifs.length;
         }
-    }, 500);
+        
+        // Правая гифка (с небольшой задержкой)
+        const rightTimer = window.audioManager?.addTimer(setTimeout(() => {
+            if (!rightVisible) {
+                // Очищаем контейнер
+                rightGif.innerHTML = '';
+                
+                // Создаем изображение безопасно
+                const rightImg = safeCreateImage(rightGifs[rightIndex].src, 'Декоративная гифка справа', {
+                    style: `width: ${rightGifs[rightIndex].width}; filter: ${rightGifs[rightIndex].filter};`
+                });
+                
+                rightGif.appendChild(rightImg);
+                rightGif.style.opacity = '1';
+                rightVisible = true;
+            } else {
+                rightGif.style.opacity = '0';
+                rightVisible = false;
+                rightIndex = (rightIndex + 1) % rightGifs.length;
+            }
+        }, 500));
+    } catch (error) {
+        console.error('Ошибка анимации гифок:', error);
+    }
 }
 
-// Запуск анимации
-setInterval(animateGifs, 3000);
+// Запуск анимации с отслеживанием таймера
+const animationTimer = window.audioManager?.addTimer(setInterval(animateGifs, 3000));
 animateGifs(); // Первый запуск сразу
 
 // Загадочные фразы
@@ -133,40 +155,46 @@ function showMysticPhrase() {
     document.body.appendChild(phraseElement);
     
     // Показываем фразу
-    setTimeout(() => {
+    const showTimer = window.audioManager?.addTimer(setTimeout(() => {
         phraseElement.style.opacity = '1';
-    }, 100);
+    }, 100));
     
     // Скрываем через 4 секунды
-    setTimeout(() => {
+    const hideTimer = window.audioManager?.addTimer(setTimeout(() => {
         if (phraseElement) {
             phraseElement.style.opacity = '0';
-            setTimeout(() => {
+            const removeTimer = window.audioManager?.addTimer(setTimeout(() => {
                 if (phraseElement) {
                     phraseElement.remove();
                     phraseElement = null;
                 }
-            }, 2000);
+            }, 2000));
         }
-    }, 4000);
+    }, 4000));
     
     // Следующая фраза
     phraseIndex = (phraseIndex + 1) % phrases.length;
 }
 
 // Показываем фразы в случайные моменты
-setInterval(() => {
+const phraseTimer = window.audioManager?.addTimer(setInterval(() => {
     const random = Math.random();
     if (random < 0.5) {
         showMysticPhrase();
     }
-}, 8000);
+}, 8000));
 
 // Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
 function goToProductFromMain(productId) {
-    // Создаем уникальный звук для каждого товара
-    if (window.soundManager && window.soundManager.audioContext) {
-        const audioContext = window.soundManager.audioContext;
+    try {
+        // Используем singleton AudioContext
+        const audioContext = window.audioManager?.getAudioContext();
+        if (!audioContext) {
+            console.warn('AudioContext недоступен');
+            window.location.href = `product.html?id=${productId}`;
+            return;
+        }
+
         const duration = 2; // 2 секунды для лучшего восприятия
         const sampleRate = 44100;
         const numSamples = duration * sampleRate;
@@ -249,8 +277,12 @@ function goToProductFromMain(productId) {
             data[i] = envelope * sample * (0.5 + 0.3 * modulation1 + 0.2 * modulation2) * (1 + vibrato);
         }
         
-        // Воспроизводим звук
-        const source = audioContext.createBufferSource();
+        const source = window.audioManager?.createBufferSource();
+        if (!source) {
+            window.location.href = `product.html?id=${productId}`;
+            return;
+        }
+        
         source.buffer = buffer;
         
         // УНИКАЛЬНЫЙ фильтр для каждого товара
@@ -264,12 +296,17 @@ function goToProductFromMain(productId) {
         source.start();
         
         console.log(`🎵 ${profile.description} - Частота: ${profile.freq}Гц, Фильтр: ${profile.filter}`);
-    }
-    
-    // Переходим на страницу товара
-    setTimeout(() => {
+        
+        // Переходим на страницу товара
+        const navTimer = window.audioManager?.addTimer(setTimeout(() => {
+            window.location.href = `product.html?id=${productId}`;
+        }, 500)); // Небольшая задержка чтобы звук успел проиграться
+        
+    } catch (error) {
+        console.error('Ошибка в goToProductFromMain:', error);
+        // Fallback - переходим без звука
         window.location.href = `product.html?id=${productId}`;
-    }, 500); // Небольшая задержка чтобы звук успел проиграться
+    }
 }
 </script>
 

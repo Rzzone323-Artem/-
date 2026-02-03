@@ -1,6 +1,6 @@
 (function () {
     function initSoundControls() {
-        if (!window.soundManager) return;
+        if (!window.soundManager && !window.audioManager) return;
         if (document.getElementById('soundControls')) return;
 
         const root = document.createElement('div');
@@ -18,34 +18,72 @@
         const currentVolume = typeof window.soundManager.volume === 'number' ? window.soundManager.volume : 0.3;
         const initialSliderValue = Math.round(currentVolume * 100);
 
-        root.innerHTML = `
-            <div style="color: #C0C0C0; font-size: 12px; margin-bottom: 5px;">🔊 ЗВУКОВОЙ ПАНЕЛЬ</div>
-            <button id="soundToggleBtn" style="background: #4B0082; color: #C0C0C0; border: none; padding: 5px 10px; margin: 2px; cursor: pointer; border-radius: 5px; font-size: 11px;">
-                <span id="soundToggleText">🔊 ВКЛ</span>
-            </button>
-            <div style="margin-top: 5px;">
-                <label style="color: #C0C0C0; font-size: 10px;">ГРОМКОСТЬ:</label>
-                <input type="range" id="volumeSlider" min="0" max="100" value="${initialSliderValue}" style="width: 100px; vertical-align: middle;">
-            </div>
-            <div style="margin-top: 5px;">
-                <button data-sound="click" style="background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;">КЛИК</button>
-                <button data-sound="mystic" style="background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;">МИСТИКА</button>
-                <button data-sound="zone" style="background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;">ЗОНА</button>
-            </div>
-        `;
+        // Безопасное создание контента
+        const titleDiv = safeCreateElement('div');
+        titleDiv.textContent = '🔊 ЗВУКОВОЙ ПАНЕЛЬ';
+        titleDiv.style.cssText = 'color: #C0C0C0; font-size: 12px; margin-bottom: 5px;';
+        root.appendChild(titleDiv);
+
+        const toggleBtn = safeCreateElement('button');
+        toggleBtn.id = 'soundToggleBtn';
+        toggleBtn.textContent = '🔊 ВКЛ';
+        toggleBtn.style.cssText = 'background: #4B0082; color: #C0C0C0; border: none; padding: 5px 10px; margin: 2px; cursor: pointer; border-radius: 5px; font-size: 11px;';
+        root.appendChild(toggleBtn);
+
+        const volumeContainer = safeCreateElement('div');
+        volumeContainer.style.cssText = 'margin-top: 5px;';
+        
+        const volumeLabel = safeCreateElement('label');
+        volumeLabel.textContent = 'ГРОМКОСТЬ:';
+        volumeLabel.style.cssText = 'color: #C0C0C0; font-size: 10px;';
+        volumeContainer.appendChild(volumeLabel);
+        
+        const slider = safeCreateElement('input');
+        slider.id = 'volumeSlider';
+        slider.type = 'range';
+        slider.min = '0';
+        slider.max = '100';
+        slider.value = initialSliderValue;
+        slider.style.cssText = 'width: 100px; vertical-align: middle;';
+        volumeContainer.appendChild(slider);
+        
+        root.appendChild(volumeContainer);
+
+        const buttonsContainer = safeCreateElement('div');
+        buttonsContainer.style.cssText = 'margin-top: 5px;';
+        
+        const clickBtn = safeCreateElement('button');
+        clickBtn.textContent = 'КЛИК';
+        clickBtn.setAttribute('data-sound', 'click');
+        clickBtn.style.cssText = 'background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;';
+        buttonsContainer.appendChild(clickBtn);
+        
+        const mysticBtn = safeCreateElement('button');
+        mysticBtn.textContent = 'МИСТИКА';
+        mysticBtn.setAttribute('data-sound', 'mystic');
+        mysticBtn.style.cssText = 'background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;';
+        buttonsContainer.appendChild(mysticBtn);
+        
+        const zoneBtn = safeCreateElement('button');
+        zoneBtn.textContent = 'ЗОНА';
+        zoneBtn.setAttribute('data-sound', 'zone');
+        zoneBtn.style.cssText = 'background: #333; color: #C0C0C0; border: none; padding: 2px 5px; margin: 1px; cursor: pointer; border-radius: 3px; font-size: 9px;';
+        buttonsContainer.appendChild(zoneBtn);
+        
+        root.appendChild(buttonsContainer);
 
         document.body.appendChild(root);
 
         const toggleText = root.querySelector('#soundToggleText');
-        const toggleBtn = root.querySelector('#soundToggleBtn');
-        const slider = root.querySelector('#volumeSlider');
+        const toggleBtnElement = root.querySelector('#soundToggleBtn');
+        const sliderElement = root.querySelector('#volumeSlider');
 
-        toggleBtn.addEventListener('click', () => {
+        toggleBtnElement.addEventListener('click', () => {
             const enabled = window.soundManager.toggle();
-            toggleText.textContent = enabled ? '🔊 ВКЛ' : '🔈 ВЫКЛ';
+            toggleBtnElement.textContent = enabled ? '🔊 ВКЛ' : '🔈 ВЫКЛ';
         });
 
-        slider.addEventListener('input', (e) => {
+        sliderElement.addEventListener('input', (e) => {
             const value = Number(e.target.value);
             window.soundManager.setVolume(value / 100);
         });
