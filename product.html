@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{PRODUCT_NAME}} - ЧУДО-БАЗАР "Святой Алтарь"</title>
+<link rel="stylesheet" href="style.css">
+<script src="sounds.js"></script>
+<style>
+.product-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: linear-gradient(145deg, rgba(0,0,0,0.9), rgba(20,0,20,0.9));
+    border: 3px solid #ff0066;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.product-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.product-title {
+    font-size: 3em;
+    color: #ff0066;
+    text-shadow: 0 0 20px #ff0066;
+    margin-bottom: 20px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 20px #ff0066; }
+    to { text-shadow: 0 0 30px #ff0066, 0 0 40px #ff0066; }
+}
+
+.product-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.product-image {
+    text-align: center;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border: 3px solid #8a2be2;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+}
+
+.product-info {
+    color: #0F0;
+    font-family: "Courier New", monospace;
+}
+
+.product-description {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.product-price {
+    font-size: 2em;
+    color: #FFD700;
+    text-shadow: 0 0 15px #FFD700;
+    margin-bottom: 30px;
+}
+
+.under-construction {
+    background: linear-gradient(145deg, rgba(255,0,0,0.1), rgba(255,165,0,0.1));
+    border: 2px solid #FF4500;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.under-construction h2 {
+    color: #FF4500;
+    font-size: 2em;
+    margin-bottom: 15px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.5; }
+}
+
+.under-construction p {
+    color: #FFD700;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+.back-button {
+    display: inline-block;
+    background: linear-gradient(145deg, #ff0066, #8a2be2);
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+    border: 2px solid #ff0066;
+}
+
+.back-button:hover {
+    background: linear-gradient(145deg, #8a2be2, #ff0066);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+}
+
+.loading-animation {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.loading-animation::after {
+    content: '⏳ ЗАГРУЗКА ДАННЫХ ТОВАРА';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '⏳ ЗАГРУЗКА ДАННЫХ ТОВАРА'; }
+    40% { content: '⏳ ЗАГРУЗКА ДАННЫХ ТОВАРА.'; }
+    60% { content: '⏳ ЗАГРУЗКА ДАННЫХ ТОВАРА..'; }
+    80%, 100% { content: '⏳ ЗАГРУЗКА ДАННЫХ ТОВАРА...'; }
+}
+
+.mystical-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ff0066;
+    border-radius: 50%;
+    animation: float 10s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Мистические эффекты -->
+<div class="mystical-effects" id="mysticalEffects"></div>
+
+<!-- Звуковая панель -->
+<div id="soundPanel" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #ff0066;">
+    <div style="color: #0F0; margin-bottom: 10px;">🔊 Звуки сайта</div>
+    <button onclick="toggleSound()" style="background: #ff0066; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Вкл/Выкл</button>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50" style="width: 100px; margin-left: 10px;" onchange="changeVolume(this.value)">
+</div>
+
+<div class="product-detail-container">
+    <div class="product-header">
+        <h1 class="product-title" id="productTitle">ЗАГРУЗКА...</h1>
+        <div class="loading-animation"></div>
+    </div>
+
+    <div class="product-content">
+        <div class="product-image">
+            <img src="img/product-placeholder.jpg" alt="Товар" id="productImage">
+        </div>
+        
+        <div class="product-info">
+            <div class="product-description" id="productDescription">
+                Загрузка описания товара...
+            </div>
+            
+            <div class="product-price" id="productPrice">
+                Цена: определение...
+            </div>
+            
+            <div class="under-construction">
+                <h2>🚧 В РАЗРАБОТКЕ 🚧</h2>
+                <p>
+                    <strong>⚡ МОЩНЫЙ АРТЕФАКТ В СОЗДАНИИ! ⚡</strong><br><br>
+                    
+                    Наши лучшие алхимики и сталкеры работают над этим товаром прямо сейчас!<br><br>
+                    
+                    📅 <strong>Ориентировочный срок готовности:</strong> Очень скоро<br>
+                    🔮 <strong>Статус создания:</strong> Заряжается мистической энергией<br>
+                    ⭐ <strong>Редкость:</strong> Легендарная<br><br>
+                    
+                    <em>Следите за обновлениями в Зоне...</em>
+                </p>
+            </div>
+            
+            <a href="catalog.html" class="back-button">← ВЕРНУТЬСЯ В КАТАЛОГ</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Данные товаров
+const products = {
+    'svyatoj-vodon': {
+        name: 'СВЯТОЙ ВОДОН',
+        description: 'Легендарный эликсир, очищающий не только тело, но и душу. Создан по древнему рецепту из воды семи священных источников Зоны.',
+        price: '7777 ₽',
+        image: 'img/vodon.jpg'
+    },
+    'sivorotka-svet-radiacii': {
+        name: 'СЫВОРОТКА "СВЕТ РАДИАЦИИ"',
+        description: 'Уникальное противорадиационное средство. Позволяет проходить через самые опасные аномалии без вреда для здоровья.',
+        price: '13370 ₽',
+        image: 'img/sivorotka.jpg'
+    },
+    'protivogaz-stalkera': {
+        name: 'ПРОТИВОГАЗ СТАЛКЕРА',
+        description: 'Профессиональное оборудование для выживания в Зоне. Фильтрует 99.9% всех аномальных веществ.',
+        price: '8800 ₽',
+        image: 'img/protivogaz.jpg'
+    },
+    'anomalnyj-artefakt': {
+        name: 'АНОМАЛЬНЫЙ АРТЕФАКТ',
+        description: 'Таинственный предмет неизвестного происхождения. Обладает мистическими свойствами и меняет реальность вокруг себя.',
+        price: '25000 ₽',
+        image: 'img/artefakt.jpg'
+    },
+    'energeticheskij-donut': {
+        name: 'ЭНЕРГЕТИЧЕСКИЙ ДОНАТ',
+        description: 'Вкуснейшее лакомство, заряженное энергией выбросов. Дает силы на 24 часа непрерывного выживания.',
+        price: '666 ₽',
+        image: 'img/donut.jpg'
+    },
+    'karta-tajnyh-prohodov': {
+        name: 'КАРТА ТАЙНЫХ ПРОХОДОВ',
+        description: 'Детальная карта Зоны с отмеченными секретными тропами. Поможет избежать опасностей и найти сокровища.',
+        price: '15000 ₽',
+        image: 'img/karta.jpg'
+    }
+};
+
+// Получаем ID товара из URL
+function getProductId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('id') || 'svyatoj-vodon';
+}
+
+// Воспроизведение 10-секундного звука при входе
+function playProductEntrySound() {
+    if (window.soundManager) {
+        // Создаем 10-секундный мистический звук
+        const duration = 10; // 10 секунд
+        const sampleRate = 44100;
+        const numSamples = duration * sampleRate;
+        
+        const audioContext = window.soundManager.audioContext;
+        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        // Создаем мистический звук с несколькими частотами
+        for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            const envelope = Math.exp(-t * 0.3); // Затухание
+            
+            // Основная частота + гармоники
+            data[i] = envelope * (
+                Math.sin(2 * Math.PI * 220 * t) * 0.3 +  // A3
+                Math.sin(2 * Math.PI * 440 * t) * 0.2 +  // A4
+                Math.sin(2 * Math.PI * 880 * t) * 0.1 +  // A5
+                Math.sin(2 * Math.PI * 110 * t) * 0.4    // A2
+            ) * Math.sin(t * 0.5); // Медленная модуляция
+        }
+        
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        
+        // Добавляем реверберацию для мистического эффекта
+        const convolver = audioContext.createConvolver();
+        const reverbLength = audioContext.sampleRate * 2; // 2 секунды реверберации
+        const reverbBuffer = audioContext.createBuffer(2, reverbLength, audioContext.sampleRate);
+        
+        for (let channel = 0; channel < 2; channel++) {
+            const channelData = reverbBuffer.getChannelData(channel);
+            for (let i = 0; i < reverbLength; i++) {
+                channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLength, 2);
+            }
+        }
+        
+        convolver.buffer = reverbBuffer;
+        
+        source.connect(convolver);
+        convolver.connect(audioContext.destination);
+        
+        source.start();
+        
+        console.log('🎵 Проигрывается 10-секундный мистический звук товара');
+    }
+}
+
+// Загрузка данных товара
+function loadProduct() {
+    const productId = getProductId();
+    const product = products[productId];
+    
+    if (product) {
+        document.getElementById('productTitle').textContent = product.name;
+        document.getElementById('productDescription').textContent = product.description;
+        document.getElementById('productPrice').textContent = `Цена: ${product.price}`;
+        document.getElementById('productImage').src = product.image;
+        document.getElementById('productImage').alt = product.name;
+        
+        // Обновляем заголовок страницы
+        document.title = `${product.name} - ЧУДО-БАЗАР "Святой Алтарь"`;
+        
+        // Проигрываем звук
+        playProductEntrySound();
+    } else {
+        document.getElementById('productTitle').textContent = 'ТОВАР НЕ НАЙДЕН';
+        document.getElementById('productDescription').textContent = 'Такой товар исчез в аномалии...';
+        document.getElementById('productPrice').textContent = 'Цена: бесценно';
+    }
+}
+
+// Создание мистических частиц
+function createMysticalParticles() {
+    const container = document.getElementById('mysticalEffects');
+    
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            container.appendChild(particle);
+        }, i * 200);
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadProduct();
+    createMysticalParticles();
+    
+    // Обновляем частицы каждые 30 секунд
+    setInterval(createMysticalParticles, 30000);
+});
+
+// Функции управления звуком
+function toggleSound() {
+    if (window.soundManager) {
+        window.soundManager.toggleEnabled();
+    }
+}
+
+function changeVolume(value) {
+    if (window.soundManager) {
+        window.soundManager.setVolume(value / 100);
+    }
+}
+</script>
+
+</body>
+</html>

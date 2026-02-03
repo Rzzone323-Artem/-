@@ -86,6 +86,17 @@ function animateGifs() {
 // Запуск анимации
 setInterval(animateGifs, 3000);
 animateGifs(); // Первый запуск сразу
+
+// Функция перехода на страницу товара
+function goToProduct(productId) {
+    // Воспроизводим звук клика
+    if (window.soundManager) {
+        window.soundManager.playClick();
+    }
+    
+    // Переходим на страницу товара
+    window.location.href = `product.html?id=${productId}`;
+}
 </script>
 
 <!-- Декоративные гифки -->
@@ -114,7 +125,7 @@ animateGifs(); // Первый запуск сразу
 
 <div class="products-grid">
 
-<div class="product">
+<div class="product" onclick="goToProduct('svyatoj-vodon')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -129,15 +140,16 @@ animateGifs(); // Первый запуск сразу
 </div>
 <h2>🧪 ЭЛИКСИРЫ И НАПИТКИ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Сыворотка "Свет радиации" - 2500 RU</li>
-<li>Эликсир "Третий глаз" - 1500 RU</li>
-<li>Настойка "Хрустальный сон" - 1800 RU</li>
-<li>Напиток "Бегство от реальности" - 2200 RU</li>
-<li>Коктейль "Пси-усиление" - 3000 RU</li>
+<li><strong>СВЯТОЙ ВОДОН</strong> - 7777 ₽ ✨</li>
+<li>Сыворотка "Свет радиации" - 2500 ₽</li>
+<li>Эликсир "Третий глаз" - 1500 ₽</li>
+<li>Настойка "Хрустальный сон" - 1800 ₽</li>
+<li>Напиток "Бегство от реальности" - 2200 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProduct('sivorotka-svet-radiacii')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -150,17 +162,18 @@ animateGifs(); // Первый запуск сразу
 <div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
-<h2>🍄 ПОРОШКИ И ЗЕЛЬЯ</h2>
+<h2>🛡️ ЗАЩИТА И БРОНЯ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Порошок "Рыжий лес" - 900 RU</li>
-<li>Зелье "Невидимость" - 2700 RU</li>
-<li>Порошок "Чистая аура" - 1200 RU</li>
-<li>Смесь "Трансовый гриб" - 1600 RU</li>
-<li>Пыльца "Цветок аномалии" - 2100 RU</li>
+<li><strong>СЫВОРОТКА "СВЕТ РАДИАЦИИ"</strong> - 13370 ₽ ⚡</li>
+<li>Противогаз сталкера - 8800 ₽</li>
+<li>Бронежилет "Тень" - 12000 ₽</li>
+<li>Щит аномалий - 15000 ₽</li>
+<li>Амулет невидимости - 9900 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProduct('protivogaz-stalkera')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -173,17 +186,18 @@ animateGifs(); // Первый запуск сразу
 <div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
-<h2>🔮 АМУЛЕТЫ И ТАЛИСМАНЫ</h2>
+<h2>🔮 АРТЕФАКТЫ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Амулет из когтя невидимого мутанта - 1800 RU</li>
-<li>Талисман "Удача сталкера" - 2100 RU</li>
-<li>Оберег "Защита от сглаза" - 1300 RU</li>
-<li>Кулон "Энергия зоны" - 2500 RU</li>
-<li>Руна "Путь к выходу" - 1900 RU</li>
+<li><strong>ПРОТИВОГАЗ СТАЛКЕРА</strong> - 8800 ₽ 🎭</li>
+<li>Аномальный артефакт - 25000 ₽</li>
+<li>Кристалл времени - 18000 ₽</li>
+<li>Осколок реальности - 22000 ₽</li>
+<li>Сфера концентрации - 16000 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProduct('anomalnyj-artefakt')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -196,17 +210,18 @@ animateGifs(); // Первый запуск сразу
 <div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
-<h2>🔥 ФРАГМЕНТ И АРТЕФАКТЫ</h2>
+<h2>🍔 ЕДА И СНАБЖЕНИЕ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Осколок "Испорченный камень" - 1400 RU</li>
-<li>Фрагмент "Мозг контролёра" - 3500 RU</li>
-<li>Часть "Сердце выброса" - 4200 RU</li>
-<li>Образец "Живая слизь" - 800 RU</li>
-<li>Осколок "Память зоны" - 2800 RU</li>
+<li><strong>АНОМАЛЬНЫЙ АРТЕФАКТ</strong> - 25000 ₽ 💎</li>
+<li>Энергетический донат - 666 ₽</li>
+<li>Консервы "Выживание" - 450 ₽</li>
+<li>Хлеб "Зона" - 300 ₽</li>
+<li>Вода "Чистая" - 200 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProduct('energeticheskij-donut')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -219,17 +234,18 @@ animateGifs(); // Первый запуск сразу
 <div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
-<h2>🧪 НЕЧТО В БАНКАХ</h2>
+<h2>🗺️ КАРТЫ И НАВИГАЦИЯ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Банка "Светлячки в сиропе" - 1100 RU</li>
-<li>Банка "Туман болота" - 950 RU</li>
-<li>Банка "Плесень мудрости" - 1350 RU</li>
-<li>Банка "Слёзы мутанта" - 1750 RU</li>
-<li>Банка "Вечность в банке" - 5000 RU</li>
+<li><strong>ЭНЕРГЕТИЧЕСКИЙ ДОНАТ</strong> - 666 ₽ 🍩</li>
+<li>Карта тайных проходов - 15000 ₽</li>
+<li>Компас аномалий - 8000 ₽</li>
+<li>GPS-навигатор "Сталкер" - 12000 ₽</li>
+<li>План Зоны - 9000 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
-<div class="product">
+<div class="product" onclick="goToProduct('karta-tajnyh-prohodov')" style="cursor: pointer;">
 <div style="position: absolute; top: -15px; left: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
@@ -242,14 +258,15 @@ animateGifs(); // Первый запуск сразу
 <div style="position: absolute; bottom: -15px; right: -15px; z-index: 3;">
 <img src="img/fire.gif" style="width: 40px;">
 </div>
-<h2>📦 НАБОРЫ И КОМПЛЕКТЫ</h2>
+<h2>� ИНСТРУМЕНТЫ</h2>
 <ul style="text-align: left; color: #0F0;">
-<li>Набор "Чистота души" - 3200 RU</li>
-<li>Комплект "Выживание в зоне" - 4500 RU</li>
-<li>Набор "Первый сталкер" - 2800 RU</li>
-<li>Комплект "Мастер экстрасенса" - 3900 RU</li>
-<li>Набор "Путь к просветлению" - 6200 RU</li>
+<li><strong>КАРТА ТАЙНЫХ ПРОХОДОВ</strong> - 15000 ₽ 🗺️</li>
+<li>Детектор аномалий - 11000 ₽</li>
+<li>Мультитул "Выживание" - 5500 ₽</li>
+<li>Фонарь "Луч света" - 3500 ₽</li>
+<li>Набор сталкера - 7800 ₽</li>
 </ul>
+<div style="color: #ff0066; font-size: 0.9em; margin-top: 10px;">👆 НАЖМИТЕ ЧТОБЫ УЗНАТЬ БОЛЬШЕ</div>
 </div>
 
 </div>
