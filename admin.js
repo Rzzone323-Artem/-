@@ -137,18 +137,43 @@ function showAdminPanel() {
         <div class="modal-content">
             <span class="close" onclick="closeAdminPanel()">&times;</span>
             <h2>🔐 ПАНЕЛЬ АДМИНИСТРАТОРА</h2>
+            
             <div class="admin-controls">
-                <button class="admin-btn" onclick="toggleForumPosting()">🚫 ЗАПРЕТИТЬ ПОСТИНГ НА ФОРУМЕ</button>
-                <button class="admin-btn" onclick="enableForumPosting()">✅ РАЗРЕШИТЬ ПОСТИНГ НА ФОРУМЕ</button>
+                <button class="admin-btn" onclick="toggleForumPosting()">🚫 ЗАПРЕТИТЬ ПОСТИНГ</button>
+                <button class="admin-btn" onclick="enableForumPosting()">✅ РАЗРЕШИТЬ ПОСТИНГ</button>
                 <button class="admin-btn" onclick="clearAllForumTopics()">🗑️ ОЧИСТИТЬ ФОРУМ</button>
-                <button class="admin-btn" onclick="showModerationPanel()">📋 МОДЕРАЦИЯ СООБЩЕНИЙ</button>
+                <button class="admin-btn" onclick="deleteAllProducts()">📦 УДАЛИТЬ ВСЕ ТОВАРЫ</button>
+                <button class="admin-btn" onclick="backupSite()">� СОХРАНИТЬ РЕЗЕРВ</button>
                 <button class="admin-btn" onclick="startSnakeGame()">🐍 ИГРАТЬ В ЗМЕЙКУ</button>
+                <button class="admin-btn" onclick="showUserList()">👴 СПИСОК ПОЛЬЗОВАТЕЛЕЙ</button>
                 <button class="admin-btn" onclick="logoutAdmin()" style="background: linear-gradient(45deg, #F00, #800);">🚪 ВЫЙТИ ИЗ АДМИНКИ</button>
             </div>
+            
             <div class="admin-status">
-                <p>Статус постинга на форуме: <span id="forumPostingStatus" style="color: #0F0;">РАЗРЕШЕН</span></p>
+                <p>Статус постинга: <span id="forumPostingStatus" style="color: #0F0;">РАЗРЕШЕН</span></p>
                 <p>Текущий пользователь: <span style="color: #FF0;">АДМИНИСТРАТОР</span></p>
                 <p>Ожидающих сообщений: <span id="pendingCount" style="color: #FF0;">${pendingMessages.length}</span></p>
+            </div>
+            
+            <div class="admin-moderation">
+                <h3>📋 СООБЩЕНИЯ НА МОДЕРАЦИИ</h3>
+                <div class="moderation-list">
+                    ${pendingMessages.length === 0 ? 
+                        '<p style="color: #FF0;">Нет сообщений на модерации</p>' :
+                        pendingMessages.map((msg, index) => `
+                            <div class="moderation-item" style="border: 1px solid #FF0; padding: 10px; margin: 10px 0; background: rgba(255, 0, 102, 0.1);">
+                                <p><strong>Автор:</strong> ${msg.author}</p>
+                                <p><strong>Тема:</strong> ${msg.title}</p>
+                                <p><strong>Сообщение:</strong> ${msg.content}</p>
+                                <p><strong>Дата:</strong> ${msg.date}</p>
+                                <div style="margin-top: 10px;">
+                                    <button class="admin-btn" onclick="approveMessage(${index})" style="background: #0A0; padding: 5px 10px; font-size: 12px;">✅ ОДОБРИТЬ</button>
+                                    <button class="admin-btn" onclick="rejectMessage(${index})" style="background: #A00; padding: 5px 10px; font-size: 12px;">❌ ОТКЛОНИТЬ</button>
+                                </div>
+                            </div>
+                        `).join('')
+                    }
+                </div>
             </div>
         </div>
     `;
@@ -207,18 +232,56 @@ function closeModerationPanel() {
 
 function approveMessage(index) {
     const message = pendingMessages[index];
-    alert(`✅ Сообщение от ${message.author} одобрено!`);
+    alert(`✅ Сообщение от ${message.author} одобрено и опубликовано на форуме!`);
     pendingMessages.splice(index, 1);
-    closeModerationPanel();
-    showAdminPanel();
+    // Обновляем админ-панель
+    const modal = document.getElementById('adminPanelModal');
+    if (modal) {
+        modal.remove();
+        showAdminPanel();
+    }
 }
 
 function rejectMessage(index) {
     const message = pendingMessages[index];
     alert(`❌ Сообщение от ${message.author} отклонено!`);
     pendingMessages.splice(index, 1);
-    closeModerationPanel();
-    showAdminPanel();
+    // Обновляем админ-панель
+    const modal = document.getElementById('adminPanelModal');
+    if (modal) {
+        modal.remove();
+        showAdminPanel();
+    }
+}
+
+// Дополнительные админ-функции
+function deleteAllProducts() {
+    if (confirm('⚠️ ВЫ УВЕРЕНЫ? ЭТО УДАЛИТ ВСЕ ТОВАРЫ САЙТА!')) {
+        if (confirm('🚨 ЭТО ДЕЙСТВИТЕЛЬНО УДАЛИТ ВСЕ ТОВАРЫ! НАЗАД ПУТИ НЕ БУДЕТ!')) {
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => product.remove());
+            alert('🗑️ Все товары удалены!');
+        }
+    }
+}
+
+function backupSite() {
+    alert('💦 Резервная копия сайта создана!\n\n(Это симуляция - в реальности здесь был бы бэкап)');
+}
+
+function showUserList() {
+    const users = [
+        'Исследователь_2024',
+        'Любопытный_Журналист', 
+        'Энтузиаст_Легенд',
+        'Фотограф_Природы',
+        'Научный_Сотрудник',
+        'Книголюб_Исследователь',
+        'Первый_Раз_В_Зоне',
+        'Здоровье_Прежде_Всего'
+    ];
+    
+    alert(`👴 АКТИВНЫЕ ПОЛЬЗОВАТЕЛИ:\n\n${users.join('\n')}\n\nВсего: ${users.length} пользователей`);
 }
 
 // Управление постингом на форуме
@@ -444,91 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loginBtn.onclick = showAdminLogin;
         header.appendChild(loginBtn);
     }
-    
-    // Создаем крутящийся коловрат курсор
-    createKolovratCursor();
 });
-
-// Создание крутящегося коловрата курсора
-function createKolovratCursor() {
-    const cursor = document.createElement('div');
-    cursor.className = 'kolovrat-cursor';
-    cursor.innerHTML = `
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="kolovratGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ff0066;stop-opacity:1" />
-                    <stop offset="50%" style="stop-color:#ffff00;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#ff0066;stop-opacity:1" />
-                </linearGradient>
-            </defs>
-            <g fill="url(#kolovratGradient)" opacity="0.8">
-                <path d="M16 2 L18 8 L24 6 L20 12 L26 16 L20 20 L24 26 L18 24 L16 30 L14 24 L8 26 L12 20 L6 16 L12 12 L8 6 L14 8 Z"/>
-                <circle cx="16" cy="16" r="3" fill="#000"/>
-            </g>
-        </svg>
-    `;
-    
-    cursor.style.cssText = `
-        position: fixed;
-        width: 32px;
-        height: 32px;
-        pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.1s ease;
-        opacity: 0.8;
-        animation: spin 2s linear infinite;
-    `;
-    
-    document.body.appendChild(cursor);
-    
-    // Скрыть стандартный курсор
-    document.body.style.cursor = 'none';
-    
-    // Отслеживание движения мыши
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    // Плавное движение курсора
-    function animateCursor() {
-        cursorX += (mouseX - cursorX) * 0.1;
-        cursorY += (mouseY - cursorY) * 0.1;
-        
-        cursor.style.left = cursorX - 16 + 'px';
-        cursor.style.top = cursorY - 16 + 'px';
-        
-        requestAnimationFrame(animateCursor);
-    }
-    
-    animateCursor();
-    
-    // Эффект при клике
-    document.addEventListener('click', (e) => {
-        cursor.style.transform = 'scale(1.5)';
-        setTimeout(() => {
-            cursor.style.transform = 'scale(1)';
-        }, 200);
-    });
-    
-    // Эффект при наведении на интерактивные элементы
-    const interactiveElements = document.querySelectorAll('a, button, input, textarea, select');
-    interactiveElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.2)';
-            cursor.style.filter = 'drop-shadow(0 0 10px #ff0066)';
-        });
-        
-        element.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.filter = 'none';
-        });
-    });
-}
 
 // Глобальные функции для доступа из других скриптов
 window.isAdmin = function() { return isAdmin; };
