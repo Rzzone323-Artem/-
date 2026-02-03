@@ -271,10 +271,9 @@ function getProductId() {
     return urlParams.get('id') || 'svyatoj-vodon';
 }
 
-// Воспроизведение 10-секундного звука при входе
-function playProductEntrySound() {
+// Воспроизведение УНИКАЛЬНОГО 10-секундного звука для каждого товара
+function playProductEntrySound(productId) {
     if (window.soundManager) {
-        // Создаем 10-секундный мистический звук
         const duration = 10; // 10 секунд
         const sampleRate = 44100;
         const numSamples = duration * sampleRate;
@@ -283,24 +282,85 @@ function playProductEntrySound() {
         const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
         const data = buffer.getChannelData(0);
         
-        // Создаем мистический звук с несколькими частотами
+        // УНИКАЛЬНЫЕ звуковые профили для каждого товара
+        const soundProfiles = {
+            'svyatoj-vodon': {
+                freq: 349, // F4 - священный
+                harmonics: [1, 2, 3, 5], // квинтовые интервалы
+                modulation: 0.3,
+                filter: 'lowpass',
+                description: 'Святой Водон - священный, гармоничный'
+            },
+            'sivorotka-svet-radiacii': {
+                freq: 523, // C5 - яркий, чистый
+                harmonics: [1, 2, 3, 4],
+                modulation: 0.5,
+                filter: 'highpass',
+                description: 'Сыворотка - яркий, энергичный'
+            },
+            'protivogaz-stalkera': {
+                freq: 196, // G3 - защитный, серьезный
+                harmonics: [1, 1.5, 2, 2.5],
+                modulation: 0.7,
+                filter: 'lowpass',
+                description: 'Противогаз - защитный, надежный'
+            },
+            'anomalnyj-artefakt': {
+                freq: 110, // A2 - глубокий, таинственный
+                harmonics: [1, 1.618, 2.618], // золотое сечение
+                modulation: 0.8,
+                filter: 'bandpass',
+                description: 'Артефакт - древний, загадочный'
+            },
+            'energeticheskij-donut': {
+                freq: 659, // E5 - высокий, веселый
+                harmonics: [1, 3, 5, 7],
+                modulation: 0.2,
+                filter: 'highpass',
+                description: 'Донат - энергичный, веселый'
+            },
+            'karta-tajnyh-prohodov': {
+                freq: 440, // A4 - загадочный, исследовательский
+                harmonics: [1, 2.5, 4, 6],
+                modulation: 0.6,
+                filter: 'bandpass',
+                description: 'Карта - исследовательский, таинственный'
+            }
+        };
+        
+        const profile = soundProfiles[productId] || soundProfiles['svyatoj-vodon'];
+        
+        // Создаем УНИКАЛЬНЫЙ звук для товара
         for (let i = 0; i < numSamples; i++) {
             const t = i / sampleRate;
             const envelope = Math.exp(-t * 0.3); // Затухание
             
-            // Основная частота + гармоники
-            data[i] = envelope * (
-                Math.sin(2 * Math.PI * 220 * t) * 0.3 +  // A3
-                Math.sin(2 * Math.PI * 440 * t) * 0.2 +  // A4
-                Math.sin(2 * Math.PI * 880 * t) * 0.1 +  // A5
-                Math.sin(2 * Math.PI * 110 * t) * 0.4    // A2
-            ) * Math.sin(t * 0.5); // Медленная модуляция
+            let sample = 0;
+            profile.harmonics.forEach((harmonic, index) => {
+                const harmonicFreq = profile.freq * harmonic;
+                const harmonicVolume = 1 / (index + 1);
+                const phase = Math.random() * Math.PI * 2; // Случайная фаза
+                sample += Math.sin(2 * Math.PI * harmonicFreq * t + phase) * harmonicVolume;
+            });
+            
+            // Уникальная модуляция для каждого товара
+            const modulation1 = Math.sin(2 * Math.PI * profile.modulation * t);
+            const modulation2 = Math.sin(2 * Math.PI * profile.modulation * 0.3 * t);
+            const vibrato = Math.sin(2 * Math.PI * 3 * t) * 0.1; // Вибрато
+            
+            data[i] = envelope * sample * (0.5 + 0.3 * modulation1 + 0.2 * modulation2) * (1 + vibrato);
         }
         
         const source = audioContext.createBufferSource();
         source.buffer = buffer;
         
-        // Добавляем реверберацию для мистического эффекта
+        // УНИКАЛЬНЫЙ фильтр для каждого товара
+        const filter = audioContext.createBiquadFilter();
+        filter.type = profile.filter;
+        filter.frequency.value = profile.freq * 2;
+        filter.Q.value = 5; // Резонанс для характера
+        
+        // Реверберация для мистического эффекта
         const convolver = audioContext.createConvolver();
         const reverbLength = audioContext.sampleRate * 2; // 2 секунды реверберации
         const reverbBuffer = audioContext.createBuffer(2, reverbLength, audioContext.sampleRate);
@@ -314,12 +374,15 @@ function playProductEntrySound() {
         
         convolver.buffer = reverbBuffer;
         
-        source.connect(convolver);
+        // Соединяем узлы
+        source.connect(filter);
+        filter.connect(convolver);
         convolver.connect(audioContext.destination);
+        filter.connect(audioContext.destination); // Прямой сигнал
         
         source.start();
         
-        console.log('🎵 Проигрывается 10-секундный мистический звук товара');
+        console.log(`🎵 ${profile.description} - Частота: ${profile.freq}Гц, Фильтр: ${profile.filter}`);
     }
 }
 
@@ -338,8 +401,8 @@ function loadProduct() {
         // Обновляем заголовок страницы
         document.title = `${product.name} - ЧУДО-БАЗАР "Святой Алтарь"`;
         
-        // Проигрываем звук
-        playProductEntrySound();
+        // Проигрываем УНИКАЛЬНЫЙ звук для этого товара
+        playProductEntrySound(productId);
     } else {
         document.getElementById('productTitle').textContent = 'ТОВАР НЕ НАЙДЕН';
         document.getElementById('productDescription').textContent = 'Такой товар исчез в аномалии...';
