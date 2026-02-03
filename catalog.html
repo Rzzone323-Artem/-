@@ -80,12 +80,59 @@ animateGifs(); // Первый запуск сразу
 
 // Функция перехода на страницу товара
 function goToProduct(productId) {
-    // Воспроизводим звук клика
-    if (window.soundManager) {
-        window.soundManager.playClick();
+    // Создаем уникальный звук для каждой категории
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 1.5;
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // УЛУЧШЕННЫЕ звуковые профили для категорий
+    const soundProfiles = {
+        'svyatoj-vodon': { freq: 349, modulation: 0.3, harmonics: [1, 2, 3, 5], filter: 'lowpass' },
+        'sivorotka-svet-radiacii': { freq: 523, modulation: 0.4, harmonics: [1, 2, 4, 6], filter: 'highpass' }, // УЛУЧШЕН!
+        'protivogaz-stalkera': { freq: 293, modulation: 0.5, harmonics: [1, 2, 3], filter: 'lowpass' }, // УЛУЧШЕН!
+        'anomalnyj-artefakt': { freq: 220, modulation: 0.6, harmonics: [1, 1.5, 2], filter: 'bandpass' },
+        'energeticheskij-donut': { freq: 880, modulation: 0.2, harmonics: [1, 3, 5], filter: 'highpass' },
+        'karta-tajnyh-prohodov': { freq: 392, modulation: 0.4, harmonics: [1, 2, 4, 5], filter: 'bandpass' } // УЛУЧШЕН!
+    };
+    
+    const profile = soundProfiles[productId] || soundProfiles['svyatoj-vodon'];
+    
+    // Генерируем улучшенный звук
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * 2);
+        
+        let sample = 0;
+        profile.harmonics.forEach((harmonic, index) => {
+            const harmonicFreq = profile.freq * harmonic;
+            const harmonicVolume = 1 / (index + 1);
+            sample += Math.sin(2 * Math.PI * harmonicFreq * t) * harmonicVolume;
+        });
+        
+        const modulation = Math.sin(2 * Math.PI * profile.modulation * t);
+        data[i] = envelope * sample * (0.6 + 0.4 * modulation);
     }
     
-    // Переходим на страницу товара
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    const filter = audioContext.createBiquadFilter();
+    filter.type = profile.filter;
+    filter.frequency.value = profile.freq * 2;
+    filter.Q.value = 3;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1; // Тихая громкость
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
+    
     window.location.href = `product.html?id=${productId}`;
 }
 </script>

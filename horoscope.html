@@ -274,6 +274,9 @@ const horoscopes = {
 };
 
 function generateHoroscope(zodiac) {
+    // Воспроизводим мистический звук при выборе гороскопа
+    playHoroscopeSound();
+    
     const data = horoscopes[zodiac];
     const prediction = data.predictions[Math.floor(Math.random() * data.predictions.length)];
     
@@ -290,6 +293,51 @@ function generateHoroscope(zodiac) {
     
     document.getElementById('luckyItems').innerHTML = luckyHtml;
     document.getElementById('horoscopeResult').classList.add('show');
+}
+
+// Функция воспроизведения мистического звука гороскопа
+function playHoroscopeSound() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 1; // 1 секунда
+    const sampleRate = 44100;
+    const numSamples = duration * sampleRate;
+    
+    const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    // Создаем мистический звук гороскопа
+    for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const envelope = Math.exp(-t * 3); // Быстрое затухание
+        
+        // Основная частота + мистические гармоники
+        const baseFreq = 440; // A4
+        const sample = envelope * (
+            Math.sin(2 * Math.PI * baseFreq * t) * 0.3 +
+            Math.sin(2 * Math.PI * baseFreq * 1.5 * t) * 0.2 +
+            Math.sin(2 * Math.PI * baseFreq * 2 * t) * 0.1 +
+            Math.sin(2 * Math.PI * baseFreq * 0.5 * t) * 0.4
+        ) * (0.5 + 0.5 * Math.sin(2 * Math.PI * 8 * t)); // Модуляция
+        
+        data[i] = sample;
+    }
+    
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    
+    // Добавляем фильтр для мистичности
+    const filter = audioContext.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 800;
+    filter.Q.value = 2;
+    
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.1; // Тихая громкость
+    
+    source.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    source.start();
 }
 </script>
 

@@ -249,9 +249,9 @@ function goToProductFromMain(productId) {
     filter.frequency.value = profile.freq * 2;
     filter.Q.value = 5; // Резонанс для характера
     
-    // ГЛАВНОЕ: Устанавливаем громкость 0.5!
+    // ГЛАВНОЕ: Устанавливаем громкость 0.1!
     const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.5; // Умеренная громкость
+    gainNode.gain.value = 0.1; // Тихая громкость
     
     source.connect(filter);
     filter.connect(gainNode);

@@ -259,9 +259,57 @@ const products = {
     },
     'karta-tajnyh-prohodov': {
         name: 'КАРТА ТАЙНЫХ ПРОХОДОВ',
-        description: 'Детальная карта Зоны с отмеченными секретными тропами. Поможет избежать опасностей и найти сокровища.',
+        description: 'Детальная карта Зоны с отмеченными секретными тропами. Помогает избежать опасностей и найти сокровища.',
         price: '15000 ₽',
         image: 'img/karta.jpg'
+    },
+    'kost-ploti': {
+        name: 'КОСТЬ ПЛОТИ',
+        description: 'Мощный амулет из кости загадочного существа. Усиливает физическую силу и привлекает мутантов.',
+        price: '666 ₽',
+        image: 'img/kost.jpg'
+    },
+    'glaz-slepogo-psa': {
+        name: 'ГЛАЗ СЛЕПОГО ПСА',
+        description: 'Мистический амулет, дарующий ночное зрение и помогающий видеть скрытые аномалии.',
+        price: '420 ₽',
+        image: 'img/glaz.jpg'
+    },
+    'shnurok-udachi': {
+        name: 'ШНУРОК УДАЧИ',
+        description: 'Простой но эффективный амулет для привлечения удачи. Помогает находить ценные артефакты.',
+        price: '111 ₽',
+        image: 'img/shnurok.jpg'
+    },
+    'amulet-kogtya': {
+        name: 'АМУЛЕТ ИЗ КОГТЯ НЕВИДИМОГО МУТАНТА',
+        description: 'Защищает от сглаза, налоговой инспекции и бывших партнеров. Может стать невидимым.',
+        price: '1800 ₽',
+        image: 'img/kogot.jpg'
+    },
+    'talisman-udacha': {
+        name: 'ТАЛИСМАН "УДАЧА СТАЛКЕРА"',
+        description: 'Увеличивает шанс найти артефакты на 73%. Тянет владельца к таинственным местам.',
+        price: '2100 ₽',
+        image: 'img/talisman.jpg'
+    },
+    'obereg-zashita': {
+        name: 'ОБЕРЕГ "ЗАЩИТА ОТ СГЛАЗА"',
+        description: 'Мощный оберег, блокирующий ментальные атаки контролёров и других опасных существ.',
+        price: '1300 ₽',
+        image: 'img/obereg.jpg'
+    },
+    'kulon-energiya': {
+        name: 'КУЛОН "ЭНЕРГИЯ ЗОНЫ"',
+        description: 'Восстанавливает выносливость и снижает утомляемость. Дает энергию для долгих путешествий.',
+        price: '2500 ₽',
+        image: 'img/kulon.jpg'
+    },
+    'runa-put': {
+        name: 'РУНА "ПУТЬ К ВЫХОДУ"',
+        description: 'Древняя руна, помогающая находить выход из лабиринтов и пещер. Показывает правильный путь.',
+        price: '1900 ₽',
+        image: 'img/runa.jpg'
     }
 };
 
@@ -293,15 +341,15 @@ function playProductEntrySound(productId) {
         },
         'sivorotka-svet-radiacii': {
             freq: 523, // C5 - яркий, чистый
-            harmonics: [1, 2, 3, 4],
-            modulation: 0.5,
+            harmonics: [1, 2, 4, 6], // улучшенные гармоники
+            modulation: 0.4,
             filter: 'highpass',
-            description: 'Сыворотка - яркий, энергичный'
+            description: 'Сыворотка - яркий, чистый'
         },
         'protivogaz-stalkera': {
-            freq: 196, // G3 - защитный, серьезный
-            harmonics: [1, 1.5, 2, 2.5],
-            modulation: 0.7,
+            freq: 293, // D4 - защитный, надежный (УЛУЧШЕН!)
+            harmonics: [1, 2, 3], // простые гармоники
+            modulation: 0.5,
             filter: 'lowpass',
             description: 'Противогаз - защитный, надежный'
         },
@@ -320,11 +368,68 @@ function playProductEntrySound(productId) {
             description: 'Донат - энергичный, веселый'
         },
         'karta-tajnyh-prohodov': {
-            freq: 440, // A4 - загадочный, исследовательский
-            harmonics: [1, 2.5, 4, 6],
-            modulation: 0.6,
+            freq: 392, // G4 - исследовательский (УЛУЧШЕН!)
+            harmonics: [1, 2, 4, 5], // улучшенные гармоники
+            modulation: 0.4,
             filter: 'bandpass',
             description: 'Карта - исследовательский, таинственный'
+        },
+        // АМУЛЕТЫ
+        'kost-ploti': {
+            freq: 196, // G3 - мощный, земной
+            harmonics: [1, 2, 3],
+            modulation: 0.7,
+            filter: 'lowpass',
+            description: 'Кость плоти - мощный, земной'
+        },
+        'glaz-slepogo-psa': {
+            freq: 330, // E4 - мистический, проникающий
+            harmonics: [1, 3, 5],
+            modulation: 0.5,
+            filter: 'bandpass',
+            description: 'Глаз слепого пса - мистический, проникающий'
+        },
+        'shnurok-udachi': {
+            freq: 587, // D5 - легкий, воздушный
+            harmonics: [1, 2, 4],
+            modulation: 0.3,
+            filter: 'highpass',
+            description: 'Шнурок удачи - легкий, воздушный'
+        },
+        'amulet-kogtya': {
+            freq: 220, // A3 - защитный, острый
+            harmonics: [1, 1.5, 2.5],
+            modulation: 0.6,
+            filter: 'bandpass',
+            description: 'Амулет из когтя - защитный, острый'
+        },
+        'talisman-udacha': {
+            freq: 440, // A4 - удачливый, гармоничный
+            harmonics: [1, 2, 3, 5],
+            modulation: 0.4,
+            filter: 'lowpass',
+            description: 'Талисман удачи - удачливый, гармоничный'
+        },
+        'obereg-zashita': {
+            freq: 293, // D4 - оберегающий, спокойный
+            harmonics: [1, 2, 4],
+            modulation: 0.8,
+            filter: 'lowpass',
+            description: 'Оберег защиты - оберегающий, спокойный'
+        },
+        'kulon-energiya': {
+            freq: 784, // G5 - энергетический, вибрирующий
+            harmonics: [1, 3, 6],
+            modulation: 0.2,
+            filter: 'highpass',
+            description: 'Кулон энергии - энергетический, вибрирующий'
+        },
+        'runa-put': {
+            freq: 349, // F4 - ведущий, направляющий
+            harmonics: [1, 2.5, 4],
+            modulation: 0.5,
+            filter: 'bandpass',
+            description: 'Руна пути - ведущий, направляющий'
         }
     };
     
@@ -360,9 +465,9 @@ function playProductEntrySound(productId) {
     filter.frequency.value = profile.freq * 2;
     filter.Q.value = 5; // Резонанс для характера
     
-    // ГЛАВНОЕ: Устанавливаем громкость 0.5!
+    // ГЛАВНОЕ: Устанавливаем громкость 0.1!
     const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.5; // Умеренная громкость
+    gainNode.gain.value = 0.1; // Тихая громкость
     
     // Реверберация для мистического эффекта
     const convolver = audioContext.createConvolver();
