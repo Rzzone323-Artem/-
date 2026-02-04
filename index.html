@@ -14,7 +14,9 @@
 <!-- Декоративные гифки по бокам с чередованием -->
 
 <!-- Скрытая кнопка секретов зоны -->
-<div id="secretButton" style="position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; background: transparent; border: none; cursor: pointer; z-index: 1; opacity: 0;" onclick="revealZoneSecrets()" title="УЗНАТЬ СЕКРЕТЫ ЗОНЫ"></div>
+<div id="secretButton" style="position: fixed; bottom: 20px; right: 20px; width: 30px; height: 30px; background: rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.3); border-radius: 5px; cursor: pointer; z-index: 1; opacity: 0.1; transition: all 0.3s ease;" onclick="revealZoneSecrets()" title="УЗНАТЬ СЕКРЕТЫ ЗОНЫ">
+    <span style="color: rgba(255, 0, 102, 0.5); font-size: 12px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">🔐</span>
+</div>
 
 <script>
 // Массивы гифок для левой и правой сторон
@@ -241,17 +243,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const width = window.innerWidth;
         const height = window.innerHeight;
         
-        // Если курсор в правом нижнем углу (50x50px)
-        if (x > width - 50 && y > height - 50) {
-            secretButton.style.opacity = '0.3';
+        // Если курсор в правом нижнем углу (100x100px)
+        if (x > width - 100 && y > height - 100) {
+            secretButton.style.opacity = '0.8';
             secretButton.style.background = 'rgba(138, 43, 226, 0.3)';
+            secretButton.style.border = '1px solid rgba(138, 43, 226, 0.6)';
+            secretButton.style.transform = 'scale(1.1)';
         } else {
-            secretButton.style.opacity = '0';
-            secretButton.style.background = 'transparent';
+            secretButton.style.opacity = '0.1';
+            secretButton.style.background = 'rgba(138, 43, 226, 0.1)';
+            secretButton.style.border = '1px solid rgba(138, 43, 226, 0.3)';
+            secretButton.style.transform = 'scale(1)';
         }
     });
     
-    // Альтернативный способ: тройной клик на заголовке
+    // Альтернативный способ: тройной клик на заголовок
     let clickCount = 0;
     const header = document.querySelector('.title');
     if (header) {
@@ -268,6 +274,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 2000);
         });
     }
+    
+    // Добавляем случайное мерцание кнопки
+    setInterval(() => {
+        if (Math.random() < 0.1) { // 10% шанс
+            secretButton.style.opacity = '0.3';
+            setTimeout(() => {
+                secretButton.style.opacity = '0.1';
+            }, 500);
+        }
+    }, 5000);
 });
 
 // Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
