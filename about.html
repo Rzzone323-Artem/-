@@ -148,6 +148,12 @@ animateGifs(); // Первый запуск сразу
 Каждый наш товар - это ключ к пониманию себя
 и своего места во вселенной Зоны.
 </p>
+
+<div style="text-align: center; margin: 20px 0;">
+<button onclick="openPhilosophy()" style="background: linear-gradient(145deg, #4a0080, #2a0040); color: #ffff00; border: 2px solid #8a2be2; border-radius: 10px; padding: 12px 25px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-family: 'Times New Roman', serif; text-shadow: 0 0 10px #8a2be2; box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);" onmouseover="this.style.background='linear-gradient(145deg, #5a0090, #3a0050)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 0 30px rgba(138, 43, 226, 0.8)';" onmouseout="this.style.background='linear-gradient(145deg, #4a0080, #2a0040)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 0 20px rgba(138, 43, 226, 0.5)';">
+🔮 УЗНАТЬ БОЛЬШЕ О ФИЛОСОФИИ 🔮
+</button>
+</div>
 </div>
 
 <div class="product">
@@ -174,6 +180,19 @@ animateGifs(); // Первый запуск сразу
 </div>
 
 <a href="index.html">← НА ГЛАВНУЮ</a>
+
+<script>
+// Функция открытия страницы философии
+function openPhilosophy() {
+    // Воспроизводим мистический звук
+    if (window.soundManager && window.soundManager.playMysticChime) {
+        window.soundManager.playMysticChime();
+    }
+    
+    // Переходим на страницу философии
+    window.location.href = 'philosophy.html';
+}
+</script>
 
 </body>
 </html>

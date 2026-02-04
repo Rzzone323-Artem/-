@@ -232,6 +232,22 @@ function revealZoneSecrets() {
     }, 1000);
 }
 
+// Функция открытия тайного портала
+function openSecretPortal() {
+    // Воспроизводим мистический звук
+    if (window.soundManager && window.soundManager.playMysticChime) {
+        window.soundManager.playMysticChime();
+    }
+    
+    // Показываем сообщение
+    alert('🌌 ВЫ ОТКРЫЛИ ТАЙНЫЙ ПОРТАЛ В ЛУЧШИЙ ИЗ МИРОВ!\n\n✨ Портал активирован! Готовы к путешествию?\n\n🚪 Проход в другой мир открывается...');
+    
+    // Редирект на рикролл
+    setTimeout(() => {
+        window.open('https://youtu.be/6nMOqxe4FBc?si=k6iwYALgJyw33L3l', '_blank');
+    }, 1500);
+}
+
 // Делаем кнопку видимой при наведении на угол страницы
 document.addEventListener('DOMContentLoaded', function() {
     const secretButton = document.getElementById('secretButton');
@@ -433,7 +449,7 @@ function goToProductFromMainWithSound(productId) {
 </marquee>
 
 <div style="text-align: center; margin: 20px 0;">
-<img src="img/eye.gif" style="width: 120px; filter: drop-shadow(0 0 25px #ff0066); animation: pulse 2s infinite;" alt="Всевидящее око">
+<img src="img/eye.gif" onclick="openSecretPortal()" style="width: 120px; filter: drop-shadow(0 0 25px #ff0066); animation: pulse 2s infinite; cursor: pointer;" alt="Всевидящее око" title="КЛИКНИ ЧТОБЫ ОТКРЫТЬ ТАЙНЫЙ ПОРТАЛ">
 </div>
 
 <div class="products-grid">
