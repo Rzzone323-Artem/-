@@ -184,129 +184,15 @@ const phraseTimer = window.audioManager?.addTimer(setInterval(() => {
     }
 }, 8000));
 
-// Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
+// Функция перехода на страницу товара с коротким звуком при клике
 function goToProductFromMain(productId) {
-    try {
-        // Используем singleton AudioContext
-        const audioContext = window.audioManager?.getAudioContext();
-        if (!audioContext) {
-            console.warn('AudioContext недоступен');
-            window.location.href = `product.html?id=${productId}`;
-            return;
-        }
-
-        const duration = 2; // 2 секунды для лучшего восприятия
-        const sampleRate = 44100;
-        const numSamples = duration * sampleRate;
-        
-        const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
-        const data = buffer.getChannelData(0);
-        
-        // УНИКАЛЬНЫЕ звуковые профили для каждого товара
-        const soundProfiles = {
-            'sivorotka-svet-radiacii': { 
-                freq: 440, 
-                modulation: 0.5, 
-                harmonics: [1, 2, 3, 4], 
-                filter: 'lowpass',
-                envelope: 3,
-                description: 'Сыворотка - яркий, чистый'
-            },
-            'anomalnyj-artefakt': { 
-                freq: 110, 
-                modulation: 0.8, 
-                harmonics: [1, 1.618, 2.618], 
-                filter: 'lowpass',
-                envelope: 2,
-                description: 'Артефакт - глубокий, таинственный'
-            },
-            'energeticheskij-donut': { 
-                freq: 880, 
-                modulation: 0.3, 
-                harmonics: [1, 3, 5, 7], 
-                filter: 'highpass',
-                envelope: 4,
-                description: 'Донат - высокий, веселый'
-            },
-            'svyatoj-vodon': { 
-                freq: 349, 
-                modulation: 0.4, 
-                harmonics: [1, 2, 3, 5], 
-                filter: 'lowpass',
-                envelope: 3.5,
-                description: 'Водон - священный, гармоничный'
-            },
-            'protivogaz-stalkera': { 
-                freq: 147, 
-                modulation: 0.7, 
-                harmonics: [1, 1.5, 2, 2.5], 
-                filter: 'lowpass',
-                envelope: 2.5,
-                description: 'Противогаз - защитный, серьезный'
-            },
-            'karta-tajnyh-prohodov': { 
-                freq: 523, 
-                modulation: 0.6, 
-                harmonics: [1, 2.5, 4, 6], 
-                filter: 'bandpass',
-                envelope: 3,
-                description: 'Карта - загадочный, исследовательский'
-            }
-        };
-        
-        const profile = soundProfiles[productId] || soundProfiles['sivorotka-svet-radiacii'];
-        
-        // Генерируем УНИКАЛЬНЫЙ звук
-        for (let i = 0; i < numSamples; i++) {
-            const t = i / sampleRate;
-            const envelope = Math.exp(-t * profile.envelope);
-            
-            let sample = 0;
-            profile.harmonics.forEach((harmonic, index) => {
-                const harmonicFreq = profile.freq * harmonic;
-                const harmonicVolume = 1 / (index + 1);
-                const phase = Math.random() * Math.PI * 2; // Случайная фаза для уникальности
-                sample += Math.sin(2 * Math.PI * harmonicFreq * t + phase) * harmonicVolume;
-            });
-            
-            // Уникальная модуляция для каждого товара
-            const modulation1 = Math.sin(2 * Math.PI * profile.modulation * t);
-            const modulation2 = Math.sin(2 * Math.PI * profile.modulation * 0.3 * t);
-            const vibrato = Math.sin(2 * Math.PI * 5 * t) * 0.1; // Вибрато
-            
-            data[i] = envelope * sample * (0.5 + 0.3 * modulation1 + 0.2 * modulation2) * (1 + vibrato);
-        }
-        
-        const source = window.audioManager?.createBufferSource();
-        if (!source) {
-            window.location.href = `product.html?id=${productId}`;
-            return;
-        }
-        
-        source.buffer = buffer;
-        
-        // УНИКАЛЬНЫЙ фильтр для каждого товара
-        const filter = audioContext.createBiquadFilter();
-        filter.type = profile.filter;
-        filter.frequency.value = profile.freq * 2;
-        filter.Q.value = 5; // Резонанс для характера
-        
-        source.connect(filter);
-        filter.connect(audioContext.destination);
-        source.start();
-        
-        console.log(`🎵 ${profile.description} - Частота: ${profile.freq}Гц, Фильтр: ${profile.filter}`);
-        
-        // Переходим на страницу товара
-        const navTimer = window.audioManager?.addTimer(setTimeout(() => {
-            window.location.href = `product.html?id=${productId}`;
-        }, 500)); // Небольшая задержка чтобы звук успел проиграться
-        
-    } catch (error) {
-        console.error('Ошибка в goToProductFromMain:', error);
-        // Fallback - переходим без звука
-        window.location.href = `product.html?id=${productId}`;
+    // Воспроизводим короткий звук клика
+    if (window.soundManager && window.soundManager.playClick) {
+        window.soundManager.playClick();
     }
+    
+    // Переходим на страницу товара
+    window.location.href = `product.html?id=${productId}`;
 }
 </script>
 

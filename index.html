@@ -13,6 +13,9 @@
 
 <!-- Декоративные гифки по бокам с чередованием -->
 
+<!-- Скрытая кнопка секретов зоны -->
+<div id="secretButton" style="position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; background: transparent; border: none; cursor: pointer; z-index: 1; opacity: 0;" onclick="revealZoneSecrets()" title="УЗНАТЬ СЕКРЕТЫ ЗОНЫ"></div>
+
 <script>
 // Массивы гифок для левой и правой сторон
 const leftGifs = [
@@ -200,8 +203,75 @@ const phraseTimer = window.audioManager?.addTimer(setInterval(() => {
     }
 }, 4000)); // Каждые 4 секунды
 
-// Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
+// Функция перехода на страницу товара с коротким звуком при клике
 function goToProductFromMain(productId) {
+    // Воспроизводим короткий звук клика
+    if (window.soundManager && window.soundManager.playClick) {
+        window.soundManager.playClick();
+    }
+    
+    // Переходим на страницу товара
+    window.location.href = `product.html?id=${productId}`;
+}
+
+// Функция раскрытия секретов зоны
+function revealZoneSecrets() {
+    // Воспроизводим мистический звук
+    if (window.soundManager && window.soundManager.playMysticChime) {
+        window.soundManager.playMysticChime();
+    }
+    
+    // Показываем сообщение
+    alert('🔐 СЕКРЕТЫ ЗОНЫ РАСКРЫВАЮТСЯ...\n\n🌟 Вы готовы узнать самую главную тайну?');
+    
+    // Редирект на рикролл
+    setTimeout(() => {
+        window.open('https://youtu.be/dQw4w9WgXcQ?si=h0I1WA7qTTvNCvc3', '_blank');
+    }, 1000);
+}
+
+// Делаем кнопку видимой при наведении на угол страницы
+document.addEventListener('DOMContentLoaded', function() {
+    const secretButton = document.getElementById('secretButton');
+    
+    // Показываем кнопку при наведении на правый нижний угол
+    document.addEventListener('mousemove', function(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Если курсор в правом нижнем углу (50x50px)
+        if (x > width - 50 && y > height - 50) {
+            secretButton.style.opacity = '0.3';
+            secretButton.style.background = 'rgba(138, 43, 226, 0.3)';
+        } else {
+            secretButton.style.opacity = '0';
+            secretButton.style.background = 'transparent';
+        }
+    });
+    
+    // Альтернативный способ: тройной клик на заголовке
+    let clickCount = 0;
+    const header = document.querySelector('.title');
+    if (header) {
+        header.addEventListener('click', function() {
+            clickCount++;
+            if (clickCount >= 3) {
+                revealZoneSecrets();
+                clickCount = 0;
+            }
+            
+            // Сброс счетчика через 2 секунды
+            setTimeout(() => {
+                clickCount = 0;
+            }, 2000);
+        });
+    }
+});
+
+// Функция перехода на страницу товара с УНИКАЛЬНЫМИ звуками
+function goToProductFromMainWithSound(productId) {
     // Создаем уникальный звук для каждого товара
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const duration = 2; // 2 секунды для лучшего восприятия

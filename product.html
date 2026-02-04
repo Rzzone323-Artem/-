@@ -534,8 +534,8 @@ function loadProduct() {
         // Обновляем заголовок страницы
         document.title = `${product.name} - ЧУДО-БАЗАР "Святой Алтарь"`;
         
-        // Проигрываем звук
-        playProductEntrySound(productId);
+        // Убираем долгий звук при входе в товар
+        // playProductEntrySound(productId);
     } else {
         document.getElementById('productTitle').textContent = 'ТОВАР НЕ НАЙДЕН';
         document.getElementById('productDescription').textContent = 'Такой товар исчез в аномалии...';

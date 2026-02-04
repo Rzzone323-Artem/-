@@ -6,79 +6,92 @@
 <title>ФОРУМ СТАЛКЕРОВ - ЧУДО-БАЗАР "Святой Алтарь"</title>
 <link rel="stylesheet" href="style.css">
 <script src="audio-utils.js"></script>
-<script src="sounds.js"></script>
-<script src="email-setup.js"></script>
 <style>
 .forum-container {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
 }
 
 .forum-section {
-    background: linear-gradient(145deg, rgba(0,0,0,0.9), rgba(20,0,20,0.9));
-    border: 3px solid #ff0066;
-    border-radius: 15px;
-    margin: 20px 0;
-    padding: 20px;
-    box-shadow: 
-        8px 8px 16px rgba(0, 0, 0, 0.7),
-        -4px -4px 8px rgba(255, 0, 102, 0.2);
+    background: linear-gradient(145deg, rgba(0,0,0,0.8), rgba(20,0,20,0.8));
+    border: 2px solid #8a2be2;
+    border-radius: 10px;
+    margin: 15px 0;
+    padding: 15px;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
 }
 
 .forum-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #ff0066;
+    border-bottom: 1px solid #8a2be2;
+}
+
+.forum-header h2 {
+    color: #ff0066;
+    text-shadow: 0 0 10px #ff0066;
+    margin: 0;
 }
 
 .topic-item {
-    background: rgba(255, 0, 102, 0.05);
-    border-left: 4px solid #ff0066;
-    padding: 15px;
+    background: rgba(138, 43, 226, 0.1);
+    border-left: 3px solid #8a2be2;
+    padding: 12px;
     margin: 10px 0;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
 .topic-item:hover {
-    background: rgba(255, 0, 102, 0.1);
-    transform: translateX(5px);
+    background: rgba(138, 43, 226, 0.2);
+    transform: translateX(3px);
+}
+
+.topic-item h3 {
+    color: #ffff00;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.topic-item p {
+    color: #c0c0c0;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .topic-meta {
-    font-size: 12px;
+    font-size: 11px;
     color: #ff6666;
     margin-top: 5px;
 }
 
 .topic-stats {
     display: flex;
-    gap: 20px;
-    font-size: 14px;
+    gap: 15px;
+    font-size: 12px;
     color: #ffcc00;
+    margin-top: 5px;
 }
 
 .new-topic-btn {
     background: linear-gradient(145deg, #4a0080, #2a0040);
     color: #ffff00;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
+    border: 1px solid #8a2be2;
+    border-radius: 8px;
+    padding: 8px 16px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
-    box-shadow: 
-        5px 5px 10px rgba(0, 0, 0, 0.7),
-        -2px -2px 5px rgba(138, 43, 226, 0.3);
+    margin: 10px auto;
+    display: block;
 }
 
 .new-topic-btn:hover {
-    transform: translateY(-2px);
     background: linear-gradient(145deg, #5a0090, #3a0050);
+    transform: translateY(-1px);
 }
 
 .modal {
@@ -89,26 +102,24 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
 }
 
 .modal-content {
     background: linear-gradient(145deg, #1a001a, #2a002a);
-    border: 3px solid #ff0066;
-    border-radius: 15px;
-    margin: 10% auto;
-    padding: 30px;
-    width: 80%;
-    max-width: 600px;
-    box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.9),
-        -6px -6px 12px rgba(255, 0, 102, 0.3);
+    border: 2px solid #ff0066;
+    border-radius: 10px;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
 }
 
 .close {
     color: #ff0066;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 }
@@ -126,76 +137,83 @@
     margin-bottom: 5px;
     color: #ffff00;
     font-weight: bold;
+    font-size: 14px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #ff0066;
-    border-radius: 8px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #8a2be2;
+    border-radius: 5px;
     color: #ffff00;
-    font-family: "Comic Sans MS";
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
 }
 
 .form-group textarea {
-    height: 100px;
+    height: 80px;
     resize: vertical;
 }
 
-.stalker-tag {
-    background: rgba(138, 43, 226, 0.3);
-    border: 1px solid #8a2be2;
-    border-radius: 15px;
-    padding: 2px 8px;
-    font-size: 11px;
-    margin-right: 5px;
+.provodnik-reply {
+    background: rgba(0, 255, 0, 0.1);
+    border-left: 3px solid #00ff00;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.provodnik-name {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.provodnik-badge {
+    background: rgba(0, 255, 0, 0.2);
+    border: 1px solid #00ff00;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    margin-left: 5px;
+    color: #00ff00;
 }
 
 .hot-topic {
     border-left-color: #ff6600;
-    background: rgba(255, 102, 0, 0.05);
+    background: rgba(255, 102, 0, 0.1);
 }
 
 .hot-topic::before {
-    content: "🔥 ГОРЯЧАЯ ТЕМА ";
+    content: "🔥 ";
     color: #ff6600;
     font-weight: bold;
 }
 
-.admin-btn {
-    background: linear-gradient(45deg, #800080, #008000);
-    color: #FFF;
-    border: 2px solid #FF0;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: all 0.3s;
-}
-
-.admin-btn:hover {
-    background: linear-gradient(45deg, #A000A0, #00A000);
-    transform: scale(1.05);
-}
-
-.admin-status {
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #FF0;
+.auto-message {
+    background: rgba(255, 255, 0, 0.1);
+    border: 1px dashed #ffff00;
     padding: 10px;
     margin: 10px 0;
-    border-radius: 5px;
+    font-style: italic;
+    color: #ffff00;
 }
 
-.admin-topics {
-    max-height: 300px;
-    overflow-y: auto;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid #FF0;
-    padding: 10px;
-    border-radius: 5px;
+.typing-indicator {
+    color: #00ff00;
+    font-style: italic;
+    margin: 5px 0;
+}
+
+.typing-dots {
+    display: inline-block;
+    animation: typing 1.5s infinite;
+}
+
+@keyframes typing {
+    0%, 60%, 100% { opacity: 1; }
+    30% { opacity: 0.3; }
 }
 </style>
 </head>
@@ -204,7 +222,7 @@
 
 <div class="header">
 <img src="img/left.gif">
-<span class="title" id="adminButton">ФОРУМ СТАЛКЕРОВ</span>
+<span class="title">ФОРУМ СТАЛКЕРОВ</span>
 <img src="img/right.gif">
 </div>
 
@@ -224,163 +242,111 @@
 
 <div class="forum-section">
 <div class="forum-header">
-<h2>🔥 ОБСУЖДЕНИЕ ЗОНЫ</h2>
-<button class="new-topic-btn" onclick="openModal()">+ НОВАЯ ТЕМА</button>
+<h2>🔥 ВОПРОСЫ О ЗОНЕ</h2>
+<button class="new-topic-btn" onclick="openModal()">ЗАДАТЬ ВОПРОС</button>
 </div>
 
-<div class="topic-item hot-topic" onclick="openTopic('Как попасть в Зону отчуждения?')">
-<h3>Как попасть в Зону отчуждения?</h3>
-<p>Ребята, кто-нибудь знает легальные способы попасть в Зону? Очень хочу увидеть это место своими глазами! Какие документы нужны? Можно ли с экскурсией?</p>
+<div class="topic-item hot-topic" onclick="openTopic('Действительно ли помогает моча кабана от радиации?')">
+<h3>Действительно ли помогает моча кабана от радиации?</h3>
+<p>Слышал от старых сталкеров, что если натереться мочой кабана перед заходом в Зону, то меньше пучит от радиации. Кто-нибудь пробовал? Это реально работает или просто байки?</p>
 <div class="topic-stats">
-<span>💬 45 ответов</span>
-<span>👁️ 1.2K просмотров</span>
+<span>💬 67 ответов</span>
+<span>👁️ 2.3K просмотров</span>
 <span>🔥 Горячая тема</span>
 </div>
-<div class="topic-meta">Автор: Исследователь_2024 | 15 минут назад</div>
-<div class="reply-section">
-<div class="reply">
-<div class="reply-author">Проводник <span class="provodnik-badge">ПРОВОДНИК</span></div>
+<div class="topic-meta">Автор: Новичок_Сергей | 2 часа назад</div>
+<div class="provodnik-reply">
+<div class="provodnik-name">Проводник_Виталий <span class="provodnik-badge">ПРОВОДНИК</span></div>
+<p>Молодой, это старая дедовщина. Лучше купи "Антирад" у Бармена - проверено временем. Моча кабана только мутантов привлекает...</p>
+</div>
 </div>
 
-<div class="topic-item" onclick="openTopic('Что происходит в Зоне сейчас?')">
-<h3>Что происходит в Зоне сейчас?</h3>
-<p>Интересует текущая ситуация в Зоне. Есть ли какие-то изменения после недавних новостей? Что с радиационным фоном?</p>
+<div class="topic-item" onclick="openTopic('Лечит ли геморрой глаз контролёра?')">
+<h3>Лечит ли геморрой глаз контролёра?</h3>
+<p>Бабка в деревне сказала, что если приложить свежий глаз контролёра к проблемному месту, то геморрой проходит за 3 дня. Кто-нибудь проверял? Боюсь пробовать без совета...</p>
 <div class="topic-stats">
-<span>💬 23 ответов</span>
-<span>👁️ 856 просмотров</span>
+<span>💬 34 ответа</span>
+<span>👁️ 1.1K просмотров</span>
 </div>
-<div class="topic-meta">Автор: Любопытный_Журналист | 2 часа назад</div>
-</div>
-</div>
-<div class="topic-stats">
-<span>💬 12 ответов</span>
-<span>👁️ 456 просмотров</span>
-<span>👍 8 лайков</span>
+<div class="topic-meta">Автор: Дачник_78 | 5 часов назад</div>
+<div class="provodnik-reply">
+<div class="provodnik-name">Доктор_Сталкер <span class="provodnik-badge">ЭКСПЕРТ</span></div>
+<p>😂 Это лучший юмор, который я слышал за последнюю неделю! Геморрой лучше лечь у хирурга, а не в Зоне лезть...</p>
 </div>
 </div>
 
-<div class="topic-item" onclick="openTopic('Продаю ВСС Винторез')">
-<h3>Продаю ВСС Винторез</h3>
-<p>Отличное состояние, 2 магазина, патроны в подарок. Цена 15000 RU. Торг уместен.</p>
-<div class="topic-meta">
-Автор: <strong>ТОРГОВЕЦ_2000</strong> | Вчера 18:45
-<span class="stalker-tag">Торговец</span>
-<span class="stalker-tag">Бар</span>
-</div>
-<div class="topic-stats">
-<span>💬 8 ответов</span>
-<span>👁️ 234 просмотра</span>
-<span>💰 5 предложений</span>
-</div>
-</div>
-</div>
-
-<div class="forum-section">
-<div class="forum-header">
-<h2>💰 ТОРГОВЛЯ И ОБМЕН</h2>
-</div>
-
-<div class="topic-item" onclick="openTopic('Куплю антидот')">
-<h3>Куплю антидот</h3>
-<p>Срочно нужен антидот от радиации, готов заплатить хорошую цену. Находясь на Припяти.</p>
-<div class="topic-meta">
-Автор: <strong>ПРИПЯТСКИЙ_ВОЛК</strong> | Сегодня 16:20
-<span class="stalker-tag">Одиночка</span>
-<span class="stalker-tag">Припять</span>
-</div>
-<div class="topic-stats">
-<span>💬 3 ответа</span>
-<span>👁️ 89 просмотров</span>
-<span>💰 2 предложения</span>
-</div>
-</div>
-
-<div class="topic-item" onclick="openTopic('Обменяю артефакты')">
-<h3>Обменяю артефакты</h3>
-<p>Есть 'Медуза' и 'Кровь камня' на 'Огненный шар' или 'Батарейку'. Сталкеры, откликайтесь!</p>
-<div class="topic-meta">
-Автор: <strong>АРТЕФАКТОР</strong> | Вчера 20:10
-<span class="stalker-tag">Коллекционер</span>
-<span class="stalker-tag">Затон</span>
-</div>
-<div class="topic-stats">
-<span>💬 7 ответов</span>
-<span>👁️ 156 просмотров</span>
-<span>🔄 4 предложения</span>
-</div>
-</div>
-</div>
-
-<div class="forum-section">
-<div class="forum-header">
-<h2>📖 ИСТОРИИ И ЛЕГЕНДЫ</h2>
-</div>
-
-<div class="topic-item" onclick="openTopic('Встреча с контролёром')">
-<h3>Встреча с контролёром</h3>
-<p>Сегодня чуть не попался... Рассказываю как смог уйти от трёх контролёров одновременно.</p>
-<div class="topic-meta">
-Автор: <strong>СЧАСТЛИВЧИК</strong> | 2 дня назад
-<span class="stalker-tag">Выживший</span>
-<span class="stalker-tag">Рыжий лес</span>
-</div>
+<div class="topic-item" onclick="openTopic('Можно ли есть хвосты слепых собак?')">
+<h3>Можно ли есть хвосты слепых собак?</h3>
+<p>Наткнулся на группу слепых псов, убил одного. Хвост выглядит аппетитно, как сосиска. Можно ли его приготовить или отравлюсь?</p>
 <div class="topic-stats">
 <span>💬 28 ответов</span>
 <span>👁️ 890 просмотров</span>
-<span>👍 15 лайков</span>
+</div>
+<div class="topic-meta">Автор: Голодный_Сталкер | 1 день назад</div>
+<div class="provodnik-reply">
+<div class="provodnik-name">Охотник_Михалыч <span class="provodnik-badge">СТАРИК</span></div>
+<p>Молодой, ты что с ума сошел? В хвостах мутантов всякая дрянь скапливается. Лучше консервы ешь...</p>
 </div>
 </div>
 
-<div class="topic-item" onclick="openTopic('Легенда о Монолите')">
-<h3>Легенда о Монолите</h3>
-<p>Слышал историю от старого сталкера про то, что на самом деле в центре Зоны...</p>
-<div class="topic-meta">
-Автор: <strong>ЛЕТОПИСЕЦ</strong> | 3 дня назад
-<span class="stalker-tag">Историк</span>
-<span class="stalker-tag">Агропром</span>
-</div>
+<div class="topic-item" onclick="openTopic('Правда что аномалии лечат простатит?')">
+<h3>Правда что аномалии лечат простатит?</h3>
+<p>Слышал легенду, что если посидеть 5 минут в "жаркой" аномалии, то простатит как рукой снимает. Жена отправила в Зону за лечением, стоит ли пробовать?</p>
 <div class="topic-stats">
-<span>💬 19 ответов</span>
-<span>👁️ 567 просмотров</span>
-<span>📖 11 лайков</span>
+<span>💬 45 ответов</span>
+<span>👁️ 1.5K просмотров</span>
+</div>
+<div class="topic-meta">Автор: Муж_с_Проблемами | 3 дня назад</div>
+<div class="provodnik-reply">
+<div class="provodnik-name">Проводник_Степан <span class="provodnik-badge">ПРОВОДНИК</span></div>
+<p>Тебе жена на пенсию по инвалидности собирается оформить? В "жаркой" аномалии только косточки соберешь...</p>
 </div>
 </div>
+
 </div>
 
 <div class="forum-section">
 <div class="forum-header">
-<h2>❓ ПОМОЩЬ НОВИЧКАМ</h2>
+<h2>💬 ОБЩЕНИЕ И ПЛАНЫ</h2>
 </div>
 
-<div class="topic-item" onclick="openTopic('Как выжить первый день?')">
-<h3>Как выжить первый день?</h3>
-<p>Новичок в Зоне, что брать с собой? Куда идти? Помогите советом, пожалуйста.</p>
-<div class="topic-meta">
-Автор: <strong>ЗЕЛЁНЫЙ_НОВИЧОК</strong> | Сегодня 09:15
-<span class="stalker-tag">Новичок</span>
-<span class="stalker-tag">Кордон</span>
-</div>
+<div class="topic-item" onclick="openTopic('Ищу напарника на Кордон')">
+<h3>Ищу напарника на Кордон</h3>
+<p>Новичок, ищу опытного сталкера для совместного выезда на Кордон. Есть базовый набор, но боюсь один идти. Готов делиться находками 50/50.</p>
 <div class="topic-stats">
-<span>💬 34 ответа</span>
+<span>💬 12 ответов</span>
+<span>👁️ 456 просмотров</span>
+</div>
+<div class="topic-meta">Автор: Зеленый_Новичок | 6 часов назад</div>
+</div>
+
+<div class="topic-item" onclick="openTopic('Продаю карту тайников')">
+<h3>Продаю карту тайников</h3>
+<p>Есть подробная карта тайников на Юпитер с 20 отмеченными точками. Продам недорого, сам уже всё собрал. Только серьезным покупателям.</p>
+<div class="topic-stats">
+<span>💬 8 ответов</span>
 <span>👁️ 234 просмотра</span>
-<span>💡 18 советов</span>
 </div>
+<div class="topic-meta">Автор: Картограф_2000 | Вчера</div>
 </div>
 
-<div class="topic-item" onclick="openTopic('Где найти первого проводника?')">
-<h3>Где найти первого проводника?</h3>
-<p>Ищу проводника на Юпитер, готов заплатить. Кто может помочь?</p>
-<div class="topic-meta">
-Автор: <strong>ИСКАТЕЛЬ_ПУТИ</strong> | Вчера 14:30
-<span class="stalker-tag">Новичок</span>
-<span class="stalker-tag">Кордон</span>
 </div>
+
+<div class="forum-section">
+<div class="forum-header">
+<h2>📖 ИСТОРИИ ИЗ ЗОНЫ</h2>
+</div>
+
+<div class="topic-item" onclick="openTopic('Встреча с Бюром')">
+<h3>Встреча с Бюро</h3>
+<p>Сегодня чуть не попался... Рассказываю как смог уйти от Бюро на Юпитере. Было страшно до усрачки...</p>
 <div class="topic-stats">
-<span>💬 6 ответов</span>
-<span>👁️ 78 просмотров</span>
-<span>🧭 3 предложения</span>
+<span>💬 56 ответов</span>
+<span>👁️ 2.1K просмотров</span>
 </div>
+<div class="topic-meta">Автор: Счастливчик_Петр | 2 дня назад</div>
 </div>
+
 </div>
 
 </div>
@@ -388,75 +354,61 @@
 <hr>
 
 <div class="warning">
-<p>📝 Правила форума: нет оскорблениям, спаму и обсуждению реальных местоположений Зоны.</p>
-<p>⚠️ Администрация не несёт ответственности за сделки между сталкерами.</p>
-<p>🔐 Все сообщения проверяются на наличие ментального воздействия со стороны контролёров.</p>
+<p>📝 Правила форума: уважайте друг друга, нет оскорблениям и спаму.</p>
+<p>⚠️ Администрация не несёт ответственности за советы по лечению мутантами.</p>
+<p>🔐 Все сообщения проверяются на наличие ментального воздействия со стороны аномалий.</p>
 </div>
 
 <a href="index.html">← НА ГЛАВНУЮ</a>
 
-<!-- Модальное окно для создания новой темы -->
+<!-- Модальное окно для создания нового сообщения -->
 <div id="newTopicModal" class="modal">
 <div class="modal-content">
 <span class="close" onclick="closeModal()">&times;</span>
-<h2>СОЗДАТЬ НОВУЮ ТЕМУ</h2>
+<h2>ЗАДАТЬ ВОПРОС ФОРУМУ</h2>
 <form onsubmit="submitTopic(event)">
 <div class="form-group">
-<label for="topicTitle">Заголовок темы:</label>
-<input type="text" id="topicTitle" required placeholder="Введите заголовок...">
+<label for="topicTitle">Заголовок вопроса:</label>
+<input type="text" id="topicTitle" required placeholder="Например: Помогает ли...?">
 </div>
 <div class="form-group">
-<label for="topicCategory">Категория:</label>
-<select id="topicCategory" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 2px solid #ff0066; border-radius: 8px; color: #ffff00; font-family: 'Comic Sans MS';">
-<option value="zone">🔥 Обсуждение Зоны</option>
-<option value="trade">💰 Торговля и обмен</option>
-<option value="stories">📖 Истории и легенды</option>
-<option value="help">❓ Помощь новичкам</option>
-</select>
-</div>
-<div class="form-group">
-<label for="topicContent">Сообщение:</label>
-<textarea id="topicContent" required placeholder="Напишите ваше сообщение..."></textarea>
+<label for="topicContent">Ваш вопрос:</label>
+<textarea id="topicContent" required placeholder="Опишите вашу ситуацию или задайте вопрос..."></textarea>
 </div>
 <div class="form-group">
 <label for="stalkerName">Ваш позывной:</label>
 <input type="text" id="stalkerName" required placeholder="СТАЛКЕР_123">
 </div>
-<button type="submit" class="new-topic-btn">ОТПРАВИТЬ В НООСФЕРУ</button>
+<button type="submit" class="new-topic-btn">ОТПРАВИТЬ ВОПРОС</button>
 </form>
 </div>
 </div>
 
-<!-- Админ-панель -->
-<div id="adminModal" class="modal">
-<div class="modal-content">
-<span class="close" onclick="closeAdminModal()">&times;</span>
-<h2>🔐 АДМИНИСТРАТОРСКАЯ ПАНЕЛЬ 🔐</h2>
-<div class="admin-controls">
-<button class="admin-btn" onclick="togglePosting()">🚫 ЗАПРЕТИТЬ ПОСТИНГ</button>
-<button class="admin-btn" onclick="clearAllTopics()">🗑️ ОЧИСТИТЬ ВСЕ ТЕМЫ</button>
-<button class="admin-btn" onclick="enablePosting()">✅ РАЗРЕШИТЬ ПОСТИНГ</button>
-</div>
-<div id="adminStatus" class="admin-status">
-<p>Статус постинга: <span id="postingStatus" style="color: #0F0;">РАЗРЕШЕН</span></p>
-</div>
-<div class="admin-topics">
-<h3>Управление темами:</h3>
-<div id="topicsList"></div>
-</div>
-</div>
-</div>
-
 <script>
-// Глобальные переменные для админ-панели
-let postingEnabled = true;
-let topics = [];
+// Массив вопросов для автоматического ответа
+const autoQuestions = [
+    "Хочу попасть в зону, как это сделать?",
+    "Помогите, я новичок, что делать?",
+    "Как стать проводником в зоне?",
+    "Где найти первого проводника?",
+    "Что нужно для входа в зону?",
+    "Можно ли попасть в зону легально?",
+    "Ищу проводника на экскурсию",
+    "Как стать сталкером?",
+    "Подскажите, как попасть в зону отчуждения?",
+    "Хочу в зону, с чего начать?"
+];
+
+// Ответы проводника
+const provodnikAnswers = [
+    "Свяжись со мной по телефону: +7-900-ЗОНА-123 или напиши на email: provodnik@zone.com",
+    "Я проводник с 10-летним стажем. Мой контакты: телеграм @provodnik_zone, телефон +7-900-СТАЛКЕР",
+    "Проводник Виталий на связи! Звоните: +7-495-ЗОНА-999. Организую безопасный вход в Зону.",
+    "Сталкеры, я помогу попасть в Зону. Опыт 15 лет. Контакты: provodnik_vitaliy@mail.com, телеграм @zone_guide",
+    "Нужен проводник? Обращайтесь! Телефон: +7-800-ПРОВОДНИК, email: stalker_guide@yandex.ru"
+];
 
 function openModal() {
-    if (!postingEnabled) {
-        alert('🚫 Постинг запрещён администратором!');
-        return;
-    }
     document.getElementById('newTopicModal').style.display = 'block';
 }
 
@@ -464,32 +416,16 @@ function closeModal() {
     document.getElementById('newTopicModal').style.display = 'none';
 }
 
-function closeAdminModal() {
-    document.getElementById('adminModal').style.display = 'none';
-}
-
 function openTopic(topicTitle) {
-    alert(`Открытие темы: ${topicTitle}\n\n(В реальном приложении здесь была бы полная страница темы)`);
+    alert(`Открытие темы: ${topicTitle}\n\n(В реальном приложении здесь была бы полная страница темы с ответами)`);
 }
 
 function submitTopic(event) {
     event.preventDefault();
     
-    // Воспроизводим звук создания темы
-    playForumSound();
-    
     const title = document.getElementById('topicTitle').value;
-    const category = document.getElementById('topicCategory').value;
     const content = document.getElementById('topicContent').value;
     const author = document.getElementById('stalkerName').value;
-    
-    const newTopic = {
-        title: title,
-        category: category,
-        content: content,
-        author: author,
-        date: new Date().toLocaleString()
-    };
     
     // Показываем индикатор загрузки
     const submitBtn = document.querySelector('button[type="submit"]');
@@ -497,152 +433,127 @@ function submitTopic(event) {
     submitBtn.textContent = '⏳ ОТПРАВКА...';
     submitBtn.disabled = true;
     
-    // Отправляем на email через EmailJS (простая версия)
-    if (window.emailManager) {
-        window.emailManager.sendForumMessage(newTopic).then(success => {
-            // Также сохраняем копию в localStorage как бэкап
-            const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
-            messages.push(newTopic);
-            localStorage.setItem('pendingMessages', JSON.stringify(messages));
-            
-            if (success) {
-                alert('✨ ТЕМА ОТПРАВЛЕНА НА МОДЕРАЦИЮ! ✨\n\nАдминистратор проверит вашу тему в ближайшее время.\n\n� Уведомление отправлено на email администратору!');
-                
-                // Воспроизводим звук успеха
-                if (window.soundManager) {
-                    window.soundManager.playSuccess();
-                }
-            } else {
-                alert('⚠️ ТЕМА СОХРАНЕНА ЛОКАЛЬНО\n\nПроизошла ошибка отправки email, но ваша тема сохранена.\n\nАдминистратор увидит ее при следующем входе.');
-                
-                // Воспроизводим звук ошибки
-                if (window.soundManager) {
-                    window.soundManager.playError();
-                }
-            }
-            
-            // Очищаем форму
-            document.getElementById('topicTitle').value = '';
-            document.getElementById('topicCategory').value = 'zone';
-            document.getElementById('topicContent').value = '';
-            document.getElementById('stalkerName').value = '';
-            
-            // Закрываем модальное окно
-            closeModal();
-            
-            // Восстанавливаем кнопку
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        });
-    } else {
-        // Если EmailJS не загрузился, сохраняем только локально
-        const messages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
-        messages.push(newTopic);
-        localStorage.setItem('pendingMessages', JSON.stringify(messages));
-        
-        alert('⚠️ ТЕМА СОХРАНЕНА ЛОКАЛЬНО\n\nEmail сервис не доступен, но ваша тема сохранена.\n\nАдминистратор увидит ее при следующем входе.');
-        
-        // Очищаем форму и закрываем модальное окно
+    // Сохраняем в localStorage
+    const messages = JSON.parse(localStorage.getItem('forumMessages') || '[]');
+    const newMessage = {
+        title: title,
+        content: content,
+        author: author,
+        date: new Date().toLocaleString()
+    };
+    messages.push(newMessage);
+    localStorage.setItem('forumMessages', JSON.stringify(messages));
+    
+    // Имитируем отправку
+    setTimeout(() => {
+        // Очищаем форму
         document.getElementById('topicTitle').value = '';
         document.getElementById('topicContent').value = '';
         document.getElementById('stalkerName').value = '';
+        
+        // Закрываем модальное окно
         closeModal();
         
         // Восстанавливаем кнопку
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
-    }
+        
+        // Показываем сообщение об успехе
+        alert('✨ Ваш вопрос отправлен на форум!\n\nДругие сталкеры скоро ответят на ваш вопрос.');
+    }, 1500);
 }
 
-// Админ-функции
-function togglePosting() {
-    postingEnabled = false;
-    updateAdminStatus();
-    alert('🚫 Постинг запрещён!');
-}
-
-function enablePosting() {
-    postingEnabled = true;
-    updateAdminStatus();
-    alert('✅ Постинг разрешён!');
-}
-
-function clearAllTopics() {
-    if (confirm('⚠️ Вы уверены, что хотите удалить все темы?')) {
-        topics = [];
-        updateTopicsList();
-        alert('🗑️ Все темы удалены!');
-    }
-}
-
-function updateAdminStatus() {
-    const statusElement = document.getElementById('postingStatus');
-    statusElement.textContent = postingEnabled ? 'РАЗРЕШЕН' : 'ЗАПРЕЩЕН';
-    statusElement.style.color = postingEnabled ? '#0F0' : '#F00';
-}
-
-function updateTopicsList() {
-    const topicsList = document.getElementById('topicsList');
-    if (topics.length === 0) {
-        // Безопасное создание контента
-        topicsList.innerHTML = '';
-        const noTopicsPara = safeCreateElement('p');
-        noTopicsPara.textContent = 'Нет тем для управления';
-        noTopicsPara.style.color = '#FF0';
-        topicsList.appendChild(noTopicsPara);
-        return;
-    }
+// Автоматическая проверка и ответ на вопросы о проводниках
+function checkForProvodnikQuestion() {
+    const messages = JSON.parse(localStorage.getItem('forumMessages') || '[]');
+    const lastMessage = messages[messages.length - 1];
     
-    // Безопасное создание контента
-    topicsList.innerHTML = '';
-    topics.forEach(topic => {
-        const topicDiv = safeCreateElement('div');
-        topicDiv.style.cssText = 'border: 1px solid #FF0; padding: 10px; margin: 5px 0;';
+    if (!lastMessage || lastMessage.autoAnswered) return;
+    
+    const title = lastMessage.title.toLowerCase();
+    const content = lastMessage.content.toLowerCase();
+    
+    // Проверяем, есть ли в сообщении вопросы о проводниках или входе в зону
+    const isProvodnikQuestion = autoQuestions.some(question => 
+        title.includes(question.toLowerCase()) || 
+        content.includes('проводник') || 
+        content.includes('попасть в зону') ||
+        content.includes('как попасть') ||
+        content.includes('стать проводником')
+    );
+    
+    if (isProvodnikQuestion) {
+        // Показываем индикатор набора текста
+        showTypingIndicator();
         
-        const topicTitle = safeCreateElement('strong');
-        topicTitle.textContent = `${topic.title} - ${topic.author}`;
-        topicDiv.appendChild(topicTitle);
-        
-        const deleteBtn = safeCreateElement('button');
-        deleteBtn.textContent = 'УДАЛИТЬ';
-        deleteBtn.style.cssText = 'margin-left: 10px; background: #F00; color: #FFF; border: none; padding: 5px; cursor: pointer;';
-        deleteBtn.onclick = () => deleteTopic(topic.id);
-        topicDiv.appendChild(deleteBtn);
-        
-        topicsList.appendChild(topicDiv);
-    });
-}
-
-function deleteTopic(topicId) {
-    topics = topics.filter(topic => topic.id !== topicId);
-    updateTopicsList();
-    alert('🗑️ Тема удалена!');
-}
-
-// Секретная активация админ-панели
-let adminClickCount = 0;
-document.getElementById('adminButton').addEventListener('click', function() {
-    adminClickCount++;
-    if (adminClickCount >= 5) {
-        document.getElementById('adminModal').style.display = 'block';
-        updateAdminStatus();
-        updateTopicsList();
-        adminClickCount = 0;
+        // Через 2 секунды показываем ответ проводника
+        setTimeout(() => {
+            hideTypingIndicator();
+            showProvodnikReply(lastMessage);
+            
+            // Помечаем сообщение как обработанное
+            lastMessage.autoAnswered = true;
+            localStorage.setItem('forumMessages', JSON.stringify(messages));
+        }, 2000);
     }
-});
+}
 
-// Закрытие модальных окон при клике вне их
+function showTypingIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'typingIndicator';
+    indicator.className = 'auto-message';
+    indicator.innerHTML = '<div class="provodnik-name">Проводник <span class="provodnik-badge">ПРОВОДНИК</span></div><div class="typing-indicator">Печатает<span class="typing-dots">...</span></div>';
+    
+    // Добавляем после последнего сообщения
+    const forumContainer = document.querySelector('.forum-container');
+    forumContainer.appendChild(indicator);
+    
+    // Прокручиваем к индикатору
+    indicator.scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
+function showProvodnikReply(originalMessage) {
+    const randomAnswer = provodnikAnswers[Math.floor(Math.random() * provodnikAnswers.length)];
+    
+    const reply = document.createElement('div');
+    reply.className = 'provodnik-reply';
+    reply.innerHTML = `
+        <div class="provodnik-name">Проводник <span class="provodnik-badge">ПРОВОДНИК</span></div>
+        <p><strong>Ответ на вопрос "${originalMessage.title}":</strong></p>
+        <p>${randomAnswer}</p>
+        <p><em>Это автоматический ответ проводника. Свяжитесь по указанным контактам для организации похода в Зону.</em></p>
+    `;
+    
+    // Добавляем после индикатора набора текста
+    const forumContainer = document.querySelector('.forum-container');
+    forumContainer.appendChild(reply);
+    
+    // Прокручиваем к ответу
+    reply.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Закрытие модального окна при клике вне его
 window.onclick = function(event) {
-    const newTopicModal = document.getElementById('newTopicModal');
-    const adminModal = document.getElementById('adminModal');
-    
-    if (event.target == newTopicModal) {
+    const modal = document.getElementById('newTopicModal');
+    if (event.target == modal) {
         closeModal();
     }
-    if (event.target == adminModal) {
-        closeAdminModal();
-    }
 }
+
+// Проверяем новые сообщения каждые 5 секунд
+setInterval(checkForProvodnikQuestion, 5000);
+
+// Проверяем сразу при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(checkForProvodnikQuestion, 1000);
+});
 </script>
 
 </body>

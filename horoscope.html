@@ -277,8 +277,8 @@ const horoscopes = {
 };
 
 function generateHoroscope(zodiac) {
-    // Воспроизводим мистический звук при выборе гороскопа
-    playHoroscopeSound();
+    // Убираем долгий звук при выборе гороскопа
+    // playHoroscopeSound();
     
     const data = horoscopes[zodiac];
     const prediction = data.predictions[Math.floor(Math.random() * data.predictions.length)];
